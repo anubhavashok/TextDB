@@ -1,0 +1,77 @@
+DATABASE:
+
+1. cmd line tool
+2. uses ports to communicate
+3. load old data
+4. store data on disk when exiting
+5. Index to word in array
+6. Word to index in hashmap
+
+Components:
+1. Bit encoded Word index
+- 18 bits to store index (since there is an upper bound on the number of english words)
+- 5 bits for each char -> each word will be 5 * 32 (max 32 chars)
+- 6 bit * length of word to indicate which character (max 64)
+
+
+
+
+std::vector<(18bits)> doc;
+doc = serializeDoc("path");
+
+std::vector<(18bits)> serializeDoc(std::vector<std::string> doc)
+{
+    std::vector<(18bits)> res;
+    for (std::string word: doc) {
+        (18bits) idx = addWord(word);
+        res.push_back(idx);
+    }
+    return res;
+}
+
+std::vector<(18bits)> serializeDoc(std::string path;)
+{
+    std::vector<(18bits)> res;
+    while (!fin.eof()) {
+        (18bits) idx = addWord(word);
+        res.push_back(idx);
+    }
+    return res;
+}
+
+(18bits) addWord(std::string word)
+{
+    if (word2idx.hasKey(word)) {
+      int idx = word2idx[word];
+      assert(idx < 2^18);
+      assert(idx2word[idx] == word);
+      return idx;
+    } else {
+      // careful if parallel
+      // len might have changed
+      size_t len = idx2word.size();
+      word2idx[word] = len;
+      idx2word.push_back(word);
+      return len;
+    }
+}
+
+typedef 18bits bool[18];
+
+std::map<(18bits), std::string> wordIndex;
+void saveIndex(const std::map<(18bits), std::string>& wordIndex)
+{
+    // (list of words with [index/18bits, word/100bits])
+    // write character mapping
+    for(std::pair<(18 bits), std::string> wordPair: wordIndex) {
+       (18bits) index = wordPair.first;
+       // output index here
+       std::string word = wordPair.second;
+       assert(word.size() <= 20);
+       std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+       for (char c: word) {
+            (5bits) fb = c - 'a';
+            // output five bit here
+       }
+    }
+}
