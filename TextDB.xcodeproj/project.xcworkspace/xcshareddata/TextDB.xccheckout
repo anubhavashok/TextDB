@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>5BF905A0-7001-4EF6-90CB-AD6DDF51B860</string>
+	<key>IDESourceControlProjectName</key>
+	<string>TextDB</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>B62BCBBB-503B-4D21-B8C0-51F4A33EE8BA</key>
+		<string>https://github.com/anubhavashok/TextDB.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>TextDB.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>B62BCBBB-503B-4D21-B8C0-51F4A33EE8BA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/anubhavashok/TextDB.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>B62BCBBB-503B-4D21-B8C0-51F4A33EE8BA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>B62BCBBB-503B-4D21-B8C0-51F4A33EE8BA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>TextDB</string>
+		</dict>
+	</array>
+</dict>
+</plist>

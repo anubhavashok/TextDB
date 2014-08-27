@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
+		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E802D19AAAC0400CB7442 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		44FB69C819ADB29000219F7B /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = db.cpp; sourceTree = "<group>"; };
+		44FB69C919ADB29000219F7B /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = db.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				442E802D19AAAC0400CB7442 /* main.cpp */,
+				44FB69C819ADB29000219F7B /* db.cpp */,
+				44FB69C919ADB29000219F7B /* db.h */,
 			);
 			path = TextDB;
 			sourceTree = "<group>";
@@ -114,6 +119,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,
+				44FB69CA19ADB29000219F7B /* db.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,9 +208,11 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					/usr/local/Cellar/boost/1.55.0_1/include/,
+					/usr/local/Cellar/boost/1.55.0_2/include/,
 				);
+				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = (
+					"-L/usr/local/lib",
 					"-lboost_system-mt",
 					"-lboost_thread-mt",
 					"-lboost_program_options",
@@ -219,9 +227,11 @@
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"/usr/local/Cellar/boost/1.55.0_1/include/**",
+					"/usr/local/Cellar/boost/1.55.0_2/include/**",
 				);
+				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = (
+					"-L/usr/local/lib",
 					"-lboost_system-mt",
 					"-lboost_thread-mt",
 					"-lboost_program_options",
@@ -249,6 +259,7 @@
 				442E803319AAAC0400CB7442 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
