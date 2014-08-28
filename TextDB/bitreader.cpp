@@ -7,12 +7,14 @@
 //
 
 #include "bitreader.h"
+
 #include <cassert>
 #include <fstream>
 
 #include <iostream>
 using namespace std;
 
+#include <snappy.h>
 
 BitReader::BitReader(const std::vector<char>& data)
 {
@@ -85,7 +87,10 @@ void BitReader::saveToFile(std::string path)
 {
     assert(data.size() >= 5);
     ofstream fout(path, ios::out | ios::binary);
-    for (char c: data) {
+    std::string datastring(data.begin(), data.end());
+    std::string compresseddatastring;
+    snappy::Compress(datastring.data(), datastring.size(), &compresseddatastring);
+    for (char c: compresseddatastring) {
         fout.put(c);
     }
     fout.close();

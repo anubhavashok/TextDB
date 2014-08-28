@@ -211,9 +211,12 @@
 		442E803219AAAC0400CB7442 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LIBRARY = "libc++";
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
 					/usr/local/Cellar/boost/1.55.0_2/include/,
 				);
 				OTHER_LDFLAGS = "";
@@ -221,6 +224,7 @@
 					"-L/usr/local/lib",
 					"-lboost_system-mt",
 					"-lboost_thread-mt",
+					"-lsnappy",
 					"-lboost_program_options",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -230,9 +234,12 @@
 		442E803319AAAC0400CB7442 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LIBRARY = "libc++";
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/include,
 					"/usr/local/Cellar/boost/1.55.0_2/include/**",
 				);
 				OTHER_LDFLAGS = "";
@@ -240,6 +247,7 @@
 					"-L/usr/local/lib",
 					"-lboost_system-mt",
 					"-lboost_thread-mt",
+					"-lsnappy",
 					"-lboost_program_options",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";

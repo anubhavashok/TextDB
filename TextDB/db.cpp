@@ -10,6 +10,7 @@
 #include <fstream>
 #include <cassert>
 #include "bitreader.h"
+#include <snappy.h>
 
 // index of word
 // max value is ~250,000 since there are only that many english words
@@ -193,9 +194,14 @@ void DB::decodeAndLoad(std::string path)
     while (fin.get(c)) {
         data.push_back(c);
     }
-
+    std::string compresseddatastring(data.begin(), data.end());
+    std::string datastring;
+    snappy::Uncompress(compresseddatastring.data(), compresseddatastring.size(), &datastring);
+    
+    std::vector<char> uncompresseddata(datastring.begin(), datastring.end());
+    
     fin.close();
-    BitReader bitReader(data);
+    BitReader bitReader(uncompresseddata);
 
     // read num words - first 18 bits
     std::bitset<18> len;
