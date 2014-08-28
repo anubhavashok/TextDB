@@ -10,7 +10,7 @@ DATABASE:
 Components:
 1. Bit encoded Word index
 - 18 bits to store index (since there is an upper bound on the number of english words)
-- 5 bits for each char -> each word will be 5 * 32 (max 32 chars)
+- 5 bits for each word len -> each word will be 5 * 32 (max 32 chars)
 - 6 bit * length of word to indicate which character (max 64)
 
 

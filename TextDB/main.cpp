@@ -76,4 +76,16 @@ int main(int argc, char ** argv) {
         boost::split(in, raw, boost::is_any_of(" "));
         db.handleQuery(in);
     }
+    std::string dbpath("/Users/anubhav/TextDB/store.bindb");
+    std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
+    db.encodeAndSave(dbpath);
+    db.saveUncompressed(uncompresseddbpath);
+    cout << "stored data at: " << dbpath << endl;
+    
+    db.printIndex();
+    
+    DB newdb;
+    newdb.decodeAndLoad(dbpath);
+    cout << "loaded data from: " << dbpath << endl;
+    newdb.printIndex();
 }

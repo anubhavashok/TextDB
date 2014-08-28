@@ -53,7 +53,12 @@ public:
     void add(std::string name, std::vector<std::string> text);
     std::vector<std::string> get(std::string name);
     widx uint2widx(unsigned long i);
-
+    
+    void encodeAndSave(std::string path);
+    void decodeAndLoad(std::string path);
+    void saveUncompressed(std::string path);
+    
+    void printIndex();
 };
 
 

@@ -9,6 +9,7 @@
 #include "db.h"
 #include <fstream>
 #include <cassert>
+#include "bitreader.h"
 
 // index of word
 // max value is ~250,000 since there are only that many english words
@@ -31,6 +32,7 @@ std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
     return res;
 }
 
+// UNUSED
 std::vector<widx> DB::serializeDoc(std::string path)
 {
     ifstream fin(path);
@@ -97,6 +99,7 @@ void DB::handleQuery(std::vector<std::string> in)
     }
 }
 
+// UNUSED
 void DB::add(std::string name, std::string path)
 {
     std::vector<widx> serializedDoc = serializeDoc(path);
@@ -121,4 +124,140 @@ std::vector<std::string> DB::get(std::string name)
 
     }
     return deserializedDoc;
+}
+
+
+void DB::encodeAndSave(std::string path)
+{
+    // Fix this after creating BitReader
+    BitReader bitReader;
+    
+    // set word len
+    size_t mask = 1;
+    size_t len = idx2word.size();
+    for (size_t i = 0; i < 18; i ++) {
+        if (mask & len) {
+            bitReader.setNextBit(true);
+        } else {
+            bitReader.setNextBit(false);
+        }
+        mask <<= 1;
+    }
+    assert(idx2word.size() > 0);
+    for(std::pair<widx, std::string> wordPair: idx2word) {
+        std::string word = wordPair.second;
+        assert(word.size() <= 20);
+        // word should already be in lower case but just in case
+        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+        
+        // encode wordlen
+        size_t wordlen = word.size();
+        size_t mask = 1;
+        for (size_t i = 0; i < 5; i++) {
+            if (mask & wordlen) {
+                bitReader.setNextBit(true);
+            } else {
+                bitReader.setNextBit(false);
+            }
+            mask <<= 1;
+        }
+        
+        // encode word
+        for (char c: word) {
+            size_t charnum = c - 'a';
+            // we can still accomodate for 6 more characters
+            // to be decided
+            assert(charnum < 32);
+            assert(charnum < 26);
+            size_t mask = 1;
+            for (size_t i = 0; i < 5; i ++) {
+                if (mask & charnum) {
+                    bitReader.setNextBit(true);
+                } else {
+                    bitReader.setNextBit(false);
+                }
+                mask <<= 1;
+            }
+        }
+    }
+    
+    // save to file
+    bitReader.saveToFile(path);
+}
+
+void DB::decodeAndLoad(std::string path)
+{
+    std::vector<char> data;
+    ifstream fin(path, ios::in | ios::binary);
+    
+    // read raw data as chars
+    while (!fin.eof()) {
+        char c;
+        fin.get(c);
+        data.push_back(c);
+    }
+    fin.close();
+    BitReader bitReader(data);
+    // read num words - first 18 bits
+    std::bitset<18> len;
+    for (size_t i = 0; i < 18; i ++) {
+        if (bitReader.eof()) {
+            // something went wrong
+            cout << "Unexpected error when decoding file" << endl;
+        }
+        bool nextBit = bitReader.nextBit();
+        if (nextBit) {
+            len.set(i);
+        }
+    }
+    std::vector<std::string> words;
+    while (!bitReader.eof()) {
+        // read word len
+        std::bitset<5> len;
+        for (size_t i = 0; i < 5; i ++) {
+            if (bitReader.nextBit()) {
+                len.set(i);
+            }
+        }
+        // read word
+        size_t nchars = len.to_ulong();
+        std::string word;
+        for (size_t i = 0; i < nchars; i ++) {
+            // read 5 bit character
+            std::bitset<5> charbits;
+            for (size_t j = 0; j < 5; j++) {
+                if (bitReader.nextBit()) {
+                    charbits.set(j);
+                }
+            }
+            char c = charbits.to_ulong() + 'a';
+            word.append(&c);
+        }
+        words.push_back(word);
+    }
+    idx2word.empty();
+    word2idx.empty();
+    for (size_t i = 0; i < words.size(); i ++) {
+        widx idx = BitReader::num2widx(i);
+        idx2word[idx] = words[i];
+        word2idx[words[i]] = idx;
+    }
+    //assert(len.to_ulong() == words.size());
+}
+
+void DB::printIndex()
+{
+    for (std::pair<widx, std::string> wordPair: idx2word) {
+        cout << wordPair.second << endl;
+    }
+}
+
+void DB::saveUncompressed(std::string path)
+{
+    ofstream fout(path);
+    fout << idx2word.size() << endl;
+    for (std::pair<widx, std::string> wordPair: idx2word) {
+        fout << wordPair.second.length() << "|" << wordPair.second << endl;
+    }
+    fout.close();
 }
