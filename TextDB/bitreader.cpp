@@ -75,7 +75,7 @@ void BitReader::setNextBit(bool bit)
         char newchar = 0;
         data.push_back(newchar);
     }
-    int mask = 1;
+    int mask = bit;
     mask <<= offset;
     data[idx] = data[idx] | mask;
     pos++;
@@ -84,10 +84,9 @@ void BitReader::setNextBit(bool bit)
 void BitReader::saveToFile(std::string path)
 {
     assert(data.size() >= 5);
-    std::cout << data.size() << std::endl;
     ofstream fout(path, ios::out | ios::binary);
     for (char c: data) {
-        fout << c;
+        fout.put(c);
     }
     fout.close();
 }

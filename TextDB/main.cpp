@@ -80,12 +80,9 @@ int main(int argc, char ** argv) {
     std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
     db.encodeAndSave(dbpath);
     db.saveUncompressed(uncompresseddbpath);
-    cout << "stored data at: " << dbpath << endl;
-    
-    db.printIndex();
+    cout << endl << "stored data at: " << dbpath << endl;
     
     DB newdb;
     newdb.decodeAndLoad(dbpath);
     cout << "loaded data from: " << dbpath << endl;
-    newdb.printIndex();
 }

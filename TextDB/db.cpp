@@ -180,7 +180,6 @@ void DB::encodeAndSave(std::string path)
             }
         }
     }
-    
     // save to file
     bitReader.saveToFile(path);
 }
@@ -189,15 +188,15 @@ void DB::decodeAndLoad(std::string path)
 {
     std::vector<char> data;
     ifstream fin(path, ios::in | ios::binary);
-    
+    char c;
     // read raw data as chars
-    while (!fin.eof()) {
-        char c;
-        fin.get(c);
+    while (fin.get(c)) {
         data.push_back(c);
     }
+
     fin.close();
     BitReader bitReader(data);
+
     // read num words - first 18 bits
     std::bitset<18> len;
     for (size_t i = 0; i < 18; i ++) {
@@ -231,7 +230,7 @@ void DB::decodeAndLoad(std::string path)
                 }
             }
             char c = charbits.to_ulong() + 'a';
-            word.append(&c);
+            word += c;
         }
         words.push_back(word);
     }
