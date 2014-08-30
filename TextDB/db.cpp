@@ -7,10 +7,14 @@
 //
 
 #include "db.h"
+#include <cmath>
 #include <fstream>
 #include <cassert>
 #include "bitreader.h"
 #include <snappy.h>
+#include <boost/filesystem/path.hpp>
+
+namespace fs = boost::filesystem;
 
 // index of word
 // max value is ~250,000 since there are only that many english words
@@ -49,7 +53,7 @@ std::vector<widx> DB::serializeDoc(std::string path)
 
 widx DB::uint2widx(unsigned long i)
 {
-    assert(i < (2^18));
+    assert(i < pow(2,18));
     widx res(i);
     return res;
 }
@@ -88,6 +92,24 @@ void DB::handleQuery(std::vector<std::string> in)
         // index word and add to db
         add(name, text);
         
+    } if (cmd == "adddoc") {
+        assert(in.size() >= 3);
+        std::string name = in[1];
+        
+        // have either text or path to doc
+        fs::path docPath = in[2];
+        // read doc and load
+        std::vector<std::string> text;
+        ifstream fin(docPath.string());
+        while (!fin.eof()) {
+            std::string word;
+            fin >> word;
+            assert(word.length() < 32);
+            text.push_back(word);
+        }
+        // index word and add to db
+        add(name, text);
+        
     } else if (cmd == "get") {
         assert(in.size() == 2);
         std::string name = in[1];
@@ -97,6 +119,8 @@ void DB::handleQuery(std::vector<std::string> in)
         for (std::string word: res) {
             cout << word << " " << endl;
         }
+    } else {
+        cout << "Unknown query" << endl;
     }
 }
 

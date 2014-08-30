@@ -213,11 +213,13 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LIBRARY = "libc++";
+				GENERATE_MASTER_OBJECT_FILE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"/Users/anubhav/vpiotr-mongoose-cpp",
 					/usr/local/include,
-					/usr/local/Cellar/boost/1.55.0_2/include/,
+					/usr/local/Cellar/boost/1.55.0_2/include,
 				);
 				OTHER_LDFLAGS = "";
 				"OTHER_LDFLAGS[arch=*]" = (
@@ -226,6 +228,9 @@
 					"-lboost_thread-mt",
 					"-lsnappy",
 					"-lboost_program_options",
+					"-L/usr/local/Cellar/fcgi/2.4.0/lib",
+					"-lfcgi",
+					"-lfcgi++",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -236,10 +241,12 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LIBRARY = "libc++";
+				GENERATE_MASTER_OBJECT_FILE = YES;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(inherited)",
 					/Applications/Okemo/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/local/include,
+					"/Users/anubhav/vpiotr-mongoose-cpp",
 					"/usr/local/Cellar/boost/1.55.0_2/include/**",
 				);
 				OTHER_LDFLAGS = "";
@@ -249,6 +256,7 @@
 					"-lboost_thread-mt",
 					"-lsnappy",
 					"-lboost_program_options",
+					"-DUSE_WEBSOCKET",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
