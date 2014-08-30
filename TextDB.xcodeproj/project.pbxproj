@@ -225,6 +225,7 @@
 				"OTHER_LDFLAGS[arch=*]" = (
 					"-L/usr/local/lib",
 					"-lboost_system-mt",
+					"-lboost_filesystem-mt",
 					"-lboost_thread-mt",
 					"-lsnappy",
 					"-lboost_program_options",
@@ -253,6 +254,7 @@
 				"OTHER_LDFLAGS[arch=*]" = (
 					"-L/usr/local/lib",
 					"-lboost_system-mt",
+					"-lboost_filesystem-mt",
 					"-lboost_thread-mt",
 					"-lsnappy",
 					"-lboost_program_options",

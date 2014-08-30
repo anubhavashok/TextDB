@@ -23,13 +23,14 @@ namespace {
     /*! @brief Define command line options for this entrypoint */
     struct Options {
 
+        std::string dbpath;
+        
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
             po::variables_map vm;
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
-
-            //("corpusPath,c",po::value(&corpusPath), "Path to a corpus file")
+            ("dbpath,d",po::value(&dbpath), "Path to a database file")
             // example to add flags
             // ("repin,p","(optional) flag to repin coastedPath headings")
             ;
@@ -63,6 +64,7 @@ namespace {
 #include "fcgio.h"
 #include <ctime>
 #include <boost/filesystem.hpp>
+#include <fstream>
 
 
 int main(int argc, char ** argv) {
@@ -70,6 +72,10 @@ int main(int argc, char ** argv) {
     DB db;
     if (boost::filesystem::exists(dbpath)) {
         db.decodeAndLoad(dbpath);
+    } else {
+        // just create file
+        ofstream dbfile(dbpath);
+        dbfile.close();
     }
     time_t lastSaveTime(time(0));
     // Backup the stdio streambufs
@@ -81,7 +87,7 @@ int main(int argc, char ** argv) {
     
     FCGX_Init();
     FCGX_InitRequest(&request, 0, 0);
-
+    const char * query_string = "";
     while (FCGX_Accept_r(&request) == 0) {
         fcgi_streambuf cin_fcgi_streambuf(request.in);
         fcgi_streambuf cout_fcgi_streambuf(request.out);
@@ -94,7 +100,7 @@ int main(int argc, char ** argv) {
         //char** env = request.envp;
         //while (*(++env))
             //cout << *env << endl;
-        const char * query_string = FCGX_GetParam("QUERY_STRING", request.envp);
+        query_string = FCGX_GetParam("QUERY_STRING", request.envp);
         std::vector<std::string> in;
         boost::split(in, query_string, boost::is_any_of("&"));
         db.handleQuery(in);
@@ -126,7 +132,7 @@ int main(int argc, char ** argv) {
     cin.rdbuf(cin_streambuf);
     cout.rdbuf(cout_streambuf);
     cerr.rdbuf(cerr_streambuf);
-    cout << " done " << endl;
+    cout << "done " << query_string << endl;
     /*
 
     po::options_description desc("Shows the search space");
