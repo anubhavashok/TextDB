@@ -14,6 +14,7 @@
 #include <snappy.h>
 #include <boost/filesystem/path.hpp>
 #include "options.h"
+#include "preformatter.h"
 
 namespace fs = boost::filesystem;
 
@@ -104,6 +105,7 @@ void DB::handleQuery(std::vector<std::string> in)
         
         // have either text or path to doc
         fs::path docPath = in[2];
+        cout << "Loading doc: " << docPath << endl;
         // read doc and load
         std::vector<std::string> text;
         ifstream fin(docPath.string());
@@ -113,6 +115,8 @@ void DB::handleQuery(std::vector<std::string> in)
             assert(word.length() < 32);
             text.push_back(word);
         }
+        Preformatter::removePunctuations(text);
+        Preformatter::toLower(text);
         // index word and add to db
         add(name, text);
         
@@ -170,7 +174,6 @@ void DB::encodeAndSave(std::string path)
     // is set only once at start of the file so it can be 18
     // nbits inferred from this value
     size_t len = idx2word.size();
-    cout << "len is " << len << endl;
     assert(len != 0);
     bitReader.setNextBits(len, 18);
     
@@ -226,7 +229,6 @@ void DB::decodeAndLoad(std::string path)
     // read num words - first 18 bits
     size_t len = bitReader.getNextBits(18).to_ulong();
     assert(len > 0);
-    cout << "word len: " << len << endl;
     nbits = ceil(log(len)/log(2));
     nbits = 1;
     std::vector<std::string> words;
@@ -276,6 +278,9 @@ void DB::decodeAndLoad(std::string path)
             values.push_back(idx);
         }
         storage[key] = values;
+        if (docBitReader.remainingChars() <= 1) {
+            break;
+        }
     }
     
 }

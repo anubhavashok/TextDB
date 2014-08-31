@@ -81,22 +81,19 @@ int main(int argc, char ** argv) {
         fcgi_streambuf cin_fcgi_streambuf(request.in);
         fcgi_streambuf cout_fcgi_streambuf(request.out);
         fcgi_streambuf cerr_fcgi_streambuf(request.err);
+        //char** env = request.envp;
+        //while (*(++env))
+        //cout << *env << endl;
+        query_string = FCGX_GetParam("QUERY_STRING", request.envp);
+        std::vector<std::string> in;
+        boost::split(in, query_string, boost::is_any_of("&"));
+                
+        db.handleQuery(in);
+        
 
         cin.rdbuf(&cin_fcgi_streambuf);
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
-        
-        //char** env = request.envp;
-        //while (*(++env))
-            //cout << *env << endl;
-        query_string = FCGX_GetParam("QUERY_STRING", request.envp);
-        std::vector<std::string> in;
-        boost::split(in, query_string, boost::is_any_of("&"));
-        
-        Preformatter::removePunctuations(in);
-        Preformatter::toLower(in);
-        
-        db.handleQuery(in);
         
         cout << "successful query: " << query_string << endl;
         
@@ -125,7 +122,6 @@ int main(int argc, char ** argv) {
     cin.rdbuf(cin_streambuf);
     cout.rdbuf(cout_streambuf);
     cerr.rdbuf(cerr_streambuf);
-    cout << "done " << query_string << endl;
     /*
 
 

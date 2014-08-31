@@ -174,6 +174,11 @@ void BitReader::setNextString(std::string word, size_t ncharbits)
     }
 }
 
+size_t BitReader::remainingChars()
+{
+    return data.size() - pos/charsize;
+}
+
 void BitReader::saveToFile(std::string path)
 {
     assert(data.size() >= 5);

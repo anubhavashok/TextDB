@@ -29,6 +29,7 @@ public:
     boost::dynamic_bitset<> getNextBits(size_t nbits);
     std::string getNextString(size_t stringsize);
     std::string getNextString(size_t stringsize, size_t ncharbits);
+    size_t remainingChars();
     bool eof();
     
     // write
