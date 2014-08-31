@@ -12,15 +12,18 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <boost/dynamic_bitset.hpp>
 
 using namespace std;
 
 class DB
 {
 private:
+    // nbits of word index
+    size_t nbits = 1;
     // index of word
     // max value is ~250,000 since there are only that many english words
-    using widx = std::bitset<18>;
+    using widx = boost::dynamic_bitset<>;
     
     // index of a character
     // max value is 32, but only numbers up to 26 are used
@@ -29,7 +32,7 @@ private:
     
     // maps index to word
     struct Comparer {
-        bool operator() (const bitset<18> &b1, const bitset<18> &b2) const {
+        bool operator() (const boost::dynamic_bitset<> &b1, const boost::dynamic_bitset<> &b2) const {
             return b1.to_ulong() < b2.to_ulong();
         }
     };

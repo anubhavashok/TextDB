@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <vector>
+#include <boost/dynamic_bitset.hpp>
 
 class BitReader
 {
@@ -23,15 +24,22 @@ private:
 public:
     // read
     BitReader(const std::vector<char>& data);
-    bool nextBit();
+    BitReader(std::string path);
+    bool getNextBit();
+    boost::dynamic_bitset<> getNextBits(size_t nbits);
+    std::string getNextString(size_t stringsize);
+    std::string getNextString(size_t stringsize, size_t ncharbits);
     bool eof();
     
     // write
     BitReader();
     void setNextBit(bool bit);
+    void setNextBits(unsigned long data, size_t nbits);
+    void setNextString(std::string word);
+    void setNextString(std::string word, size_t ncharbits);
     void saveToFile(std::string path);
     
-    static std::bitset<18> num2widx(size_t i);
+    static boost::dynamic_bitset<> num2widx(size_t i, size_t nbits);
     
     // debug
     void print();

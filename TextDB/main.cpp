@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 anubhav. All rights reserved.
 //
 
-
+#include "options.h"
 #include <iostream>
 #include <vector>
 
@@ -15,43 +15,8 @@
 using namespace std;
 
 namespace po = boost::program_options;
-
 const char* toolName = "tdb";
 
-namespace {
-
-    /*! @brief Define command line options for this entrypoint */
-    struct Options {
-
-        std::string dbpath;
-        
-        po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
-        {
-            po::variables_map vm;
-            po::options_description inputOpts("Input settings");
-            inputOpts.add_options()
-            ("dbpath,d",po::value(&dbpath), "Path to a database file")
-            // example to add flags
-            // ("repin,p","(optional) flag to repin coastedPath headings")
-            ;
-
-            desc.add_options()
-            ("help,h", "Print this help")
-            ;
-            desc.add(inputOpts);
-
-            po::store(po::parse_command_line(argc, argv, desc), vm);
-
-            // handle command-line options
-            if (vm.count("help")) {
-                std::cout << desc << std::endl;
-                exit(0);
-            }
-            po::notify(vm);
-            return vm;
-        }
-    };
-}
 
 // TODO: enable regex
 // 1. parse
@@ -65,17 +30,41 @@ namespace {
 #include <ctime>
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include "preformatter.h"
 
-
+// TODO: VARY WORD INDEX DEPENDING ON NUMBER OF UNIQUE WORDS THERE ARE
+// TODO: Make word-text mappings persistent
+// TODO: make a preformatter to preformat all text before saving
+// TODO: growing index for chars too
 int main(int argc, char ** argv) {
-    std::string dbpath("/Users/anubhav/TextDB/store.bindb");
+    
+    po::options_description desc("Shows the search space");
+    Options options;
+    po::variables_map vm = options.processCmdLine(argc, argv, desc);
+    
+    std::string dbpath = options.dbpath;
+    if (Options::verbose) {
+        cout << "Initializing DB object...";
+    }
     DB db;
+    if (Options::verbose) {
+        cout << "done" << endl;
+    }
+    
+    if (Options::verbose) {
+        cout << "Decoding and loading db file...";
+    }
     if (boost::filesystem::exists(dbpath)) {
         db.decodeAndLoad(dbpath);
     } else {
         // just create file
-        ofstream dbfile(dbpath);
+        fstream dbfile;
+        dbfile.open(dbpath, ios::out);
         dbfile.close();
+        cout << "Created new db file at " << dbpath << endl;
+    }
+    if (Options::verbose) {
+        cout << "done" << endl;
     }
     time_t lastSaveTime(time(0));
     // Backup the stdio streambufs
@@ -103,6 +92,10 @@ int main(int argc, char ** argv) {
         query_string = FCGX_GetParam("QUERY_STRING", request.envp);
         std::vector<std::string> in;
         boost::split(in, query_string, boost::is_any_of("&"));
+        
+        Preformatter::removePunctuations(in);
+        Preformatter::toLower(in);
+        
         db.handleQuery(in);
         
         cout << "successful query: " << query_string << endl;
@@ -121,7 +114,7 @@ int main(int argc, char ** argv) {
         
         // Note: the fcgi_streambuf destructor will auto flush
         time_t currentTime(time(0));
-        if (currentTime - lastSaveTime >= 5000) {
+        if (currentTime - lastSaveTime >= 5) {
             std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
             db.encodeAndSave(dbpath);
             db.saveUncompressed(uncompresseddbpath);
@@ -135,9 +128,7 @@ int main(int argc, char ** argv) {
     cout << "done " << query_string << endl;
     /*
 
-    po::options_description desc("Shows the search space");
-    Options options;
-    po::variables_map vm = options.processCmdLine(argc, argv, desc);
+
     // listen for requests
     while (!cin.eof()) {
         cout << "Query: ";

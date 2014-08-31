@@ -13,12 +13,13 @@
 #include "bitreader.h"
 #include <snappy.h>
 #include <boost/filesystem/path.hpp>
+#include "options.h"
 
 namespace fs = boost::filesystem;
 
 // index of word
 // max value is ~250,000 since there are only that many english words
-using widx = std::bitset<18>;
+using widx = boost::dynamic_bitset<>;
 
 // index of a character
 // max value is 32, but only numbers up to 26 are used
@@ -53,16 +54,21 @@ std::vector<widx> DB::serializeDoc(std::string path)
 
 widx DB::uint2widx(unsigned long i)
 {
-    assert(i < pow(2,18));
-    widx res(i);
+    assert(i < pow(2, nbits));
+    widx res = boost::dynamic_bitset<>(nbits, i);
     return res;
 }
 
 widx DB::addWord(std::string word)
 {
+    std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+    if (idx2word.size() >= pow(2, nbits)-1) {
+        nbits++;
+        cout << "increasing index size to " << nbits << endl;
+    }
     if (word2idx.count(word)) {
         widx idx = word2idx[word];
-        // assert(idx < 2^18);
+        assert(idx.to_ulong() < pow(2, nbits));
         // assert(idx2word[idx] == word);
         return idx;
     } else {
@@ -72,7 +78,7 @@ widx DB::addWord(std::string word)
         widx idx = uint2widx((unsigned long)len);//convert len to idx;
         word2idx[word] = idx;
         idx2word[idx] = word;
-        return len;
+        return idx;
     }
 }
 
@@ -92,7 +98,7 @@ void DB::handleQuery(std::vector<std::string> in)
         // index word and add to db
         add(name, text);
         
-    } if (cmd == "adddoc") {
+    } else if (cmd == "adddoc") {
         assert(in.size() >= 3);
         std::string name = in[1];
         
@@ -133,6 +139,9 @@ void DB::add(std::string name, std::string path)
 
 void DB::add(std::string name, std::vector<std::string> text)
 {
+    if (idx2word.size() >= pow(2, nbits)) {
+        nbits++;
+    }
     std::vector<widx> serializedDoc = serializeDoc(text);
     storage[name] = serializedDoc;
 }
@@ -157,17 +166,14 @@ void DB::encodeAndSave(std::string path)
     // Fix this after creating BitReader
     BitReader bitReader;
     
-    // set word len
-    size_t mask = 1;
+    // set num words (max val 2^18 for possible eng words)
+    // is set only once at start of the file so it can be 18
+    // nbits inferred from this value
     size_t len = idx2word.size();
-    for (size_t i = 0; i < 18; i ++) {
-        if (mask & len) {
-            bitReader.setNextBit(true);
-        } else {
-            bitReader.setNextBit(false);
-        }
-        mask <<= 1;
-    }
+    cout << "len is " << len << endl;
+    assert(len != 0);
+    bitReader.setNextBits(len, 18);
+    
     assert(idx2word.size() > 0);
     for(std::pair<widx, std::string> wordPair: idx2word) {
         std::string word = wordPair.second;
@@ -175,103 +181,103 @@ void DB::encodeAndSave(std::string path)
         // word should already be in lower case but just in case
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
         
-        // encode wordlen
+        // encode wordlen (max val = 32 chars in each word)
         size_t wordlen = word.size();
-        size_t mask = 1;
-        for (size_t i = 0; i < 5; i++) {
-            if (mask & wordlen) {
-                bitReader.setNextBit(true);
-            } else {
-                bitReader.setNextBit(false);
-            }
-            mask <<= 1;
-        }
+        bitReader.setNextBits(wordlen, 5);
         
-        // encode word
-        for (char c: word) {
-            size_t charnum = c - 'a';
-            // we can still accomodate for 6 more characters
-            // to be decided
-            assert(charnum < 32);
-            assert(charnum < 26);
-            size_t mask = 1;
-            for (size_t i = 0; i < 5; i ++) {
-                if (mask & charnum) {
-                    bitReader.setNextBit(true);
-                } else {
-                    bitReader.setNextBit(false);
-                }
-                mask <<= 1;
-            }
-        }
+        // encode word (max val = 32 but only 26 used to encode each english lower case char)
+        bitReader.setNextString(word);
     }
     // save to file
     bitReader.saveToFile(path);
+    
+    // ENCODE KEY-DOC mapping
+    BitReader docBitReader;
+    
+    // create file to store all docs
+    for (std::pair<std::string, std::vector<widx>> doc: storage) {
+        
+        // output number of chars in name (max 32)
+        std::string name = doc.first;
+        assert(name.size() < 32);
+        docBitReader.setNextBits(name.size(), 5);
+        
+        // output name
+        docBitReader.setNextString(name);
+        
+        // output number of words in doc
+        docBitReader.setNextBits(doc.second.size(), 32);
+        
+        // output nbits for each word
+        // remember: nbits is inferrred from num words at the start of decoding
+        for (widx idx: doc.second) {
+            assert(idx.size() <= nbits);
+            docBitReader.setNextBits(idx.to_ulong(), nbits);
+        }
+    }
+    
+    docBitReader.saveToFile(path + ".kvp");
 }
 
 void DB::decodeAndLoad(std::string path)
 {
-    std::vector<char> data;
-    ifstream fin(path, ios::in | ios::binary);
-    char c;
-    // read raw data as chars
-    while (fin.get(c)) {
-        data.push_back(c);
-    }
-    std::string compresseddatastring(data.begin(), data.end());
-    std::string datastring;
-    snappy::Uncompress(compresseddatastring.data(), compresseddatastring.size(), &datastring);
-    
-    std::vector<char> uncompresseddata(datastring.begin(), datastring.end());
-    
-    fin.close();
-    BitReader bitReader(uncompresseddata);
+    BitReader bitReader(path);
 
     // read num words - first 18 bits
-    std::bitset<18> len;
-    for (size_t i = 0; i < 18; i ++) {
-        if (bitReader.eof()) {
-            // something went wrong
-            cout << "Unexpected error when decoding file" << endl;
-        }
-        bool nextBit = bitReader.nextBit();
-        if (nextBit) {
-            len.set(i);
-        }
-    }
+    size_t len = bitReader.getNextBits(18).to_ulong();
+    assert(len > 0);
+    cout << "word len: " << len << endl;
+    nbits = ceil(log(len)/log(2));
+    nbits = 1;
     std::vector<std::string> words;
     while (!bitReader.eof()) {
+        
         // read word len
-        std::bitset<5> len;
-        for (size_t i = 0; i < 5; i ++) {
-            if (bitReader.nextBit()) {
-                len.set(i);
-            }
-        }
+        boost::dynamic_bitset<> len = bitReader.getNextBits(5);
+        
         // read word
         size_t nchars = len.to_ulong();
-        std::string word;
-        for (size_t i = 0; i < nchars; i ++) {
-            // read 5 bit character
-            std::bitset<5> charbits;
-            for (size_t j = 0; j < 5; j++) {
-                if (bitReader.nextBit()) {
-                    charbits.set(j);
-                }
-            }
-            char c = charbits.to_ulong() + 'a';
-            word += c;
-        }
+        std::string word = bitReader.getNextString(nchars);
         words.push_back(word);
     }
+
     idx2word.empty();
     word2idx.empty();
     for (size_t i = 0; i < words.size(); i ++) {
-        widx idx = BitReader::num2widx(i);
+        if (i >= pow(2, nbits)) {
+            nbits++;
+        }
+        widx idx(nbits, i);
         idx2word[idx] = words[i];
         word2idx[words[i]] = idx;
     }
-    //assert(len.to_ulong() == words.size());
+    // assert(len.to_ulong() == words.size());
+    
+    // DECODE KEY-DOC STORAGE
+    std::string docPath = path + ".kvp";
+    BitReader docBitReader(docPath);
+    while (!docBitReader.eof()) {
+        
+        // read size of name
+        size_t keyLen = docBitReader.getNextBits(5).to_ulong();
+
+        // read name
+        std::string key = docBitReader.getNextString(keyLen);
+        cout << "key is: " << key << endl;
+
+        // read length of words (standard 32 bit unsigned int)
+        size_t nwords = docBitReader.getNextBits(32).to_ulong();
+
+        // read each word idx
+        std::vector<widx> values;
+        for (size_t n = 0; n < nwords; n++) {
+            widx idx = docBitReader.getNextBits(nbits);
+            // TODO: make sure each idx is stored optimally
+            values.push_back(idx);
+        }
+        storage[key] = values;
+    }
+    
 }
 
 void DB::printIndex()
@@ -287,6 +293,16 @@ void DB::saveUncompressed(std::string path)
     fout << idx2word.size() << endl;
     for (std::pair<widx, std::string> wordPair: idx2word) {
         fout << wordPair.second.length() << "|" << wordPair.second << endl;
+    }
+    fout << "DOCUMENTS" << endl;
+    for (std::pair<std::string, std::vector<widx>> doc: storage) {
+        std::string name  = doc.first;
+        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+        fout << name << endl;
+        for (widx idx: doc.second) {
+            fout << idx2word[idx] << " ";
+        }
+        fout << endl;
     }
     fout.close();
 }
