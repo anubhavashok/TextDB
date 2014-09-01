@@ -9,12 +9,14 @@
 #include "db.h"
 #include <cmath>
 #include <fstream>
+#include <iostream>
 #include <cassert>
 #include "bitreader.h"
 #include <snappy.h>
 #include <boost/filesystem/path.hpp>
 #include "options.h"
 #include "preformatter.h"
+#include <boost/algorithm/string.hpp>
 
 namespace fs = boost::filesystem;
 
@@ -33,6 +35,7 @@ std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
 {
     std::vector<widx> res;
     for (std::string word: doc) {
+        assert(word.length() < 32);
         widx idx = addWord(word);
         res.push_back(idx);
     }
@@ -69,14 +72,16 @@ widx DB::addWord(std::string word)
     }
 }
 
-void DB::handleQuery(std::vector<std::string> in)
+void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 {
     std::string cmd = in[0];
+    std::string name = in[1];
+
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     if (cmd == "add") {
         assert(in.size() >= 3);
-        std::string name = in[1];
-        
+        htmlout << "<h1> ADD " << name << "</h1>\n";
+
         // have either text or path to doc
         std::vector<std::string> text;
         for (size_t i = 2; i < in.size(); i++) {
@@ -84,35 +89,49 @@ void DB::handleQuery(std::vector<std::string> in)
         }
         // index word and add to db
         add(name, text);
-        
+        htmlout << "<p>";
+        for (std::string word: text) {
+            htmlout << word << " ";
+        }
+        htmlout << " </p>";
+
     } else if (cmd == "adddoc") {
         assert(in.size() >= 3);
-        std::string name = in[1];
+        htmlout << "<h1> ADDDOC " << name << "</h1>\n";
         
         // have either text or path to doc
         fs::path docPath = in[2];
-        cout << "Loading doc: " << docPath << endl;
         // read doc and load
         std::vector<std::string> text;
         ifstream fin(docPath.string());
+        std::string line;
+        std::vector<std::string> words;
         while (!fin.eof()) {
-            std::string word;
-            fin >> word;
-            assert(word.length() < 32);
-            text.push_back(word);
+            std::getline(fin, line);
+            boost::split(words, line, boost::is_any_of(" "));
+            for(std::string word: words) {
+                text.push_back(word);
+            }
+            text.push_back("\n");
         }
         // index word and add to db
         add(name, text);
+        htmlout << "    <p> Added " << in[2] << "</p>" << endl;
         
     } else if (cmd == "get") {
         assert(in.size() == 2);
-        std::string name = in[1];
-        // get from db
+        htmlout << "<h1> GET " << name << "</h1>\n";
+        
         std::vector<std::string> res;
         res = get(name);
+        htmlout << "<p>\n" << endl;
         for (std::string word: res) {
-            cout << word << " " << endl;
+            htmlout << word << " ";
+            if (word == "\n") {
+                htmlout << "<br>\n" << endl;
+            }
         }
+        htmlout << "</p>\n" << endl;
     } else {
         cout << "Unknown query" << endl;
     }
@@ -140,7 +159,6 @@ std::vector<std::string> DB::get(std::string name)
             std::string word = idx2word.find(idx)->second;
             deserializedDoc.push_back(word);
         }
-
     }
     return deserializedDoc;
 }
@@ -161,7 +179,7 @@ void DB::encodeAndSave(std::string path)
     assert(idx2word.size() > 0);
     for(std::pair<widx, std::string> wordPair: idx2word) {
         std::string word = wordPair.second;
-        assert(word.size() <= 20);
+        assert(word.size() < 32);
         // word should already be in lower case but just in case
         std::transform(word.begin(), word.end(), word.begin(), ::tolower);
         

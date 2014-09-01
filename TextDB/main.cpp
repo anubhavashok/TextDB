@@ -37,6 +37,7 @@ const char* toolName = "tdb";
 // TODO: Make word-text mappings persistent
 // TODO: make a preformatter to preformat all text before saving
 // TODO: growing index for chars too
+// TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29, 
 
 // Globals in order to handle SIGTERM signals
 static DB db;
@@ -102,16 +103,13 @@ int main(int argc, char ** argv) {
         query_string = FCGX_GetParam("QUERY_STRING", request.envp);
         std::vector<std::string> in;
         boost::split(in, query_string, boost::is_any_of("&"));
-                
-        db.handleQuery(in);
-        
 
         cin.rdbuf(&cin_fcgi_streambuf);
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
         
         cout << "successful query: " << query_string << endl;
-        
+        std::string cmd = in[0];
         cout << "Content-type: text/html\r\n"
         << "\r\n"
         << "<html>\n"
@@ -119,9 +117,9 @@ int main(int argc, char ** argv) {
         << "    <title>TextDB</title>\n"
         << "  </head>\n"
         << "  <body>\n"
-        << "    <h1>Welcome to TextDB</h1>\n"
-        << "    <p>To add a document to the database, append '?adddoc&(docname)&(docpath)' to base url</p>\n"
-        << "  </body>\n"
+        << "    <h1>Welcome to TextDB</h1>\n";
+                db.handleQuery(in, cout);
+        cout << "  </body>\n"
         << "</html>\n";
         
         // Note: the fcgi_streambuf destructor will auto flush

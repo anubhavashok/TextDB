@@ -104,7 +104,7 @@ std::string BitReader::getNextString(size_t stringsize, size_t ncharbits)
     for (size_t i = 0; i < stringsize; i ++) {
         // read ncharbit bit character
         boost::dynamic_bitset<> charbits = getNextBits(ncharbits);
-        char c = charbits.to_ulong() + 'a';
+        char c = num2char(charbits.to_ulong());
         word += c;
     }
     return word;
@@ -151,11 +151,10 @@ void BitReader::setNextString(std::string word)
 void BitReader::setNextString(std::string word, size_t ncharbits)
 {
     for (char c: word) {
-        size_t charnum = c - 'a';
+        size_t charnum = char2num(c);
         // we can still accomodate for 6 more characters
         // to be decided
         assert(charnum < 32);
-        assert(charnum < 26);
         setNextBits(charnum, ncharbits);
     }
 }
@@ -185,6 +184,40 @@ void BitReader::print()
     }
 }
 
+
+size_t BitReader::char2num(char c)
+{
+    if (isalpha(c) && islower(c)) {
+        return c - 'a';
+    } else if (c == '\n') {
+        return 27;
+    } else if (c == '.') {
+        return 28;
+    } else if (c == ',') {
+        return 29;
+    } else if (c == '(') {
+        return 30;
+    } else if (c == ')') {
+        return 31;
+    } else {
+        // invalid character
+        assert(false);
+    }
+}
+
+char BitReader::num2char(size_t num)
+{
+    assert(num < 32);
+    switch(num)
+    {
+        case 27: return '\n';
+        case 28: return '.';
+        case 29: return ',';
+        case 30: return '(';
+        case 31: return ')';
+        default: return num + 'a';
+    }
+}
 
 
 

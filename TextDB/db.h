@@ -49,7 +49,7 @@ public:
     std::vector<widx> serializeDoc(std::string path);
     
     widx addWord(std::string word);
-    void handleQuery(std::vector<std::string> in);
+    void handleQuery(std::vector<std::string> in, ostream& htmlout);
     
     
     void add(std::string name, std::string path);

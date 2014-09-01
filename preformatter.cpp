@@ -8,13 +8,14 @@
 
 #include "preformatter.h"
 #include <algorithm>
+#include <boost/algorithm/string.hpp>
 void Preformatter::removePunctuations(std::vector<std::string>& doc)
 {
     for (std::string& s: doc) {
         std::string fs = "";
         for (size_t i = 0; i < s.size(); i ++) {
             char c = s[i];
-            if (!ispunct(c)) {
+            if (isalpha(c) || boost::is_any_of("\n,.()")(c)) {
                 fs += c;
             }
         }
