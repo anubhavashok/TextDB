@@ -39,20 +39,6 @@ std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
     return res;
 }
 
-// UNUSED
-std::vector<widx> DB::serializeDoc(std::string path)
-{
-    ifstream fin(path);
-    std::vector<widx> res;
-    while (!fin.eof()) {
-        std::string word;
-        fin >> word;
-        widx idx = addWord(word);
-        res.push_back(idx);
-    }
-    return res;
-}
-
 widx DB::uint2widx(unsigned long i)
 {
     assert(i < pow(2, nbits));
@@ -115,8 +101,6 @@ void DB::handleQuery(std::vector<std::string> in)
             assert(word.length() < 32);
             text.push_back(word);
         }
-        Preformatter::removePunctuations(text);
-        Preformatter::toLower(text);
         // index word and add to db
         add(name, text);
         
@@ -134,15 +118,12 @@ void DB::handleQuery(std::vector<std::string> in)
     }
 }
 
-// UNUSED
-void DB::add(std::string name, std::string path)
-{
-    std::vector<widx> serializedDoc = serializeDoc(path);
-    storage[name] = serializedDoc;
-}
 
 void DB::add(std::string name, std::vector<std::string> text)
 {
+    Preformatter::removePunctuations(text);
+    Preformatter::toLower(text);
+
     if (idx2word.size() >= pow(2, nbits)) {
         nbits++;
     }

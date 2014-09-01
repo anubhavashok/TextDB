@@ -31,22 +31,37 @@ const char* toolName = "tdb";
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include "preformatter.h"
+#include <signal.h>
 
 // TODO: VARY WORD INDEX DEPENDING ON NUMBER OF UNIQUE WORDS THERE ARE
 // TODO: Make word-text mappings persistent
 // TODO: make a preformatter to preformat all text before saving
 // TODO: growing index for chars too
+
+// Globals in order to handle SIGTERM signals
+static DB db;
+static std::string dbpath;
+
+void DBSigHandler(int signum);
+void DBSigHandler(int signum)
+{
+    std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
+    db.encodeAndSave(dbpath);
+    db.saveUncompressed(uncompresseddbpath);
+    exit(0);
+}
+
 int main(int argc, char ** argv) {
     
     po::options_description desc("Shows the search space");
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
-    
-    std::string dbpath = options.dbpath;
+    signal(SIGTERM, DBSigHandler);
+
+    dbpath = options.dbpath;
     if (Options::verbose) {
         cout << "Initializing DB object...";
     }
-    DB db;
     if (Options::verbose) {
         cout << "done" << endl;
     }

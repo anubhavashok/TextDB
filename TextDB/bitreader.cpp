@@ -115,20 +115,6 @@ bool BitReader::eof()
     return end;
 }
 
-boost::dynamic_bitset<> BitReader::num2widx(size_t num, size_t nbits)
-{
-    assert(sizeof(num) > 3);
-    boost::dynamic_bitset<> idx;
-    size_t mask = 1;
-    for (size_t i = 0; i < nbits; i++) {
-        if (mask & num) {
-            idx.set(i);
-        }
-        mask <<= 1;
-    }
-    return idx;
-}
-
 void BitReader::setNextBit(bool bit)
 {
     size_t idx = pos / charsize;
@@ -191,7 +177,6 @@ void BitReader::saveToFile(std::string path)
     }
     fout.close();
 }
-
 
 void BitReader::print()
 {
