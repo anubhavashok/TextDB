@@ -80,7 +80,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     if (cmd == "add") {
         assert(in.size() >= 3);
-        htmlout << "<h1> ADD " << name << "</h1>\n";
+        htmlout << "ADD " << name << "\n";
 
         // have either text or path to doc
         std::vector<std::string> text;
@@ -89,15 +89,13 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         }
         // index word and add to db
         add(name, text);
-        htmlout << "<p>";
         for (std::string word: text) {
             htmlout << word << " ";
         }
-        htmlout << " </p>";
 
     } else if (cmd == "adddoc") {
         assert(in.size() >= 3);
-        htmlout << "<h1> ADDDOC " << name << "</h1>\n";
+        htmlout << "ADDDOC " << name << "\n";
         
         // have either text or path to doc
         fs::path docPath = in[2];
@@ -116,22 +114,17 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         }
         // index word and add to db
         add(name, text);
-        htmlout << "    <p> Added " << in[2] << "</p>" << endl;
+        htmlout << "Added " << in[2] << endl;
         
     } else if (cmd == "get") {
         assert(in.size() == 2);
-        htmlout << "<h1> GET " << name << "</h1>\n";
+        htmlout << "GET " << name << endl;
         
         std::vector<std::string> res;
         res = get(name);
-        htmlout << "<p>\n" << endl;
         for (std::string word: res) {
             htmlout << word << " ";
-            if (word == "\n") {
-                htmlout << "<br>\n" << endl;
-            }
         }
-        htmlout << "</p>\n" << endl;
     } else {
         cout << "Unknown query" << endl;
     }

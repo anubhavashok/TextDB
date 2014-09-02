@@ -2,6 +2,7 @@
 # script to run db process and link to nginx
 DB_PATH=$1
 VERBOSE=$2
+TEST=$3
 DB_EXEC_PATH="/Users/anubhav/Library/Developer/Xcode/DerivedData/TextDB-enrauoafgcwxovajefbwixuxkdug/Build/Products/Debug/TextDB"
 PORT_NUM=8000
 CWD=$(pwd)

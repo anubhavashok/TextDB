@@ -40,15 +40,16 @@ const char* toolName = "tdb";
 // TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29, 
 
 // Globals in order to handle SIGTERM signals
+namespace fs=boost::filesystem;
 static DB db;
 static std::string dbpath;
 
 void DBSigHandler(int signum);
 void DBSigHandler(int signum)
 {
-    std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
+    fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
     db.encodeAndSave(dbpath);
-    db.saveUncompressed(uncompresseddbpath);
+    db.saveUncompressed(uncompresseddbpath.string());
     exit(0);
 }
 
@@ -110,26 +111,20 @@ int main(int argc, char ** argv) {
         
         cout << "successful query: " << query_string << endl;
         std::string cmd = in[0];
-        cout << "Content-type: text/html\r\n"
-        << "\r\n"
-        << "<html>\n"
-        << "  <head>\n"
-        << "    <title>TextDB</title>\n"
-        << "  </head>\n"
-        << "  <body>\n"
-        << "    <h1>Welcome to TextDB</h1>\n";
-                db.handleQuery(in, cout);
-        cout << "  </body>\n"
-        << "</html>\n";
+        cout << "Content-type: text/plain\r\n"
+        << "\r\n";
+        db.handleQuery(in, cout);
         
         // Note: the fcgi_streambuf destructor will auto flush
+        /*
         time_t currentTime(time(0));
         if (currentTime - lastSaveTime >= 5) {
-            std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
+            fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
             db.encodeAndSave(dbpath);
-            db.saveUncompressed(uncompresseddbpath);
+            db.saveUncompressed(uncompresseddbpath.string());
             lastSaveTime = currentTime;
         }
+        */
     }
     // restore stdio streambufs
     cin.rdbuf(cin_streambuf);

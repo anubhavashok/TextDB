@@ -201,6 +201,7 @@ size_t BitReader::char2num(char c)
         return 31;
     } else {
         // invalid character
+        cout << "char is :" << c << endl;
         assert(false);
     }
 }
