@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		440DEBC019B2D699000DCA90 /* preformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440DEBBE19B2D699000DCA90 /* preformatter.cpp */; };
+		440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440DEBC119B56DA9000DCA90 /* preformatter.cpp */; };
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
 		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
 		44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69CB19ADC6CF00219F7B /* bitreader.cpp */; };
@@ -27,8 +27,8 @@
 
 /* Begin PBXFileReference section */
 		440DEBBD19B179F5000DCA90 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
-		440DEBBE19B2D699000DCA90 /* preformatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = preformatter.cpp; path = ../preformatter.cpp; sourceTree = "<group>"; };
-		440DEBBF19B2D699000DCA90 /* preformatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = preformatter.h; path = ../preformatter.h; sourceTree = "<group>"; };
+		440DEBC119B56DA9000DCA90 /* preformatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = preformatter.cpp; sourceTree = "<group>"; };
+		440DEBC219B56DA9000DCA90 /* preformatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = preformatter.h; sourceTree = "<group>"; };
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E802D19AAAC0400CB7442 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		44FB69C819ADB29000219F7B /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = db.cpp; sourceTree = "<group>"; };
@@ -67,8 +67,8 @@
 		442E802C19AAAC0400CB7442 /* TextDB */ = {
 			isa = PBXGroup;
 			children = (
-				440DEBBE19B2D699000DCA90 /* preformatter.cpp */,
-				440DEBBF19B2D699000DCA90 /* preformatter.h */,
+				440DEBC119B56DA9000DCA90 /* preformatter.cpp */,
+				440DEBC219B56DA9000DCA90 /* preformatter.h */,
 				442E802D19AAAC0400CB7442 /* main.cpp */,
 				440DEBBD19B179F5000DCA90 /* options.h */,
 				44FB69C819ADB29000219F7B /* db.cpp */,
@@ -130,7 +130,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				440DEBC019B2D699000DCA90 /* preformatter.cpp in Sources */,
+				440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */,
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,
 				44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */,
 				44FB69CA19ADB29000219F7B /* db.cpp in Sources */,
