@@ -23,7 +23,10 @@ namespace {
     /*! @brief Define command line options for this entrypoint */
     struct Options {
         
+        // path to store.bindb
         std::string dbpath;
+        
+        // verbose flag
         static bool verbose;
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
@@ -33,8 +36,6 @@ namespace {
             inputOpts.add_options()
             ("dbpath,d",po::value(&dbpath), "Path to a database file")
             ("verbose,v","(optional) verbose")
-            // example to add flags
-            // ("repin,p","(optional) flag to repin coastedPath headings")
             ;
             
             desc.add_options()

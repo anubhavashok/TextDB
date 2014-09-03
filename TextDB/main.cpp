@@ -44,6 +44,13 @@ namespace fs=boost::filesystem;
 static DB db;
 static std::string dbpath;
 
+/*
+ * DBSigHandler
+ * A function that encodes and saves DB to file on SIGTERM
+ * @param signum an int that represents the signal recieved
+ * In this case signum corressponds to SIGTERM (15)
+ */
+
 void DBSigHandler(int signum);
 void DBSigHandler(int signum)
 {
@@ -78,12 +85,12 @@ int main(int argc, char ** argv) {
         fstream dbfile;
         dbfile.open(dbpath, ios::out);
         dbfile.close();
-        cout << "Created new db file at " << dbpath << endl;
+        cout << "Created new db file at " << dbpath << "..." << endl;
     }
     if (Options::verbose) {
         cout << "done" << endl;
     }
-    time_t lastSaveTime(time(0));
+
     // Backup the stdio streambufs
     streambuf * cin_streambuf  = cin.rdbuf();
     streambuf * cout_streambuf = cout.rdbuf();
@@ -94,17 +101,18 @@ int main(int argc, char ** argv) {
     FCGX_Init();
     FCGX_InitRequest(&request, 0, 0);
     const char * query_string = "";
+    
     while (FCGX_Accept_r(&request) == 0) {
+        
         fcgi_streambuf cin_fcgi_streambuf(request.in);
         fcgi_streambuf cout_fcgi_streambuf(request.out);
         fcgi_streambuf cerr_fcgi_streambuf(request.err);
-        //char** env = request.envp;
-        //while (*(++env))
-        //cout << *env << endl;
+        
         query_string = FCGX_GetParam("QUERY_STRING", request.envp);
         std::vector<std::string> in;
         boost::split(in, query_string, boost::is_any_of("&"));
 
+        // set buffers
         cin.rdbuf(&cin_fcgi_streambuf);
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
@@ -113,43 +121,12 @@ int main(int argc, char ** argv) {
         std::string cmd = in[0];
         cout << "Content-type: text/plain\r\n"
         << "\r\n";
-        db.handleQuery(in, cout);
         
-        // Note: the fcgi_streambuf destructor will auto flush
-        /*
-        time_t currentTime(time(0));
-        if (currentTime - lastSaveTime >= 5) {
-            fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
-            db.encodeAndSave(dbpath);
-            db.saveUncompressed(uncompresseddbpath.string());
-            lastSaveTime = currentTime;
-        }
-        */
+        db.handleQuery(in, cout);
     }
     // restore stdio streambufs
     cin.rdbuf(cin_streambuf);
     cout.rdbuf(cout_streambuf);
     cerr.rdbuf(cerr_streambuf);
-    /*
 
-
-    // listen for requests
-    while (!cin.eof()) {
-        cout << "Query: ";
-        std::string raw;
-        std::getline(std::cin, raw);
-        std::vector<std::string> in;
-        boost::split(in, raw, boost::is_any_of(" "));
-        db.handleQuery(in);
-    }
-    std::string dbpath("/Users/anubhav/TextDB/store.bindb");
-    std::string uncompresseddbpath("/Users/anubhav/TextDB/store.text");
-    db.encodeAndSave(dbpath);
-    db.saveUncompressed(uncompresseddbpath);
-    cout << endl << "stored data at: " << dbpath << endl;
-    
-    DB newdb;
-    newdb.decodeAndLoad(dbpath);
-    cout << "loaded data from: " << dbpath << endl;
-     */
 }

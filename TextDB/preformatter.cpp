@@ -9,6 +9,13 @@
 #include "preformatter.h"
 #include <algorithm>
 #include <boost/algorithm/string.hpp>
+
+/*
+ * removePunctuations
+ * A function that removes all non-alphabet characters except ",.()" for all strings in input vector
+ * @param doc a vector of strings representing a text document
+ */
+
 void Preformatter::removePunctuations(std::vector<std::string>& doc)
 {
     for (std::string& s: doc) {
@@ -22,6 +29,12 @@ void Preformatter::removePunctuations(std::vector<std::string>& doc)
         s = fs;
     }
 }
+
+/*
+ * toLower
+ * A function that converts all characters to lowercase for all strings in input vector
+ * @param doc a vector of strings representing a text document
+ */
 
 void Preformatter::toLower(std::vector<std::string>& doc)
 {

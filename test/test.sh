@@ -16,15 +16,15 @@ spawn-fcgi -p $PORT_NUM -n $DB_EXEC_PATH -d $DB_PATH &
 DB_PID=$!
 echo "TextDB running, PID (If anything goes wrong, manually stop TextDB using kill -15 <PID>): $DB_PID"
 
-i=0;
-testfilessize = 0
+i=0
+testfilessize=0
 for f in $CWD/files/*
     do
         echo "Adding file $f"
         A=$(printf "\\$(printf '%03o' $((97+$i)))")
         curl -i "localhost?adddoc&$A&$f" &> /dev/null
         curl -i "localhost?get&$A" &> /dev/null
-        testfilessize=$(( testfilessize+$(wc -c "$f" | awk '{print $1}')))
+        testfilessize=$(( testfilessize + $(wc -c "$f" | awk '{print $1}')))
         i=$((i+1))
     done
 

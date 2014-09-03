@@ -24,12 +24,13 @@ namespace fs = boost::filesystem;
 // max value is ~250,000 since there are only that many english words
 using widx = boost::dynamic_bitset<>;
 
-// index of a character
-// max value is 32, but only numbers up to 26 are used
-// stores a character instead of 8 bits for a char
-using cidx = std::bitset<5>;
-
-
+/*
+ * serializeDoc
+ * A function that converts each word in a text document into its equivalent index in the Word Index
+ * Adds an entry to the word index on encountering a new unique word
+ * @param doc a vector of strings representing a text document
+ * @return a vector of widxs representing the right index to each word
+ */
 
 std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
 {
@@ -42,12 +43,27 @@ std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
     return res;
 }
 
+/*
+ * uint2widx
+ * A helper function to generate a bitset of nbits containing input value
+ * NOTE: nbits is a member variable to db indicating the current size of a Word Index index
+ * @param i an unsigned long that will be the numerical value of the bitset when created
+ * @return a widx (boost::dynamic_bitset<>) that is nbits large and holds the value of i
+ */
+
 widx DB::uint2widx(unsigned long i)
 {
     assert(i < pow(2, nbits));
     widx res = boost::dynamic_bitset<>(nbits, i);
     return res;
 }
+
+/*
+ * addWord
+ * A function that adds the word to the Word Index if new and unique OR returns the words appropriate widx
+ * @param word a string containing the word that is to be added/looked up
+ * @return a widx representing the index of the input word in the Word Index
+ */
 
 widx DB::addWord(std::string word)
 {
@@ -59,18 +75,25 @@ widx DB::addWord(std::string word)
     if (word2idx.count(word)) {
         widx idx = word2idx[word];
         assert(idx.to_ulong() < pow(2, nbits));
-        // assert(idx2word[idx] == word);
+        assert(idx2word[idx] == word);
         return idx;
     } else {
         // careful if parallel
         // len might have changed
         size_t len = idx2word.size();
-        widx idx = uint2widx((unsigned long)len);//convert len to idx;
+        widx idx = uint2widx((unsigned long)len);
         word2idx[word] = idx;
         idx2word[idx] = word;
         return idx;
     }
 }
+
+/*
+ * handleQuery
+ * A function that takes in a query string and performs the correct query (ADD, ADDDOC, GET), outputting updates to the provided out stream
+ * @param in a vector of tokenized strings representing the input command and args
+ * @param htmlout an ostream& referring to the appropriate output stream (in this case plaintext html)
+ */
 
 void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 {
@@ -112,7 +135,6 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
             }
             text.push_back("\n");
         }
-        // index word and add to db
         add(name, text);
         htmlout << "Added " << in[2] << endl;
         
@@ -131,6 +153,13 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 }
 
 
+/*
+ * add
+ * A function that adds a <string, vector<string> > key value pair to the DB
+ * @param name a string that represetnts the key
+ * @param text a vector of strings representing the value (text document)
+ */
+
 void DB::add(std::string name, std::vector<std::string> text)
 {
     Preformatter::removePunctuations(text);
@@ -142,6 +171,14 @@ void DB::add(std::string name, std::vector<std::string> text)
     std::vector<widx> serializedDoc = serializeDoc(text);
     storage[name] = serializedDoc;
 }
+
+
+/*
+ * get
+ * A function queries the DB and returns a deserialized text doc corresponding to the key provided
+ * @param name a string representing the requested key
+ * @return a vector of strings representing a deserialized text doc
+ */
 
 std::vector<std::string> DB::get(std::string name)
 {
@@ -157,9 +194,14 @@ std::vector<std::string> DB::get(std::string name)
 }
 
 
+/*
+ * encodeAndSave
+ * A function that byte encodes the DB and saves it to disk
+ * @param path a string containing the absolute path of the store.bindb file
+ */
+
 void DB::encodeAndSave(std::string path)
 {
-    // Fix this after creating BitReader
     BitReader bitReader;
     
     // set num words (max val 2^18 for possible eng words)
@@ -213,6 +255,12 @@ void DB::encodeAndSave(std::string path)
     
     docBitReader.saveToFile(path + ".kvp");
 }
+
+/*
+ * decodeAndLoad
+ * A function that decodes a byte encoded form of the DB and creates an in memory usable form
+ * @param path a string containing the absolute path to the store.bindb file
+ */
 
 void DB::decodeAndLoad(std::string path)
 {
@@ -277,6 +325,11 @@ void DB::decodeAndLoad(std::string path)
     
 }
 
+/*
+ * printIndex
+ * A debug function that prints the words present in the Word Index
+ */
+
 void DB::printIndex()
 {
     for (std::pair<widx, std::string> wordPair: idx2word) {
@@ -284,12 +337,20 @@ void DB::printIndex()
     }
 }
 
+/*
+ * saveUncompressed
+ * A function that saves the DB in a uncompressed format to enable benchmarks and comparisons
+ * @param path a string containing the location of the uncompressed text file
+ */
+
 void DB::saveUncompressed(std::string path)
 {
     ofstream fout(path);
     fout << idx2word.size() << endl;
+    
+    // Don't output wordIndex for true comparision
     for (std::pair<widx, std::string> wordPair: idx2word) {
-        fout << wordPair.second.length() << "|" << wordPair.second << endl;
+        //fout << wordPair.second.length() << "|" << wordPair.second << endl;
     }
     fout << "DOCUMENTS" << endl;
     for (std::pair<std::string, std::vector<widx>> doc: storage) {

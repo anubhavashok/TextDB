@@ -19,6 +19,12 @@ using namespace std;
 #include <boost/filesystem.hpp>
 
 
+/*
+ * BitReader
+ * Constructor that constructs a bitreader that wraps a provided data vector
+ * @param data a const reference vector of chars containing the compressed/byte encoded characters read in from a file
+ */
+
 BitReader::BitReader(const std::vector<char>& data)
 {
     for (char c: data) {
@@ -28,12 +34,23 @@ BitReader::BitReader(const std::vector<char>& data)
     end = false;
 }
 
+/*
+ * BitReader
+ * Constructor that constructs an empty bitreader
+ */
+
 BitReader::BitReader()
 {
     data = std::vector<char>();
     pos = 0;
     end = false;
 }
+
+/*
+ * BitReader
+ * Constructor that constructs a bitreader from a file
+ * @param path a string containing the path to the file that the bitreader wraps
+ */
 
 BitReader::BitReader(std::string path)
 {
@@ -60,6 +77,11 @@ BitReader::BitReader(std::string path)
     end = false;
 }
 
+/*
+ * getNextBit
+ * Access function to read next bit from characters vector
+ * @return a bool equivalent to the state of next bit
+ */
 
 bool BitReader::getNextBit()
 {
@@ -78,6 +100,13 @@ bool BitReader::getNextBit()
     return mask & c;
 }
 
+/*
+ * getNextBits
+ * Access function to read next nbits
+ * @param nbits a size_t that represents the number of bits to return
+ * @return a dynamic_bitset of size nbits that contains the next nbits
+ */
+
 boost::dynamic_bitset<> BitReader::getNextBits(size_t nbits)
 {
     if (eof()) {
@@ -93,10 +122,25 @@ boost::dynamic_bitset<> BitReader::getNextBits(size_t nbits)
     return mydata;
 }
 
+/*
+ * getNextString
+ * Convenience function that reads next bits as a string of charsize 5
+ * @param stringsize a size_t representing size of the string to read
+ * @return a string that is of size stringsize
+ */
+
 std::string BitReader::getNextString(size_t stringsize)
 {
     return getNextString(stringsize, 5);
 }
+
+/*
+ * getNextString
+ * Convenience function that reads next bits as a string of charsize ncharbits
+ * @param stringsize a size_t representing size of the string to read
+ * @param ncharbits a size_t representing the size of each character
+ * @return a string that is of size stringsize
+ */
 
 std::string BitReader::getNextString(size_t stringsize, size_t ncharbits)
 {
@@ -110,10 +154,22 @@ std::string BitReader::getNextString(size_t stringsize, size_t ncharbits)
     return word;
 }
 
+/*
+ * eof
+ * Function that returns true if the bitreader has no more bits to read
+ * @return a bool that indicates if there are anymore bits left to read or not
+ */
+
 bool BitReader::eof()
 {
     return end;
 }
+
+/*
+ * setNextBit
+ * A function that sets the next bit to true or false
+ * @param bit a bool that the next bit is set to
+ */
 
 void BitReader::setNextBit(bool bit)
 {
@@ -130,6 +186,13 @@ void BitReader::setNextBit(bool bit)
     pos++;
 }
 
+/*
+ * setNextBits
+ * A function that sets the next nbits to match mydata
+ * @param mydata an unsigned long representing the value to set the next nbits tos
+ * @param nbits a size_t representing the number of bits to set
+ */
+
 void BitReader::setNextBits(unsigned long mydata, size_t nbits)
 {
     size_t mask = 1;
@@ -143,10 +206,23 @@ void BitReader::setNextBits(unsigned long mydata, size_t nbits)
     }
 }
 
+/*
+ * setNextString
+ * A function that sets the next bits to word (where each character is 5bits)
+ * @param word a string that contains the value to set the next bits to
+ */
+
 void BitReader::setNextString(std::string word)
 {
     setNextString(word, 5);
 }
+
+/*
+ * setNextString
+ * A function that sets the next bits to word (where each character is ncharbits)
+ * @param word a string that contains the value to set the next bits to
+ * @param ncharbits a size_t representing the number of bits to encode a character in
+ */
 
 void BitReader::setNextString(std::string word, size_t ncharbits)
 {
@@ -159,10 +235,22 @@ void BitReader::setNextString(std::string word, size_t ncharbits)
     }
 }
 
+/*
+ * remainingChars
+ * A function that returns the number of bits remaining in the current character
+ * @return a size_t representing the number of bits remaining
+ */
+
 size_t BitReader::remainingChars()
 {
     return data.size() - pos/charsize;
 }
+
+/*
+ * saveToFile
+ * A function that compresses and saves the current data to file
+ * @param path a string that contains the absolute path to the file the data is to be saved to
+ */
 
 void BitReader::saveToFile(std::string path)
 {
@@ -177,6 +265,11 @@ void BitReader::saveToFile(std::string path)
     fout.close();
 }
 
+/*
+ * print
+ * Debug function that prints out the current data as characters
+ */
+
 void BitReader::print()
 {
     for (char c: data) {
@@ -184,6 +277,12 @@ void BitReader::print()
     }
 }
 
+/*
+ * char2num
+ * A convenience function that converts a character to a number for encoding
+ * @param c a char representing the character to be converted
+ * @param a size_t representing the number
+ */
 
 size_t BitReader::char2num(char c)
 {
@@ -205,6 +304,13 @@ size_t BitReader::char2num(char c)
         assert(false);
     }
 }
+
+/*
+ * num2char
+ * A convenience function that converts a number to the appropriate character
+ * @param num a size_t representing the number to be converted
+ * @param a char representing the converted char
+ */
 
 char BitReader::num2char(size_t num)
 {

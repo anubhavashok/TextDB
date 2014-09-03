@@ -25,11 +25,6 @@ private:
     // max value is ~250,000 since there are only that many english words
     using widx = boost::dynamic_bitset<>;
     
-    // index of a character
-    // max value is 32, but only numbers up to 26 are used
-    // stores a character instead of 8 bits for a char
-    using cidx = std::bitset<5>;
-    
     // maps index to word
     struct Comparer {
         bool operator() (const boost::dynamic_bitset<> &b1, const boost::dynamic_bitset<> &b2) const {
