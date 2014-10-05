@@ -61,7 +61,6 @@ void DBSigHandler(int signum)
 }
 
 int main(int argc, char ** argv) {
-    
     po::options_description desc("Shows the search space");
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
@@ -90,7 +89,7 @@ int main(int argc, char ** argv) {
     if (Options::verbose) {
         cout << "done" << endl;
     }
-
+    
     // Backup the stdio streambufs
     streambuf * cin_streambuf  = cin.rdbuf();
     streambuf * cout_streambuf = cout.rdbuf();

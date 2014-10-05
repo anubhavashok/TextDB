@@ -20,10 +20,10 @@ i=0
 testfilessize=0
 for f in $CWD/files/*
     do
-        echo "Adding file $f"
         A=$(printf "\\$(printf '%03o' $((97+$i)))")
+        echo "Adding file $f to $A"
         curl -i "localhost?adddoc&$A&$f" &> /dev/null
-        curl -i "localhost?get&$A" &> /dev/null
+        curl -i "localhost/get?$A" &> /dev/null
         testfilessize=$(( testfilessize + $(wc -c "$f" | awk '{print $1}')))
         i=$((i+1))
     done

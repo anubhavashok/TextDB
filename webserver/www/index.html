@@ -1,0 +1,15 @@
+<html>
+<body>
+<h1>Welcome to TextDB</h1>
+<h2>Available docs</h2>
+<form action="/search">
+<input placeholder="Search" name="q"></input>
+<input type="submit"></input>
+</form>
+<ul>
+<% for(var i = 0; i < availableDocs.length; i++) { %>
+    <li> <a href="/get?<%= availableDocs[i]%>"> <%= availableDocs[i]%> </a></li>
+<% } %>
+</ul>
+</body>
+</html>

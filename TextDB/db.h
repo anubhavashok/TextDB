@@ -55,7 +55,8 @@ public:
     void encodeAndSave(std::string path);
     void decodeAndLoad(std::string path);
     void saveUncompressed(std::string path);
-    
+    std::map<std::string, std::vector<std::string> > search(std::string queryString);
+
     void printIndex();
 };
 

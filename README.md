@@ -2,7 +2,7 @@ TextDB
 ======
 
 TextDB is a database to store and query text.
-It is a highly efficient and stores text files in a highly compressed format.
+It is highly efficient and stores text files in a highly compressed format.
 It aims to achieve speed and performance when processing a high load of queries
 
 It compresses text documents by first creating a text index which stores all unique words found in the document and then subsequently using snappy (compression lib by google) to furhter compress the db.

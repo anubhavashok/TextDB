@@ -7,6 +7,7 @@
 //
 
 #include "db.h"
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iostream>
@@ -147,6 +148,35 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         for (std::string word: res) {
             htmlout << word << " ";
         }
+    } else if (cmd == "list") {
+        // get all keys
+        for (auto entry: storage) {
+            htmlout << entry.first << endl;
+        }
+    } else if (cmd == "search") {
+        std::string queryString = in[1].substr(2) + "+";
+        htmlout << "Search: ";
+        std::vector<std::string> query;
+        boost::split(query, queryString, boost::is_any_of(" +"));
+        for (std::string w: query) {
+            htmlout << w << " ";
+        }
+        htmlout << endl;
+        std::map<std::string, std::vector<std::string> > results = this->search(queryString);
+        std::string resultString = "{\n";
+        for (auto resultPair : results) {
+            resultString += "\"";
+            resultString += resultPair.first;
+            resultString += "\":";
+
+            resultString += "\"";
+            for (std::string word : resultPair.second) {
+                resultString += word + " ";
+            }
+            resultString += "\",\n";
+        }
+        resultString += "}";
+        htmlout << resultString << endl;
     } else {
         cout << "Unknown query" << endl;
     }
@@ -363,4 +393,58 @@ void DB::saveUncompressed(std::string path)
         fout << endl;
     }
     fout.close();
+}
+
+
+
+bool widxMatch (const widx& a, const widx& b) {
+    return (a.to_ulong() == b.to_ulong());
+}
+
+std::map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
+    std::vector<std::string> query;
+    boost::split(query, queryString, boost::is_any_of(" +"));
+    
+    std::map<std::string, std::vector<std::string> > results;
+    std::vector<widx> queryIndexes;
+    // get all widxs
+    for (std::string queryWord: query) {
+        if (word2idx.count(queryWord)) {
+            queryIndexes.push_back(word2idx[queryWord]);
+        }
+    }
+    if (queryIndexes.empty()) {
+        // return results not found;
+        return results;
+    }
+    for (auto docPair : storage) {
+        std::string docName = docPair.first;
+        std::vector<widx> doc = docPair.second;
+        for (size_t i = 0; i < doc.size(); i++) {
+            widx word = doc[i];
+            size_t j = 0;
+            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
+                j++;
+            }
+            if (j >= queryIndexes.size() - 1) {
+                // full match
+                // get 5 before start and 5 after start
+                int low = (int)i - std::min((int)i, 5);
+                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
+                for (size_t k = low; k < high; k++) {
+                    std::string resWord = idx2word[doc[k]];
+                    if (results.count(docName) == 0) {
+                        results[docName] = std::vector<std::string>();
+                        assert(results.count(docName) > 0);
+                    }
+                    results[docName].push_back(resWord);
+                }
+            } else if (j >= queryIndexes.size()/2) {
+                // partial match
+            } else {
+                
+            }
+        }
+    }
+    return results;
 }
