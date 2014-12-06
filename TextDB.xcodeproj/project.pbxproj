@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
+		440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440281101A32CF9B00C1FA11 /* sentiment.cpp */; };
 		440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440DEBC119B56DA9000DCA90 /* preformatter.cpp */; };
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
 		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
@@ -27,8 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		440281101A32CF9B00C1FA11 /* sentiment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sentiment.cpp; sourceTree = "<group>"; };
+		440281111A32CF9B00C1FA11 /* sentiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sentiment.h; sourceTree = "<group>"; };
 		440DEBBD19B179F5000DCA90 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
-
 		440DEBC119B56DA9000DCA90 /* preformatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = preformatter.cpp; sourceTree = "<group>"; };
 		440DEBC219B56DA9000DCA90 /* preformatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = preformatter.h; sourceTree = "<group>"; };
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +70,6 @@
 		442E802C19AAAC0400CB7442 /* TextDB */ = {
 			isa = PBXGroup;
 			children = (
-
 				440DEBC119B56DA9000DCA90 /* preformatter.cpp */,
 				440DEBC219B56DA9000DCA90 /* preformatter.h */,
 				442E802D19AAAC0400CB7442 /* main.cpp */,
@@ -78,6 +78,8 @@
 				44FB69C919ADB29000219F7B /* db.h */,
 				44FB69CB19ADC6CF00219F7B /* bitreader.cpp */,
 				44FB69CC19ADC6CF00219F7B /* bitreader.h */,
+				440281101A32CF9B00C1FA11 /* sentiment.cpp */,
+				440281111A32CF9B00C1FA11 /* sentiment.h */,
 			);
 			path = TextDB;
 			sourceTree = "<group>";
@@ -134,10 +136,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */,
-
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,
 				44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */,
 				44FB69CA19ADB29000219F7B /* db.cpp in Sources */,
+				440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,7 +14,7 @@ app.engine('html', require('ejs').renderFile);
 var PORT_NUM = 3001;
 
 
-app.get("/console", function(err, res) {
+app.get("/console", function(req, res) {
     async.waterfall([
         function(callback) {
             request.get("http://localhost/list/", function(error, response, body){
@@ -27,6 +27,35 @@ app.get("/console", function(err, res) {
     });
 
 });
+
+app.get("/get", function(req, res) {
+    var query = req.query;
+    var name = query.name;
+    console.log("Getting: " + name);
+    var url = "http://localhost/get?" + name;
+    request.get(url, function(error, response, body) {
+        res.type('text/plain');
+        res.send(body);
+    });
+});
+
+app.get("/adddoc", function(req, res) {
+
+    var query = req.query;
+    var name = query.name;
+    var path = query.path;
+    var url = "http://localhost?adddoc&"+name+"&"+path;
+    console.log(name);
+    request.get(url, function(error, response, body) {
+        res.send("Added: " +  name);
+    });
+
+});
+
+app.get("/", function(req, res) {
+    res.redirect("/console");
+});
+
 
 var server = app.listen(PORT_NUM);
 console.log('Listening on port ' + server.address().port);

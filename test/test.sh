@@ -8,10 +8,11 @@ rm "$CWD/store.bindb.kvp"
 rm "$CWD/store.text"
 
 DB_PATH="$CWD/store.bindb"
+DATA_PATH="$CWD/data"
 VERBOSE="-v"
 DB_EXEC_PATH="/Users/anubhav/Library/Developer/Xcode/DerivedData/TextDB-enrauoafgcwxovajefbwixuxkdug/Build/Products/Debug/TextDB"
 PORT_NUM=8000
-spawn-fcgi -p $PORT_NUM -n $DB_EXEC_PATH -d $DB_PATH &
+spawn-fcgi -p $PORT_NUM -n $DB_EXEC_PATH -d $DB_PATH -a $DATA_PATH &
 
 DB_PID=$!
 echo "TextDB running, PID (If anything goes wrong, manually stop TextDB using kill -15 <PID>): $DB_PID"

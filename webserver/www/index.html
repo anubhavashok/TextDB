@@ -1,14 +1,23 @@
 <html>
 <body>
 <h1>Welcome to TextDB</h1>
-<h2>Available docs</h2>
-<form action="/search">
+<!-- fix this part, don't hardcode server name for security reasons -->
+<form action="http://localhost/search">
 <input placeholder="Search" name="q"></input>
 <input type="submit"></input>
 </form>
+
+<form action="/adddoc">
+<h3>Add a document!</h3>
+<input placeholder="Name" name="name"></input>
+<input placeholder="Path" name="path"></input>
+<input type="submit"></input>
+</form>
+
+<h2>Available docs</h2>
 <ul>
 <% for(var i = 0; i < availableDocs.length; i++) { %>
-    <li> <a href="/get?<%= availableDocs[i]%>"> <%= availableDocs[i]%> </a></li>
+    <li> <a href="/get?name=<%= availableDocs[i]%>"> <%= availableDocs[i]%> </a></li>
 <% } %>
 </ul>
 </body>

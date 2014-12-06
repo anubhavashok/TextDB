@@ -26,6 +26,9 @@ namespace {
         // path to store.bindb
         std::string dbpath;
         
+        // path to data - sentiment analysis etc.
+        std::string datapath;
+        
         // verbose flag
         static bool verbose;
         
@@ -35,6 +38,7 @@ namespace {
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
             ("dbpath,d",po::value(&dbpath), "Path to a database file")
+            ("datapath,a",po::value(&datapath), "Path to data files")
             ("verbose,v","(optional) verbose")
             ;
             

@@ -25,6 +25,12 @@ namespace fs = boost::filesystem;
 // max value is ~250,000 since there are only that many english words
 using widx = boost::dynamic_bitset<>;
 
+
+DB::DB(fs::path data)
+: sentimentAnaylsis(data / fs::path("negative.txt"), data / fs::path("positive.txt"))
+{
+}
+
 /*
  * serializeDoc
  * A function that converts each word in a text document into its equivalent index in the Word Index
@@ -142,6 +148,8 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     } else if (cmd == "get") {
         assert(in.size() == 2);
         htmlout << "GET " << name << endl;
+        double score = getSentimentScore(name);
+        htmlout << "Sentiment: " << score << endl;
         
         std::vector<std::string> res;
         res = get(name);
@@ -169,15 +177,18 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
             resultString += resultPair.first;
             resultString += "\":";
 
-            resultString += "\"";
-            for (std::string word : resultPair.second) {
-                resultString += word + " ";
+            resultString += "[";
+            for (std::string str : resultPair.second) {
+                resultString += "\"" + str + "\",\n";
             }
-            resultString += "\",\n";
+            resultString += "],\n";
         }
         resultString += "}";
         htmlout << resultString << endl;
-    } else {
+    } else if (cmd == "sentiment") {
+        double score = getSentimentScore(name);
+        htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
+    }else {
         cout << "Unknown query" << endl;
     }
 }
@@ -431,20 +442,28 @@ std::map<std::string, std::vector<std::string> >  DB::search(std::string querySt
                 // get 5 before start and 5 after start
                 int low = (int)i - std::min((int)i, 5);
                 int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
+                std::string resString = "";
                 for (size_t k = low; k < high; k++) {
                     std::string resWord = idx2word[doc[k]];
                     if (results.count(docName) == 0) {
                         results[docName] = std::vector<std::string>();
                         assert(results.count(docName) > 0);
                     }
-                    results[docName].push_back(resWord);
+                    resString += resWord + " ";
                 }
+                results[docName].push_back(resString);
             } else if (j >= queryIndexes.size()/2) {
                 // partial match
             } else {
-                
+                // TODO: output error or something
             }
         }
     }
     return results;
+}
+
+double DB::getSentimentScore(std::string name)
+{
+    vector<string> text = get(name);
+    return sentimentAnaylsis.analyse(text);
 }

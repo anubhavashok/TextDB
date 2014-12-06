@@ -41,7 +41,7 @@ const char* toolName = "tdb";
 
 // Globals in order to handle SIGTERM signals
 namespace fs=boost::filesystem;
-static DB db;
+DB* db = nullptr;
 static std::string dbpath;
 
 /*
@@ -55,8 +55,8 @@ void DBSigHandler(int signum);
 void DBSigHandler(int signum)
 {
     fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
-    db.encodeAndSave(dbpath);
-    db.saveUncompressed(uncompresseddbpath.string());
+    db->encodeAndSave(dbpath);
+    db->saveUncompressed(uncompresseddbpath.string());
     exit(0);
 }
 
@@ -66,7 +66,11 @@ int main(int argc, char ** argv) {
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
     signal(SIGTERM, DBSigHandler);
 
+    fs::path datapath = options.datapath;
+    
     dbpath = options.dbpath;
+    db = new DB(datapath);
+    assert(db != nullptr);
     if (Options::verbose) {
         cout << "Initializing DB object...";
     }
@@ -78,7 +82,7 @@ int main(int argc, char ** argv) {
         cout << "Decoding and loading db file...";
     }
     if (boost::filesystem::exists(dbpath)) {
-        db.decodeAndLoad(dbpath);
+        db->decodeAndLoad(dbpath);
     } else {
         // just create file
         fstream dbfile;
@@ -121,7 +125,7 @@ int main(int argc, char ** argv) {
         cout << "Content-type: text/plain\r\n"
         << "\r\n";
         
-        db.handleQuery(in, cout);
+        db->handleQuery(in, cout);
     }
     // restore stdio streambufs
     cin.rdbuf(cin_streambuf);

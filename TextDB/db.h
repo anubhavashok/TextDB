@@ -13,8 +13,11 @@
 #include <map>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include "sentiment.h"
+#include <boost/filesystem.hpp>
 
 using namespace std;
+namespace fs = boost::filesystem;
 
 class DB
 {
@@ -39,7 +42,13 @@ private:
     // stores text data
     // by mapping key name to vectors of widxs representing docs
     std::map<std::string, std::vector<widx>> storage;
+    
+    // Sentiment Analysis
+    SentimentAnalysis sentimentAnaylsis;
 public:
+    
+    DB(fs::path data);
+    
     std::vector<widx> serializeDoc(std::vector<std::string> doc);
     std::vector<widx> serializeDoc(std::string path);
     
@@ -57,6 +66,9 @@ public:
     void saveUncompressed(std::string path);
     std::map<std::string, std::vector<std::string> > search(std::string queryString);
 
+    // Text Mining
+    double getSentimentScore(std::string name);
+    
     void printIndex();
 };
 
