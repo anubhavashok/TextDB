@@ -45,6 +45,7 @@ private:
     
     // Sentiment Analysis
     SentimentAnalysis sentimentAnaylsis;
+
 public:
     
     DB(fs::path data);

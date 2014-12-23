@@ -3,6 +3,7 @@
 var express = require('express');
 var async = require('async');
 var request = require('request');
+var querystring = require('querystring');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.get("/console", function(req, res) {
 
 });
 
+// TODO: backwards compatability, to transition to new format
 app.get("/get", function(req, res) {
     var query = req.query;
     var name = query.name;
@@ -38,6 +40,29 @@ app.get("/get", function(req, res) {
         res.send(body);
     });
 });
+
+app.get("/get/:name", function(req, res) {
+    var name = querystring.unescape(req.params.name);
+    console.log("Getting: " + name);
+    var url = "http://localhost/get?" + name;
+    request.get(url, function(error, response, body) {
+        res.type('text/plain');
+        res.send(body);
+    });
+});
+
+
+app.get("/get/:name/getSentence/:number", function(req, res) {
+    var name = querystring.unescape(req.params.name);
+    var number = querystring.unescape(req.params.number);
+    console.log("Getting sentence number: " + number + " from doc: " + name);
+    var url = "http://localhost/get?" + name;
+    request.get(url, function(error, response, body) {
+        res.type('text/plain');
+        res.send(body);
+    });
+});
+
 
 app.get("/adddoc", function(req, res) {
 
