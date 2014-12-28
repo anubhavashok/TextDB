@@ -18,6 +18,7 @@
 #include "options.h"
 #include "preformatter.h"
 #include <boost/algorithm/string.hpp>
+#include <string.h>
 
 namespace fs = boost::filesystem;
 
@@ -113,16 +114,20 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         htmlout << "ADD " << name << "\n";
 
         // have either text or path to doc
+        std::string rawtext = urlDecode(in[2]);
         std::vector<std::string> text;
-        for (size_t i = 2; i < in.size(); i++) {
-            text.push_back(in[i]);
-        }
+        boost::split(text, rawtext, boost::is_any_of(" "));
+
         // index word and add to db
         add(name, text);
         for (std::string word: text) {
             htmlout << word << " ";
         }
 
+    } else if (cmd == "remove") {
+        // TODO: mark words in deprecated text document in word list and lazy remove
+        bool success = remove(name);
+        htmlout << success << endl;
     } else if (cmd == "adddoc") {
         assert(in.size() >= 3);
         htmlout << "ADDDOC " << name << "\n";
@@ -187,8 +192,19 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         htmlout << resultString << endl;
     } else if (cmd == "sentiment") {
         double score = getSentimentScore(name);
-        htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
-    }else {
+        //htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
+        htmlout << score;
+    } else if (cmd == "size") {
+        if (storage.count(name) == 0) {
+            htmlout << -1;
+            return;
+        }
+        size_t size = storage[name].size();
+        htmlout << size << endl;
+    } else if (cmd == "sentence"){
+        size_t start = std::stoi(in[2], nullptr, 10);
+        htmlout << getSentence(name, start);
+    } else {
         cout << "Unknown query" << endl;
     }
 }
@@ -211,6 +227,22 @@ void DB::add(std::string name, std::vector<std::string> text)
     }
     std::vector<widx> serializedDoc = serializeDoc(text);
     storage[name] = serializedDoc;
+}
+
+/*
+ * remove
+ * A function that removes a <string, vector<string> > key value pair from the DB
+ * @param name a string that represetnts the key
+ */
+
+bool DB::remove(std::string name)
+{
+    if (storage.count(name) > 0) {
+        storage.erase(name);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
@@ -466,4 +498,106 @@ double DB::getSentimentScore(std::string name)
 {
     vector<string> text = get(name);
     return sentimentAnaylsis.analyse(text);
+}
+
+std::string DB::getSentence(std::string name, size_t start)
+{
+    widx period = uint2widx(28);
+    std::vector<widx> doc = storage[name];
+    std:string sentence = "";
+    for (size_t i = start; i < doc.size(); i++) {
+        widx idx = doc[i];
+        sentence += " " + idx2word[idx];
+        for (char c: idx2word[idx]) {
+            if (c == '.') {
+                return sentence;
+            }
+        }
+    }
+    return sentence;
+}
+
+// URL decode function stolen from: http://stackoverflow.com/questions/154536/encode-decode-urls-in-c
+/*std::string DB::urlDecode(string &SRC)
+{
+    std::string ret;
+    char ch;
+    int i, ii;
+    for (i=0; i<SRC.length(); i++) {
+        if (int(SRC[i])==37) {
+            sscanf(SRC.substr(i+1,2).c_str(), "%x", &ii);
+            ch=static_cast<char>(ii);
+            ret+=ch;
+            i=i+2;
+        } else {
+            ret+=SRC[i];
+        }
+    }
+    return (ret);
+}
+*/
+
+const char HEX2DEC[256] =
+{
+    /*       0  1  2  3   4  5  6  7   8  9  A  B   C  D  E  F */
+    /* 0 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 1 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 2 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 3 */  0, 1, 2, 3,  4, 5, 6, 7,  8, 9,-1,-1, -1,-1,-1,-1,
+    
+    /* 4 */ -1,10,11,12, 13,14,15,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 5 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 6 */ -1,10,11,12, 13,14,15,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 7 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    
+    /* 8 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* 9 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* A */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* B */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    
+    /* C */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* D */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* E */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
+    /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
+};
+
+std::string DB::urlDecode(std::string & sSrc)
+{
+    // Note from RFC1630: "Sequences which start with a percent
+    // sign but are not followed by two hexadecimal characters
+    // (0-9, A-F) are reserved for future extension"
+    
+    const unsigned char * pSrc = (const unsigned char *)sSrc.c_str();
+    const size_t SRC_LEN = sSrc.length();
+    const unsigned char * const SRC_END = pSrc + SRC_LEN;
+    // last decodable '%'
+    const unsigned char * const SRC_LAST_DEC = SRC_END - 2;
+    
+    char * const pStart = new char[SRC_LEN];
+    char * pEnd = pStart;
+    
+    while (pSrc < SRC_LAST_DEC)
+    {
+        if (*pSrc == '%')
+        {
+            char dec1, dec2;
+            if (-1 != (dec1 = HEX2DEC[*(pSrc + 1)])
+                && -1 != (dec2 = HEX2DEC[*(pSrc + 2)]))
+            {
+                *pEnd++ = (dec1 << 4) + dec2;
+                pSrc += 3;
+                continue;
+            }
+        }
+        
+        *pEnd++ = *pSrc++;
+    }
+    
+    // the last 2- chars
+    while (pSrc < SRC_END)
+        *pEnd++ = *pSrc++;
+    
+    std::string sResult(pStart, pEnd);
+    delete [] pStart;
+    return sResult;
 }

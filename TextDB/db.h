@@ -15,6 +15,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include "sentiment.h"
 #include <boost/filesystem.hpp>
+#include <boost/optional.hpp>
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -59,8 +60,11 @@ public:
     
     void add(std::string name, std::string path);
     void add(std::string name, std::vector<std::string> text);
+    bool remove(std::string name);
     std::vector<std::string> get(std::string name);
     widx uint2widx(unsigned long i);
+    std::string getSentence(std::string name, size_t start);
+
     
     void encodeAndSave(std::string path);
     void decodeAndLoad(std::string path);
@@ -71,6 +75,8 @@ public:
     double getSentimentScore(std::string name);
     
     void printIndex();
+    
+    static std::string urlDecode(string &SRC);
 };
 
 

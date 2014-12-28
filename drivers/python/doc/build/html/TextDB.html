@@ -1,0 +1,421 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>TextDB package &mdash; TextDB 1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="TextDB 1 documentation" href="index.html" />
+    <link rel="prev" title="Welcome to TextDB’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to TextDB’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TextDB 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="textdb-package">
+<h1>TextDB package<a class="headerlink" href="#textdb-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-TextDB.Cursor">
+<span id="textdb-cursor-module"></span><h2>TextDB.Cursor module<a class="headerlink" href="#module-TextDB.Cursor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TextDB.Cursor.Cursor">
+<em class="property">class </em><code class="descclassname">TextDB.Cursor.</code><code class="descname">Cursor</code><span class="sig-paren">(</span><em>_endpoint</em>, <em>key=None</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="TextDB.Cursor.Cursor.endpoint">
+<code class="descname">endpoint</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.Cursor.Cursor.endpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.Cursor.Cursor.exp">
+<code class="descname">exp</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.Cursor.Cursor.exp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="TextDB.Cursor.Cursor.get_next_sentence">
+<code class="descname">get_next_sentence</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor.get_next_sentence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the next sentence of the document.</p>
+<p>Does what you think it does.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Next sentence</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_next_sentence</span><span class="p">()</span>
+<span class="go">&quot;This is the first sentence of a.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_next_sentence</span><span class="p">()</span>
+<span class="go">&quot;This is the second sentence of a.&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TextDB.Cursor.Cursor.get_sentiment">
+<code class="descname">get_sentiment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor.get_sentiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the sentiment score of the document.</p>
+<p>Makes a GET request to the TextDB server which calculates sentiment score of the document specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">sentiment score</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_sentiment</span><span class="p">()</span>
+<span class="go">0.2156</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TextDB.Cursor.Cursor.get_size">
+<code class="descname">get_size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor.get_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get size of the document.</p>
+<p>Makes a get request to TextDB server and returns the number of words in the document specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">number of words in document</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_size</span><span class="p">()</span>
+<span class="go">102534</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TextDB.Cursor.Cursor.get_text">
+<code class="descname">get_text</code><span class="sig-paren">(</span><em>start=0</em>, <em>limit=0</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor.get_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the text in the document.</p>
+<p>Makes a get request to the TextDB server requesting for the text document.
+TODO: add start and limit functionality to enable user chunking of docs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> (<em>string</em>) &#8211; start word</li>
+<li><strong>limit</strong> (<em>string</em>) &#8211; number of words to get</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The text document</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+<span class="go">&quot;This is document a&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TextDB.Cursor.Cursor.get_word_frequency">
+<code class="descname">get_word_frequency</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.Cursor.Cursor.get_word_frequency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the word frequency table of document.</p>
+<p>TODO: Fetches the word frequency table by making a GET request to TextDB server.
+No precaching yet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dict containing the word frequency</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">get_word_frequency</span><span class="p">()</span>
+<span class="go">{&#39;word1&#39;: 10, &#39;word2&#39;: 11}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.Cursor.Cursor.key">
+<code class="descname">key</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.Cursor.Cursor.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.Cursor.Cursor.ptr">
+<code class="descname">ptr</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.Cursor.Cursor.ptr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.Cursor.Cursor.sentenceNumber">
+<code class="descname">sentenceNumber</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.Cursor.Cursor.sentenceNumber" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-TextDB.DB">
+<span id="textdb-db-module"></span><h2>TextDB.DB module<a class="headerlink" href="#module-TextDB.DB" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="TextDB.DB.TextDB">
+<em class="property">class </em><code class="descclassname">TextDB.DB.</code><code class="descname">TextDB</code><span class="sig-paren">(</span><em>_endpoint='http://localhost:3001'</em>, <em>username=None</em>, <em>password=None</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.DB.TextDB" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="TextDB.DB.TextDB.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>name</em>, <em>f</em>, <em>s=None</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.DB.TextDB.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new text document to TextDB.</p>
+<p>Makes a POST request to TextDB server with document encoded in URL.
+There is probably a better way to do this..</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; The name of the document to store (Non-numeric chars only)</li>
+<li><strong>f</strong> (<em>file</em>) &#8211; The file that contains the document</li>
+<li><strong>s</strong> (<em>string, optional</em>) &#8211; The string that contains the document</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;../d.txt&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="o">=</span><span class="s">&quot;This is document d&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span>
+<span class="go">&quot;This is document d&quot;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.DB.TextDB.endpoint">
+<code class="descname">endpoint</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.DB.TextDB.endpoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.DB.TextDB.exp">
+<code class="descname">exp</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.DB.TextDB.exp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="TextDB.DB.TextDB.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.DB.TextDB.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a cursor for document.</p>
+<p>Returns a cursor containing the url endpoint to access the doc that it references.
+NOTE: does not actually get anything at this point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the document to retrieve</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The DB cursor for the requested document</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#TextDB.Cursor.Cursor" title="TextDB.Cursor.Cursor">Cursor</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span>
+<span class="go">&lt;Cursor.Cursor&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="TextDB.DB.TextDB.key">
+<code class="descname">key</code><em class="property"> = None</em><a class="headerlink" href="#TextDB.DB.TextDB.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="TextDB.DB.TextDB.list">
+<code class="descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.DB.TextDB.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lists all documents in DB.</p>
+<p>Makes a GET request to TextDB server to get names of all available documents.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list containing strings of</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#TextDB.DB.TextDB.list" title="TextDB.DB.TextDB.list">list</a></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="TextDB.DB.TextDB.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#TextDB.DB.TextDB.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes an existing text document from TextDB.</p>
+<p>Makes a POST request to TextDB server with name.
+NOTE: does not remove words from word index yet.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The name of the document to store (Non-numeric chars only)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">indicating whether remove was successful or not</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;a&#39;, &#39;b&#39;, &#39;c&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">db</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+<span class="go">[&#39;b&#39;, &#39;c&#39;]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-TextDB">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-TextDB" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">TextDB package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-TextDB.Cursor">TextDB.Cursor module</a></li>
+<li><a class="reference internal" href="#module-TextDB.DB">TextDB.DB module</a></li>
+<li><a class="reference internal" href="#module-TextDB">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to TextDB&#8217;s documentation!</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/TextDB.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to TextDB’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">TextDB 1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Anubhav Ashok.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b2.
+    </div>
+  </body>
+</html>

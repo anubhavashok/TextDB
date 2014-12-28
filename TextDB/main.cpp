@@ -103,7 +103,7 @@ int main(int argc, char ** argv) {
     
     FCGX_Init();
     FCGX_InitRequest(&request, 0, 0);
-    const char * query_string = "";
+    std::string query_string = "";
     
     while (FCGX_Accept_r(&request) == 0) {
         
@@ -111,20 +111,20 @@ int main(int argc, char ** argv) {
         fcgi_streambuf cout_fcgi_streambuf(request.out);
         fcgi_streambuf cerr_fcgi_streambuf(request.err);
         
-        query_string = FCGX_GetParam("QUERY_STRING", request.envp);
+        query_string = FCGX_GetParam("REQUEST_URI", request.envp);
+        query_string = query_string.substr(1, query_string.size());
         std::vector<std::string> in;
-        boost::split(in, query_string, boost::is_any_of("&"));
+        boost::split(in, query_string, boost::is_any_of("&/"));
 
         // set buffers
         cin.rdbuf(&cin_fcgi_streambuf);
         cout.rdbuf(&cout_fcgi_streambuf);
         cerr.rdbuf(&cerr_fcgi_streambuf);
         
-        cout << "successful query: " << query_string << endl;
         std::string cmd = in[0];
         cout << "Content-type: text/plain\r\n"
         << "\r\n";
-        
+
         db->handleQuery(in, cout);
     }
     // restore stdio streambufs

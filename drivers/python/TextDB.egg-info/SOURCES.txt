@@ -1,0 +1,8 @@
+setup.py
+TextDB/Cursor.py
+TextDB/DB.py
+TextDB/__init__.py
+TextDB.egg-info/PKG-INFO
+TextDB.egg-info/SOURCES.txt
+TextDB.egg-info/dependency_links.txt
+TextDB.egg-info/top_level.txt
