@@ -19,6 +19,8 @@
 #include "preformatter.h"
 #include <boost/algorithm/string.hpp>
 #include <string.h>
+#include <boost/foreach.hpp>
+#include <collection.h>
 
 namespace fs = boost::filesystem;
 
@@ -30,6 +32,35 @@ using widx = boost::dynamic_bitset<>;
 DB::DB(fs::path data)
 : sentimentAnaylsis(data / fs::path("negative.txt"), data / fs::path("positive.txt"))
 {
+    // load collections
+    fs::path d = data / "collections";
+    fs::directory_iterator it(d), eod;
+    std::vector<std::string> collectionNames;
+    BOOST_FOREACH(fs::path p, std::make_pair(it, eod))
+    {
+        if(is_regular_file(p))
+        {
+            collectionNames.push_back(p.root_name().string());
+        }
+    }
+    
+    // get all collection names
+    // load all collections
+    for (std::string dirpath: collectionNames) {
+        std::string name, type;
+        std::tie(name, type) = parseCollectionsDirName(dirpath);
+        Encoder::CharacterEncoding encoding = Encoder::str2encoding(type);
+        Collection* c = new Collection(dirpath, encoding);
+        collections[name] = c;
+    }
+}
+
+std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string filename)
+{
+    // split at ., return both in pair
+    std::vector<std::string> args;
+    boost::split(args, filename, boost::is_any_of("-"));
+    return std::make_pair(args[0], args[1]);
 }
 
 /*
@@ -75,6 +106,7 @@ widx DB::uint2widx(unsigned long i)
 
 widx DB::addWord(std::string word)
 {
+    //  TODO:: replace with encoder->preformat(word)
     std::transform(word.begin(), word.end(), word.begin(), ::tolower);
     if (idx2word.size() >= pow(2, nbits)-1) {
         nbits++;
@@ -116,7 +148,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         // have either text or path to doc
         std::string rawtext = urlDecode(in[2]);
         std::vector<std::string> text;
-        boost::split(text, rawtext, boost::is_any_of(" "));
+        boost::split(text, rawtext, boost::is_any_of(" .,!:;\"()/"));
 
         // index word and add to db
         add(name, text);
@@ -141,7 +173,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         std::vector<std::string> words;
         while (!fin.eof()) {
             std::getline(fin, line);
-            boost::split(words, line, boost::is_any_of(" "));
+            boost::split(words, line, boost::is_any_of(" .,!:;\"()/"));
             for(std::string word: words) {
                 text.push_back(word);
             }
@@ -217,16 +249,23 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
  * @param text a vector of strings representing the value (text document)
  */
 
-void DB::add(std::string name, std::vector<std::string> text)
+bool DB::add(std::string collection, std::string name, std::vector<std::string> text)
 {
-    Preformatter::removePunctuations(text);
-    Preformatter::toLower(text);
+    // Preformatter::removePunctuations(text);
+    // Preformatter::toLower(text);
 
     if (idx2word.size() >= pow(2, nbits)) {
         nbits++;
     }
-    std::vector<widx> serializedDoc = serializeDoc(text);
-    storage[name] = serializedDoc;
+    if (!collections.count(collection)) {
+        cout << "Collection: " << collection << " does not exist!" << endl;
+        return false;
+    }
+    Collection* c = collections[collection];
+    return c->add(name, text);
+
+    //std::vector<widx> serializedDoc = serializeDoc(text);
+    //storage[name] = serializedDoc;
 }
 
 /*
@@ -601,3 +640,14 @@ std::string DB::urlDecode(std::string & sSrc)
     delete [] pStart;
     return sResult;
 }
+
+
+
+void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encoding)
+{
+    // add collection to db
+    Collection c = Collection(_name, _encoding);
+    collections.push_back(std::move(c));
+    // create collection file to save
+}
+

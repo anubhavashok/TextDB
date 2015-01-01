@@ -32,6 +32,9 @@ namespace {
         // verbose flag
         static bool verbose;
         
+        // memory_limit
+        size_t memory_limit;
+        
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
             po::variables_map vm;
@@ -39,6 +42,7 @@ namespace {
             inputOpts.add_options()
             ("dbpath,d",po::value(&dbpath), "Path to a database file")
             ("datapath,a",po::value(&datapath), "Path to data files")
+            ("mlimit,m",po::value(&memory_limit), "Memory limit in bytes")
             ("verbose,v","(optional) verbose")
             ;
             

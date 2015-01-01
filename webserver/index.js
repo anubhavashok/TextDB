@@ -61,14 +61,12 @@ app.get("/list", function(req, res) {
 });
 
 
-app.get("/get/:name/:start/:limit", function(req, res) {
+app.get("/get/:name", function(req, res) {
     var name = decodeURI(req.params.name);
     var key = req.query.key;
-    var start = decodeURI(req.params.start) ? decodeURI(req.params.start) : ;
-    var limit = decodeURI(req.params.limit);
     // verify key before serving request
     console.log("(new API) Getting: " + name);
-    var url = "http://localhost/get/" + name + "/" + start + "/" + limit;
+    var url = "http://localhost/get/" + name;
     request.get(url, function(error, response, body) {
         res.type('text/plain');
         console.log(body);

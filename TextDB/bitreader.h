@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include "encoder.h"
 
 class BitReader
 {
@@ -21,26 +22,21 @@ private:
     size_t pos;
     std::vector<char> data;
     bool end;
+    Encoder* encoder;
 public:
     // read
-    BitReader(const std::vector<char>& data);
-    BitReader(std::string path);
+    // UNUSED
+    BitReader(const std::vector<char>& data, Encoder::CharacterEncoding _encoding);
+    BitReader(Encoder::CharacterEncoding _encoding);
+    void read(std::string filePath, bool compressed);
+    void clear();
     bool getNextBit();
     boost::dynamic_bitset<> getNextBits(size_t nbits);
     std::string getNextString(size_t stringsize);
     std::string getNextString(size_t stringsize, size_t ncharbits);
     size_t remainingChars();
-    char num2char(size_t num);
     bool eof();
-    
-    // write
-    BitReader();
-    void setNextBit(bool bit);
-    void setNextBits(unsigned long data, size_t nbits);
-    void setNextString(std::string word);
-    void setNextString(std::string word, size_t ncharbits);
-    void saveToFile(std::string path);
-    size_t char2num(char c);
+
     
     static boost::dynamic_bitset<> num2widx(size_t i, size_t nbits);
     

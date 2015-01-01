@@ -16,6 +16,8 @@
 #include "sentiment.h"
 #include <boost/filesystem.hpp>
 #include <boost/optional.hpp>
+#include "collection.h"
+#include "encoder.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -46,6 +48,9 @@ private:
     
     // Sentiment Analysis
     SentimentAnalysis sentimentAnaylsis;
+    
+    std::map<std::string, Collection*> collections;
+    std::pair<std::string, std::string> parseCollectionsDirName(std::string);
 
 public:
     
@@ -58,8 +63,8 @@ public:
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
     
     
-    void add(std::string name, std::string path);
-    void add(std::string name, std::vector<std::string> text);
+    bool add(std::string collection, std::string name, std::string path);
+    bool add(std::string collection, std::string name, std::vector<std::string> text);
     bool remove(std::string name);
     std::vector<std::string> get(std::string name);
     widx uint2widx(unsigned long i);
@@ -77,6 +82,9 @@ public:
     void printIndex();
     
     static std::string urlDecode(string &SRC);
+    
+    ///////POST COLLECTIONS ERA
+    void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
 };
 
 
