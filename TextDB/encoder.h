@@ -25,8 +25,9 @@ public:
     virtual unsigned long encode(char c) = 0;
     virtual char decode(unsigned long i) = 0;
     virtual string preformat(string s) = 0;
-    virtual size_t charSize();
+    virtual size_t charSize() = 0;
     static CharacterEncoding str2encoding(std::string type);
+    static std::string encoding2str(CharacterEncoding _encoding);
 };
 
 class UnicodeEncoder: public Encoder

@@ -36,61 +36,76 @@ class Collection
         }
     };
 public:
+    Collection(fs::path path, Encoder::CharacterEncoding _encoding);
+
+    /* Public attributes */
+    
     const std::string name;
     
-    std::map<widx, std::string, Comparer> idx2word;
-    std::map<std::string, widx> word2idx;
+    /* Persistence/Management */
     
-    Collection(fs::path path, Encoder::CharacterEncoding _encoding);
     void loadWordIndex();
-    void load(std::string name);
-    
-    
+    bool load(std::string name);
     size_t size();
+    size_t size(std::string name);
     void kick();
+    void kick(std::string name);
     
+    /* API */
+    
+    // add
     bool add(std::string name, std::string path);
     bool add(std::string name, std::vector<std::string> text);
 
+    // get
+    std::vector<std::string> get(std::string name);
+    std::string getSentence(std::string name, size_t start);
+
+    // remove
+    bool remove(std::string name);
+    
+    // sentiment
+    double getSentimentScore(std::string name);
+    
+    // all words
+    std::vector<std::string> getWords();
+    
+    std::vector<std::string> listFiles();
+    
+    bool exists(std::string name);
     
 private:
+    
+    Collection(fs::path collectionPath);
+    
+    // WORD INDEX
+    std::map<widx, std::string, Comparer> idx2word;
+    std::map<std::string, widx> word2idx;
+
+    // STORAGE
+    std::map<std::string, std::vector<widx>> storage;
+
+    // I/O
     size_t nbits;
     BitReader bitReader;
     BitWriter bitWriter;
-    Collection(fs::path collectionPath);
     fs::path collectionPath;
     //Encoder::CharacterEncoding encoding;
     
-    std::map<std::string, std::vector<widx>> storage;
+    // widx-string (vice-versa)
+    std::vector<widx> serialize(std::vector<std::string> doc);
+    std::vector<std::string> deserialize(std::vector<widx> doc);
     
-    std::vector<widx> serializeDoc(std::vector<std::string> doc);
-    std::vector<widx> serializeDoc(std::string path);
-    
+    // add - helpers
     widx addWord(std::string word);
-    void handleQuery(std::vector<std::string> in, std::ostream& htmlout);
-    
-    
-    bool remove(std::string name);
-    std::vector<std::string> get(std::string name);
     widx uint2widx(unsigned long i);
-    std::string getSentence(std::string name, size_t start);
-    
-    
-    void encodeAndSave(std::string path);
-    void decodeAndLoad(std::string path);
-    void saveUncompressed(std::string path);
-    std::map<std::string, std::vector<std::string> > search(std::string queryString);
-    
-    // Text Mining
-    double getSentimentScore(std::string name);
-    
-    void printIndex();
-    
-    static std::string urlDecode(std::string &SRC);
-    
     std::vector<std::string> find_new_words(std::vector<std::string> doc);
     void aow(fs::path path, std::vector<widx> doc);
     void aow_words(std::vector<std::string> new_words);
+
+    
+    
+    std::map<std::string, std::vector<std::string> > search(std::string queryString);
 };
 
 #endif /* defined(__TextDB__collection__) */

@@ -25,16 +25,20 @@ public:
     void appendToFile(std::string path, bool compress);
     void clear();
     std::string string();
+    void print();
+    // void shift(int offset);
+    
+    Encoder* encoder;
 
 private:
     // number of bits in one character
     const size_t charsize = CHAR_BIT;
-    Encoder* encoder;
     size_t pos;
     std::vector<char> data;
     bool end;
 
     void setNextBit(bool bit);
+    char generateNewLastByte(char lastByte, char firstByte, int offset);
     
 };
 

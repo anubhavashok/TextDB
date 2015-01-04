@@ -20,7 +20,7 @@
 #include <boost/algorithm/string.hpp>
 #include <string.h>
 #include <boost/foreach.hpp>
-#include <collection.h>
+#include "collection.h"
 
 namespace fs = boost::filesystem;
 
@@ -30,27 +30,31 @@ using widx = boost::dynamic_bitset<>;
 
 
 DB::DB(fs::path data)
-: sentimentAnaylsis(data / fs::path("negative.txt"), data / fs::path("positive.txt"))
+: sentimentAnaylsis(data / fs::path("negative.txt"), data / fs::path("positive.txt")), datapath(data)
 {
     // load collections
     fs::path d = data / "collections";
+    if (!fs::exists(d)) {
+        fs::create_directories(d);
+    }
     fs::directory_iterator it(d), eod;
     std::vector<std::string> collectionNames;
     BOOST_FOREACH(fs::path p, std::make_pair(it, eod))
     {
-        if(is_regular_file(p))
+        if(fs::is_directory(p))
         {
-            collectionNames.push_back(p.root_name().string());
+            cout << p.stem().string() << endl;
+            collectionNames.push_back(p.stem().string());
         }
     }
     
     // get all collection names
     // load all collections
-    for (std::string dirpath: collectionNames) {
+    for (std::string collectionName: collectionNames) {
         std::string name, type;
-        std::tie(name, type) = parseCollectionsDirName(dirpath);
+        std::tie(name, type) = parseCollectionsDirName(collectionName);
         Encoder::CharacterEncoding encoding = Encoder::str2encoding(type);
-        Collection* c = new Collection(dirpath, encoding);
+        Collection* c = new Collection(datapath / "collections" / collectionName, encoding);
         collections[name] = c;
     }
 }
@@ -71,16 +75,6 @@ std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string file
  * @return a vector of widxs representing the right index to each word
  */
 
-std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
-{
-    std::vector<widx> res;
-    for (std::string word: doc) {
-        assert(word.length() < 32);
-        widx idx = addWord(word);
-        res.push_back(idx);
-    }
-    return res;
-}
 
 /*
  * uint2widx
@@ -90,13 +84,6 @@ std::vector<widx> DB::serializeDoc(std::vector<std::string> doc)
  * @return a widx (boost::dynamic_bitset<>) that is nbits large and holds the value of i
  */
 
-widx DB::uint2widx(unsigned long i)
-{
-    assert(i < pow(2, nbits));
-    widx res = boost::dynamic_bitset<>(nbits, i);
-    return res;
-}
-
 /*
  * addWord
  * A function that adds the word to the Word Index if new and unique OR returns the words appropriate widx
@@ -104,29 +91,6 @@ widx DB::uint2widx(unsigned long i)
  * @return a widx representing the index of the input word in the Word Index
  */
 
-widx DB::addWord(std::string word)
-{
-    //  TODO:: replace with encoder->preformat(word)
-    std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-    if (idx2word.size() >= pow(2, nbits)-1) {
-        nbits++;
-        cout << "increasing index size to " << nbits << endl;
-    }
-    if (word2idx.count(word)) {
-        widx idx = word2idx[word];
-        assert(idx.to_ulong() < pow(2, nbits));
-        assert(idx2word[idx] == word);
-        return idx;
-    } else {
-        // careful if parallel
-        // len might have changed
-        size_t len = idx2word.size();
-        widx idx = uint2widx((unsigned long)len);
-        word2idx[word] = idx;
-        idx2word[idx] = word;
-        return idx;
-    }
-}
 
 /*
  * handleQuery
@@ -138,7 +102,8 @@ widx DB::addWord(std::string word)
 void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 {
     std::string cmd = in[0];
-    std::string name = in[1];
+    std::string collection = in[1];
+    std::string name = in[2];
 
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
     if (cmd == "add") {
@@ -146,26 +111,26 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         htmlout << "ADD " << name << "\n";
 
         // have either text or path to doc
-        std::string rawtext = urlDecode(in[2]);
+        std::string rawtext = urlDecode(in[3]);
         std::vector<std::string> text;
         boost::split(text, rawtext, boost::is_any_of(" .,!:;\"()/"));
 
         // index word and add to db
-        add(name, text);
+        add(collection, name, text);
         for (std::string word: text) {
             htmlout << word << " ";
         }
 
     } else if (cmd == "remove") {
         // TODO: mark words in deprecated text document in word list and lazy remove
-        bool success = remove(name);
+        bool success = remove(collection, name);
         htmlout << success << endl;
     } else if (cmd == "adddoc") {
         assert(in.size() >= 3);
         htmlout << "ADDDOC " << name << "\n";
         
         // have either text or path to doc
-        fs::path docPath = in[2];
+        fs::path docPath = in[3];
         // read doc and load
         std::vector<std::string> text;
         ifstream fin(docPath.string());
@@ -179,63 +144,66 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
             }
             text.push_back("\n");
         }
-        add(name, text);
-        htmlout << "Added " << in[2] << endl;
+        add(collection, name, text);
+        htmlout << "Added " << in[3] << endl;
         
     } else if (cmd == "get") {
-        assert(in.size() == 2);
-        htmlout << "GET " << name << endl;
-        double score = getSentimentScore(name);
-        htmlout << "Sentiment: " << score << endl;
-        
+        //assert(in.size() == 2);
         std::vector<std::string> res;
-        res = get(name);
+        res = get(collection, name);
         for (std::string word: res) {
             htmlout << word << " ";
         }
-    } else if (cmd == "list") {
-        // get all keys
-        for (auto entry: storage) {
-            htmlout << entry.first << endl;
+    } else if (cmd == "listcollections") {
+        // get all collectionNames
+        std::string json = "[";
+        for (std::string s: listCollections()) {
+            json += "'" + s + "'";
         }
-    } else if (cmd == "search") {
-        std::string queryString = in[1].substr(2) + "+";
-        htmlout << "Search: ";
-        std::vector<std::string> query;
-        boost::split(query, queryString, boost::is_any_of(" +"));
-        for (std::string w: query) {
-            htmlout << w << " ";
+        json += "]";
+        htmlout << json;
+    } else if (cmd == "listdocs") {
+        // get all doc names
+        Collection* c = collections[collection];
+        std::string json = "[";
+        for (std::string s: c->listFiles()) {
+            json += "'" + s + "'";
         }
-        htmlout << endl;
-        std::map<std::string, std::vector<std::string> > results = this->search(queryString);
-        std::string resultString = "{\n";
-        for (auto resultPair : results) {
-            resultString += "\"";
-            resultString += resultPair.first;
-            resultString += "\":";
-
-            resultString += "[";
-            for (std::string str : resultPair.second) {
-                resultString += "\"" + str + "\",\n";
-            }
-            resultString += "],\n";
-        }
-        resultString += "}";
-        htmlout << resultString << endl;
+        json += "]";
+        htmlout << json;
+//    }else if (cmd == "search") {
+//        std::string queryString = in[1].substr(2) + "+";
+//        htmlout << "Search: ";
+//        std::vector<std::string> query;
+//        boost::split(query, queryString, boost::is_any_of(" +"));
+//        for (std::string w: query) {
+//            htmlout << w << " ";
+//        }
+//        htmlout << endl;
+//        std::map<std::string, std::vector<std::string> > results = this->search(queryString);
+//        std::string resultString = "{\n";
+//        for (auto resultPair : results) {
+//            resultString += "\"";
+//            resultString += resultPair.first;
+//            resultString += "\":";
+//
+//            resultString += "[";
+//            for (std::string str : resultPair.second) {
+//                resultString += "\"" + str + "\",\n";
+//            }
+//            resultString += "],\n";
+//        }
+//        resultString += "}";
+//        htmlout << resultString << endl;
     } else if (cmd == "sentiment") {
-        double score = getSentimentScore(name);
+        double score = getSentimentScore(collection, name);
         //htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
         htmlout << score;
     } else if (cmd == "size") {
-        if (storage.count(name) == 0) {
-            htmlout << -1;
-            return;
-        }
-        size_t size = storage[name].size();
-        htmlout << size << endl;
+        htmlout << collections[collection]->size(name);
     } else if (cmd == "sentence"){
-        size_t start = std::stoi(in[2], nullptr, 10);
-        htmlout << getSentence(name, start);
+        size_t start = std::stoi(in[3], nullptr, 10);
+        htmlout << getSentence(collection, name, start);
     } else {
         cout << "Unknown query" << endl;
     }
@@ -251,14 +219,9 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 
 bool DB::add(std::string collection, std::string name, std::vector<std::string> text)
 {
-    // Preformatter::removePunctuations(text);
-    // Preformatter::toLower(text);
-
-    if (idx2word.size() >= pow(2, nbits)) {
-        nbits++;
-    }
     if (!collections.count(collection)) {
         cout << "Collection: " << collection << " does not exist!" << endl;
+        createCollection(collection, Encoder::CharacterEncoding::Unicode);
         return false;
     }
     Collection* c = collections[collection];
@@ -274,16 +237,11 @@ bool DB::add(std::string collection, std::string name, std::vector<std::string> 
  * @param name a string that represetnts the key
  */
 
-bool DB::remove(std::string name)
+bool DB::remove(std::string collection, std::string name)
 {
-    if (storage.count(name) > 0) {
-        storage.erase(name);
-        return true;
-    } else {
-        return false;
-    }
+    Collection* c = collections[collection];
+    return c->remove(name);
 }
-
 
 /*
  * get
@@ -292,151 +250,42 @@ bool DB::remove(std::string name)
  * @return a vector of strings representing a deserialized text doc
  */
 
-std::vector<std::string> DB::get(std::string name)
+std::vector<std::string> DB::get(std::string collection, std::string name)
 {
-    std::vector<std::string> deserializedDoc;
-    if (storage.count(name)) {
-        std::vector<widx> serializedDoc = storage[name];
-        for (widx idx: serializedDoc) {
-            std::string word = idx2word.find(idx)->second;
-            deserializedDoc.push_back(word);
+    if (!collections.count(collection)) {
+        cout << "collection not found" << endl;
+        return std::vector<std::string>();
+    }
+    Collection* c = collections[collection];
+    if (!c->exists(name)) {
+        return std::vector<std::string>();
+    }
+    if (!lru.cached(collection+":"+name)) {
+        size_t total_size = get_occupied_space();
+        size_t required = c->size(name);
+        
+        while (memory_limit - (total_size + required) < memory_epsilon) {
+            // kick till enough space left
+            std::vector<std::string> last;
+            std::string popped = lru.pop();
+            boost::split(last, popped, boost::is_any_of(":"));
+            Collection* c = collections[last[0]];
+            c->kick(last[1]);
         }
     }
-    return deserializedDoc;
+
+    lru.access(collection+":"+name);
+    return c->get(name);
 }
 
-
-/*
- * encodeAndSave
- * A function that byte encodes the DB and saves it to disk
- * @param path a string containing the absolute path of the store.bindb file
- */
-
-void DB::encodeAndSave(std::string path)
+size_t DB::get_occupied_space()
 {
-    BitReader bitReader;
-    
-    // set num words (max val 2^18 for possible eng words)
-    // is set only once at start of the file so it can be 18
-    // nbits inferred from this value
-    size_t len = idx2word.size();
-    assert(len != 0);
-    bitReader.setNextBits(len, 18);
-    
-    assert(idx2word.size() > 0);
-    for(std::pair<widx, std::string> wordPair: idx2word) {
-        std::string word = wordPair.second;
-        assert(word.size() < 32);
-        // word should already be in lower case but just in case
-        std::transform(word.begin(), word.end(), word.begin(), ::tolower);
-        
-        // encode wordlen (max val = 32 chars in each word)
-        size_t wordlen = word.size();
-        bitReader.setNextBits(wordlen, 5);
-        
-        // encode word (max val = 32 but only 26 used to encode each english lower case char)
-        bitReader.setNextString(word);
+    size_t sum = 0;
+    for (auto p: collections) {
+        sum += p.second->size();
     }
-    // save to file
-    bitReader.saveToFile(path);
-    
-    // ENCODE KEY-DOC mapping
-    BitReader docBitReader;
-    
-    // create file to store all docs
-    for (std::pair<std::string, std::vector<widx>> doc: storage) {
-        
-        // output number of chars in name (max 32)
-        std::string name = doc.first;
-        assert(name.size() < 32);
-        docBitReader.setNextBits(name.size(), 5);
-        
-        // output name
-        docBitReader.setNextString(name);
-        
-        // output number of words in doc
-        docBitReader.setNextBits(doc.second.size(), 32);
-        
-        // output nbits for each word
-        // remember: nbits is inferrred from num words at the start of decoding
-        for (widx idx: doc.second) {
-            assert(idx.size() <= nbits);
-            docBitReader.setNextBits(idx.to_ulong(), nbits);
-        }
-    }
-    
-    docBitReader.saveToFile(path + ".kvp");
+    return sum;
 }
-
-/*
- * decodeAndLoad
- * A function that decodes a byte encoded form of the DB and creates an in memory usable form
- * @param path a string containing the absolute path to the store.bindb file
- */
-
-void DB::decodeAndLoad(std::string path)
-{
-    BitReader bitReader(path);
-
-    // read num words - first 18 bits
-    size_t len = bitReader.getNextBits(18).to_ulong();
-    assert(len > 0);
-    nbits = ceil(log(len)/log(2));
-    nbits = 1;
-    std::vector<std::string> words;
-    while (!bitReader.eof()) {
-        
-        // read word len
-        boost::dynamic_bitset<> len = bitReader.getNextBits(5);
-        
-        // read word
-        size_t nchars = len.to_ulong();
-        std::string word = bitReader.getNextString(nchars);
-        words.push_back(word);
-    }
-
-    idx2word.empty();
-    word2idx.empty();
-    for (size_t i = 0; i < words.size(); i ++) {
-        if (i >= pow(2, nbits)) {
-            nbits++;
-        }
-        widx idx(nbits, i);
-        idx2word[idx] = words[i];
-        word2idx[words[i]] = idx;
-    }
-    // assert(len.to_ulong() == words.size());
-    
-    // DECODE KEY-DOC STORAGE
-    std::string docPath = path + ".kvp";
-    BitReader docBitReader(docPath);
-    while (!docBitReader.eof()) {
-        
-        // read size of name
-        size_t keyLen = docBitReader.getNextBits(5).to_ulong();
-
-        // read name
-        std::string key = docBitReader.getNextString(keyLen);
-        cout << "key is: " << key << endl;
-
-        // read length of words (standard 32 bit unsigned int)
-        size_t nwords = docBitReader.getNextBits(32).to_ulong();
-
-        // read each word idx
-        std::vector<widx> values;
-        for (size_t n = 0; n < nwords; n++) {
-            widx idx = docBitReader.getNextBits(nbits);
-            // TODO: make sure each idx is stored optimally
-            values.push_back(idx);
-        }
-        storage[key] = values;
-        if (docBitReader.remainingChars() <= 1) {
-            break;
-        }
-    }
-    
-}
-
 /*
  * printIndex
  * A debug function that prints the words present in the Word Index
@@ -444,116 +293,110 @@ void DB::decodeAndLoad(std::string path)
 
 void DB::printIndex()
 {
-    for (std::pair<widx, std::string> wordPair: idx2word) {
-        cout << wordPair.second << endl;
+    std::set<std::string> uniqueWords;
+    for (auto p: collections) {
+        Collection* c = p.second;
+        std::vector<std::string> words = c->getWords();
+        uniqueWords.insert(words.begin(), words.end());
+    }
+    for (std::string word: uniqueWords) {
+        cout << word << endl;
     }
 }
 
-/*
- * saveUncompressed
- * A function that saves the DB in a uncompressed format to enable benchmarks and comparisons
- * @param path a string containing the location of the uncompressed text file
- */
-
-void DB::saveUncompressed(std::string path)
-{
-    ofstream fout(path);
-    fout << idx2word.size() << endl;
-    
-    // Don't output wordIndex for true comparision
-    for (std::pair<widx, std::string> wordPair: idx2word) {
-        //fout << wordPair.second.length() << "|" << wordPair.second << endl;
-    }
-    fout << "DOCUMENTS" << endl;
-    for (std::pair<std::string, std::vector<widx>> doc: storage) {
-        std::string name  = doc.first;
-        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
-        fout << name << endl;
-        for (widx idx: doc.second) {
-            fout << idx2word[idx] << " ";
-        }
-        fout << endl;
-    }
-    fout.close();
-}
+///*
+// * saveUncompressed
+// * A function that saves the DB in a uncompressed format to enable benchmarks and comparisons
+// * @param path a string containing the location of the uncompressed text file
+// */
+//
+//void DB::saveUncompressed(std::string path)
+//{
+//    ofstream fout(path);
+//    fout << idx2word.size() << endl;
+//    
+//    // Don't output wordIndex for true comparision
+//    for (std::pair<widx, std::string> wordPair: idx2word) {
+//        //fout << wordPair.second.length() << "|" << wordPair.second << endl;
+//    }
+//    fout << "DOCUMENTS" << endl;
+//    for (std::pair<std::string, std::vector<widx>> doc: storage) {
+//        std::string name  = doc.first;
+//        std::transform(name.begin(), name.end(), name.begin(), ::toupper);
+//        fout << name << endl;
+//        for (widx idx: doc.second) {
+//            fout << idx2word[idx] << " ";
+//        }
+//        fout << endl;
+//    }
+//    fout.close();
+//}
 
 
 
 bool widxMatch (const widx& a, const widx& b) {
     return (a.to_ulong() == b.to_ulong());
 }
+//
+//std::map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
+//    std::vector<std::string> query;
+//    boost::split(query, queryString, boost::is_any_of(" +"));
+//    
+//    std::map<std::string, std::vector<std::string> > results;
+//    std::vector<widx> queryIndexes;
+//    // get all widxs
+//    for (std::string queryWord: query) {
+//        if (word2idx.count(queryWord)) {
+//            queryIndexes.push_back(word2idx[queryWord]);
+//        }
+//    }
+//    if (queryIndexes.empty()) {
+//        // return results not found;
+//        return results;
+//    }
+//    for (auto docPair : storage) {
+//        std::string docName = docPair.first;
+//        std::vector<widx> doc = docPair.second;
+//        for (size_t i = 0; i < doc.size(); i++) {
+//            widx word = doc[i];
+//            size_t j = 0;
+//            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
+//                j++;
+//            }
+//            if (j >= queryIndexes.size() - 1) {
+//                // full match
+//                // get 5 before start and 5 after start
+//                int low = (int)i - std::min((int)i, 5);
+//                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
+//                std::string resString = "";
+//                for (size_t k = low; k < high; k++) {
+//                    std::string resWord = idx2word[doc[k]];
+//                    if (results.count(docName) == 0) {
+//                        results[docName] = std::vector<std::string>();
+//                        assert(results.count(docName) > 0);
+//                    }
+//                    resString += resWord + " ";
+//                }
+//                results[docName].push_back(resString);
+//            } else if (j >= queryIndexes.size()/2) {
+//                // partial match
+//            } else {
+//                // TODO: output error or something
+//            }
+//        }
+//    }
+//    return results;
+//}
 
-std::map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
-    std::vector<std::string> query;
-    boost::split(query, queryString, boost::is_any_of(" +"));
-    
-    std::map<std::string, std::vector<std::string> > results;
-    std::vector<widx> queryIndexes;
-    // get all widxs
-    for (std::string queryWord: query) {
-        if (word2idx.count(queryWord)) {
-            queryIndexes.push_back(word2idx[queryWord]);
-        }
-    }
-    if (queryIndexes.empty()) {
-        // return results not found;
-        return results;
-    }
-    for (auto docPair : storage) {
-        std::string docName = docPair.first;
-        std::vector<widx> doc = docPair.second;
-        for (size_t i = 0; i < doc.size(); i++) {
-            widx word = doc[i];
-            size_t j = 0;
-            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
-                j++;
-            }
-            if (j >= queryIndexes.size() - 1) {
-                // full match
-                // get 5 before start and 5 after start
-                int low = (int)i - std::min((int)i, 5);
-                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
-                std::string resString = "";
-                for (size_t k = low; k < high; k++) {
-                    std::string resWord = idx2word[doc[k]];
-                    if (results.count(docName) == 0) {
-                        results[docName] = std::vector<std::string>();
-                        assert(results.count(docName) > 0);
-                    }
-                    resString += resWord + " ";
-                }
-                results[docName].push_back(resString);
-            } else if (j >= queryIndexes.size()/2) {
-                // partial match
-            } else {
-                // TODO: output error or something
-            }
-        }
-    }
-    return results;
-}
-
-double DB::getSentimentScore(std::string name)
+double DB::getSentimentScore(std::string collection, std::string name)
 {
-    vector<string> text = get(name);
+    vector<string> text = get(collection, name);
     return sentimentAnaylsis.analyse(text);
 }
 
-std::string DB::getSentence(std::string name, size_t start)
+std::string DB::getSentence(std::string collection, std::string name, size_t start)
 {
-    widx period = uint2widx(28);
-    std::vector<widx> doc = storage[name];
-    std:string sentence = "";
-    for (size_t i = start; i < doc.size(); i++) {
-        widx idx = doc[i];
-        sentence += " " + idx2word[idx];
-        for (char c: idx2word[idx]) {
-            if (c == '.') {
-                return sentence;
-            }
-        }
-    }
-    return sentence;
+    return collections[collection]->getSentence(name, start);
 }
 
 // URL decode function stolen from: http://stackoverflow.com/questions/154536/encode-decode-urls-in-c
@@ -645,9 +488,23 @@ std::string DB::urlDecode(std::string & sSrc)
 
 void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encoding)
 {
+    fs::path collectionPath = datapath / "collections" / (_name+"-"+Encoder::encoding2str(_encoding));
+    if (!fs::exists(collectionPath)) {
+        fs::create_directories(collectionPath);
+    }
+    cout << collectionPath;
     // add collection to db
-    Collection c = Collection(_name, _encoding);
-    collections.push_back(std::move(c));
+    Collection* c = new Collection(collectionPath, _encoding);
+    collections[_name] = c;
     // create collection file to save
+}
+
+std::vector<std::string> DB::listCollections()
+{
+    std::vector<std::string> collectionNames;
+    for (auto p: collections) {
+        collectionNames.push_back(p.first);
+    }
+    return collectionNames;
 }
 

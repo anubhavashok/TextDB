@@ -141,7 +141,7 @@ boost::dynamic_bitset<> BitReader::getNextBits(size_t nbits)
 
 std::string BitReader::getNextString(size_t stringsize)
 {
-    return getNextString(stringsize, 5);
+    return getNextString(stringsize, encoder->charSize());
 }
 
 /*

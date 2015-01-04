@@ -13,6 +13,7 @@
 		44752F641A5065EE0029C2D8 /* collection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F621A5065EE0029C2D8 /* collection.cpp */; };
 		44752F671A5070650029C2D8 /* encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F651A5070650029C2D8 /* encoder.cpp */; };
 		44752F6A1A5081230029C2D8 /* bitwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F681A5081230029C2D8 /* bitwriter.cpp */; };
+		44752F6D1A56937C0029C2D8 /* LRU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F6B1A56937C0029C2D8 /* LRU.cpp */; };
 		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
 		44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69CB19ADC6CF00219F7B /* bitreader.cpp */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,8 @@
 		44752F661A5070650029C2D8 /* encoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoder.h; sourceTree = "<group>"; };
 		44752F681A5081230029C2D8 /* bitwriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitwriter.cpp; sourceTree = "<group>"; };
 		44752F691A5081230029C2D8 /* bitwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitwriter.h; sourceTree = "<group>"; };
+		44752F6B1A56937C0029C2D8 /* LRU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LRU.cpp; sourceTree = "<group>"; };
+		44752F6C1A56937C0029C2D8 /* LRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRU.h; sourceTree = "<group>"; };
 		44FB69C819ADB29000219F7B /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = db.cpp; sourceTree = "<group>"; };
 		44FB69C919ADB29000219F7B /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = db.h; sourceTree = "<group>"; };
 		44FB69CB19ADC6CF00219F7B /* bitreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitreader.cpp; sourceTree = "<group>"; };
@@ -88,6 +91,8 @@
 				44752F621A5065EE0029C2D8 /* collection.cpp */,
 				44752F631A5065EE0029C2D8 /* collection.h */,
 				44752F651A5070650029C2D8 /* encoder.cpp */,
+				44752F6B1A56937C0029C2D8 /* LRU.cpp */,
+				44752F6C1A56937C0029C2D8 /* LRU.h */,
 				44752F661A5070650029C2D8 /* encoder.h */,
 				44FB69CB19ADC6CF00219F7B /* bitreader.cpp */,
 				44FB69CC19ADC6CF00219F7B /* bitreader.h */,
@@ -150,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				44752F6D1A56937C0029C2D8 /* LRU.cpp in Sources */,
 				440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */,
 				44752F671A5070650029C2D8 /* encoder.cpp in Sources */,
 				44752F6A1A5081230029C2D8 /* bitwriter.cpp in Sources */,

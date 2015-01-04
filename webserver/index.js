@@ -32,7 +32,7 @@ db.keys.drop();
 app.get("/console", function(req, res) {
     async.waterfall([
         function(callback) {
-            request.get("http://localhost/list/", function(error, response, body){
+            request.get("http://localhost/listcollections/", function(error, response, body){
                 var urls = _.map(body.split("\n"), function(val){return querystring.escape(val)});
                 console.log(body.split("\n"));
                 callback(null, {"availableDocs": body.split("\n"), urls: urls});
@@ -48,7 +48,23 @@ app.get("/console", function(req, res) {
 app.get("/list", function(req, res) {
     async.waterfall([
         function(callback) {
-            request.get("http://localhost/list/", function(error, response, body){
+            request.get("http://localhost/listcollections/", function(error, response, body){
+                console.log(body.split("\n"));
+                callback(null, {"availableDocs": body.split("\n")});
+            });
+        }
+    ], function(err, result) {
+        res.type('application/json');
+        res.send(result);
+    });
+
+});
+
+app.get("/list/:collection", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+    async.waterfall([
+        function(callback) {
+            request.get("http://localhost/listdocs/"+collection+"/", function(error, response, body){
                 console.log(body.split("\n"));
                 callback(null, {"availableDocs": body.split("\n")});
             });
@@ -61,12 +77,13 @@ app.get("/list", function(req, res) {
 });
 
 
-app.get("/get/:name", function(req, res) {
+app.get("/get/:collection/:name", function(req, res) {
+    var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var key = req.query.key;
     // verify key before serving request
     console.log("(new API) Getting: " + name);
-    var url = "http://localhost/get/" + name;
+    var url = "http://localhost/get/" + collection + "/" + name;
     request.get(url, function(error, response, body) {
         res.type('text/plain');
         console.log(body);
@@ -75,11 +92,12 @@ app.get("/get/:name", function(req, res) {
 });
 
 
-app.get("/get/:name/sentence/:start", function(req, res) {
+app.get("/get/:collection/:name/sentence/:start", function(req, res) {
+    var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var start = decodeURI(req.params.start);
     console.log("Getting sentence from doc: " + name);
-    var url = "http://localhost/sentence/" + name + "/" + start;
+    var url = "http://localhost/sentence/" + collection + "/" + name + "/" + start;
     console.log(url);
     request.get(url, function(error, response, body) {
         res.type('text/plain');
@@ -88,8 +106,9 @@ app.get("/get/:name/sentence/:start", function(req, res) {
 });
 
 
-app.get("/adddoc", function(req, res) {
+app.get("/adddoc/:collection", function(req, res) {
 
+    var collection = decodeURI(req.params.collection);
     var query = req.query;
     var name = query.name;
     var path = query.path;
@@ -102,41 +121,45 @@ app.get("/adddoc", function(req, res) {
 });
 
 
-app.post("/add", function(req, res) {
-    var name = decodeURI(req.query.name);
-    var text = decodeURI(req.query.text);
+app.post("/add/:collection/:name/:text", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+    var name = decodeURI(req.params.name);
+    var text = decodeURI(req.params.text);
     console.log("Add: " + name + ", " + text);
     var url = "http://localhost/add";
-    request.get(url + "/" + name + "/" + text, function(err, r, body) {
+    request.get(url + "/" + collection + "/" + name + "/" + text, function(err, r, body) {
         res.send("Added: " + name);
     });
 });
 
-app.post("/remove/:name", function(req, res) {
+app.post("/remove/:collection/:name", function(req, res) {
+    var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     console.log("Removing: " + name);
     var url = "http://localhost/remove";
-    request.get(url + "/" + name, function(err, r, body) {
+    request.get(url + "/" + collection + "/" + name, function(err, r, body) {
         console.log(body);
         res.send(body);
     });
 });
 
 
-app.get("/get/:name/sentiment", function(req, res) {
+app.get("/get/:collection/:name/sentiment", function(req, res) {
+    var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     console.log("Getting sentiment for: " + name);
     var url = "http://localhost/sentiment";
-    request.get(url + "/" + name, function(err, r, body){
+    request.get(url + "/" + collection + "/" + name, function(err, r, body){
         res.send(body);
     });
 });
 
 
-app.get("/get/:name/size", function(req, res){
+app.get("/get/:collection/:name/size", function(req, res){
+    var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var url = "http://localhost/size";
-    request.get(url + "/" + name, function(err, r, body) {
+    request.get(url + "/" + collection + "/" + name, function(err, r, body) {
         res.send(body);
     });
 });

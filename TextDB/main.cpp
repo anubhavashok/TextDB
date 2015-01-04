@@ -54,9 +54,9 @@ static std::string dbpath;
 void DBSigHandler(int signum);
 void DBSigHandler(int signum)
 {
-    fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
-    db->encodeAndSave(dbpath);
-    db->saveUncompressed(uncompresseddbpath.string());
+    //fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
+    //db->encodeAndSave(dbpath);
+    //db->saveUncompressed(uncompresseddbpath.string());
     exit(0);
 }
 
@@ -81,15 +81,15 @@ int main(int argc, char ** argv) {
     if (Options::verbose) {
         cout << "Decoding and loading db file...";
     }
-    if (boost::filesystem::exists(dbpath)) {
-        db->decodeAndLoad(dbpath);
-    } else {
-        // just create file
-        fstream dbfile;
-        dbfile.open(dbpath, ios::out);
-        dbfile.close();
-        cout << "Created new db file at " << dbpath << "..." << endl;
-    }
+//    if (boost::filesystem::exists(dbpath)) {
+//        db->decodeAndLoad(dbpath);
+//    } else {
+//        // just create file
+//        fstream dbfile;
+//        dbfile.open(dbpath, ios::out);
+//        dbfile.close();
+//        cout << "Created new db file at " << dbpath << "..." << endl;
+//    }
     if (Options::verbose) {
         cout << "done" << endl;
     }

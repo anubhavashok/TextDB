@@ -22,7 +22,6 @@ private:
     size_t pos;
     std::vector<char> data;
     bool end;
-    Encoder* encoder;
 public:
     // read
     // UNUSED
@@ -39,6 +38,7 @@ public:
 
     
     static boost::dynamic_bitset<> num2widx(size_t i, size_t nbits);
+    Encoder* encoder;
     
     // debug
     void print();

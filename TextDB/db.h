@@ -18,6 +18,7 @@
 #include <boost/optional.hpp>
 #include "collection.h"
 #include "encoder.h"
+#include "LRU.h"
 
 using namespace std;
 namespace fs = boost::filesystem;
@@ -25,8 +26,8 @@ namespace fs = boost::filesystem;
 class DB
 {
 private:
-    // nbits of word index
-    size_t nbits = 1;
+    size_t memory_limit = 2000000000;
+    size_t memory_epsilon = 10000;
     // index of word
     // max value is ~250,000 since there are only that many english words
     using widx = boost::dynamic_bitset<>;
@@ -37,47 +38,35 @@ private:
             return b1.to_ulong() < b2.to_ulong();
         }
     };
-    std::map<widx, std::string, Comparer> idx2word;
-    
-    // maps word to index
-    std::map<std::string, widx> word2idx;
-    
-    // stores text data
-    // by mapping key name to vectors of widxs representing docs
-    std::map<std::string, std::vector<widx>> storage;
     
     // Sentiment Analysis
     SentimentAnalysis sentimentAnaylsis;
     
     std::map<std::string, Collection*> collections;
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
+    
+    LRU lru;
+    size_t get_occupied_space();
 
 public:
     
     DB(fs::path data);
+    fs::path datapath;
     
-    std::vector<widx> serializeDoc(std::vector<std::string> doc);
-    std::vector<widx> serializeDoc(std::string path);
-    
-    widx addWord(std::string word);
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
     
     
     bool add(std::string collection, std::string name, std::string path);
     bool add(std::string collection, std::string name, std::vector<std::string> text);
-    bool remove(std::string name);
-    std::vector<std::string> get(std::string name);
+    bool remove(std::string collection, std::string name);
+    std::vector<std::string> get(std::string collection, std::string name);
     widx uint2widx(unsigned long i);
-    std::string getSentence(std::string name, size_t start);
+    std::string getSentence(std::string collection, std::string name, size_t start);
 
-    
-    void encodeAndSave(std::string path);
-    void decodeAndLoad(std::string path);
-    void saveUncompressed(std::string path);
-    std::map<std::string, std::vector<std::string> > search(std::string queryString);
+    //std::map<std::string, std::vector<std::string> > search(std::string queryString);
 
     // Text Mining
-    double getSentimentScore(std::string name);
+    double getSentimentScore(std::string collection, std::string name);
     
     void printIndex();
     
@@ -85,6 +74,7 @@ public:
     
     ///////POST COLLECTIONS ERA
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
+    std::vector<std::string> listCollections();
 };
 
 

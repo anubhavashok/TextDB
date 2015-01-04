@@ -97,12 +97,21 @@ string CompressedEncoder::preformat(string s)
     return s;
 }
 
-static Encoder::CharacterEncoding str2encoding(std::string type)
+Encoder::CharacterEncoding Encoder::str2encoding(std::string type)
 {
     if (type == "compressed") {
         return Encoder::CharacterEncoding::Compressed;
     } else {
         return Encoder::CharacterEncoding::Unicode;
+    }
+}
+
+std::string Encoder::encoding2str(CharacterEncoding _encoding)
+{
+    switch (_encoding) {
+        case Compressed: return "compressed";
+        default:
+        case Unicode: return "unicode";
     }
 }
 
