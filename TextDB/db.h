@@ -20,14 +20,15 @@
 #include "encoder.h"
 #include "LRU.h"
 
+
 using namespace std;
 namespace fs = boost::filesystem;
 
 class DB
 {
 private:
-    size_t memory_limit = 2000000000;
-    size_t memory_epsilon = 10000;
+    size_t memory_limit = 150;//2000000000;
+    size_t memory_epsilon = 1;
     // index of word
     // max value is ~250,000 since there are only that many english words
     using widx = boost::dynamic_bitset<>;
@@ -40,16 +41,19 @@ private:
     };
     
     // Sentiment Analysis
-    SentimentAnalysis sentimentAnaylsis;
+    SentimentAnalysis sentimentAnalysis;
     
     std::map<std::string, Collection*> collections;
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
     
     LRU lru;
-    size_t get_occupied_space();
+    int get_occupied_space();
+
+    std::string reassembleText(const std::vector<std::string>& words);
 
 public:
-    
+    const static std::string allowed_puncs;
+
     DB(fs::path data);
     fs::path datapath;
     
@@ -59,7 +63,7 @@ public:
     bool add(std::string collection, std::string name, std::string path);
     bool add(std::string collection, std::string name, std::vector<std::string> text);
     bool remove(std::string collection, std::string name);
-    std::vector<std::string> get(std::string collection, std::string name);
+    std::string get(std::string collection, std::string name);
     widx uint2widx(unsigned long i);
     std::string getSentence(std::string collection, std::string name, size_t start);
 

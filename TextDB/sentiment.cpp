@@ -11,6 +11,8 @@
 #include <boost/filesystem.hpp>
 #include <iostream>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
+#include "db.h"
 
 namespace fs = boost::filesystem;
 using namespace std;
@@ -41,12 +43,17 @@ void SentimentAnalysis::fileToWordMap(fs::path f, map<string, double>& v, double
     }
 }
 
-double SentimentAnalysis::analyse(const vector<string>& text)
+double SentimentAnalysis::analyse(const std::string& textstring)
 {
     double score = 0;
     int count = 0;
+    std::vector<std::string> text;
+    boost::split(text, textstring, boost::is_any_of(DB::allowed_puncs));
     for (string w: text) {
+        boost::trim(w);
+        boost::to_lower(w);
         if (sentimentMap.count(w)) {
+            // descriptor
             count++;
             score += sentimentMap[w];
         }

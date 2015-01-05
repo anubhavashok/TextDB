@@ -17,9 +17,13 @@ void LRU::access(std::string name)
 
 std::string LRU::pop()
 {
-    std::string name = _lru.back();
-    _lru.pop_back();
-    return name;
+    if (_lru.size() > 0) {
+        std::string name = _lru.back();
+        _lru.pop_back();
+        return name;
+    } else {
+        return "";
+    }
 }
 
 bool LRU::cached(std::string name)

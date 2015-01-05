@@ -80,6 +80,8 @@ void Collection::loadWordIndex()
         std::string word = bitReader.getNextString(len);
         // add to in memory word index
         if(word != "") {
+            cout << len << endl;
+            cout << word << endl;
             words.push_back(word);
         }
     }
@@ -140,7 +142,12 @@ void Collection::kick(std::string name)
 
 size_t Collection::size()
 {
-    return sizeof(storage);
+    size_t sum = 0;
+    for (auto p: storage) {
+        sum += sizeof(p.first);
+        sum += sizeof(p.second);
+    }
+    return sum;
 }
 
 size_t Collection::size(std::string name)
@@ -251,6 +258,7 @@ void Collection::aow_words(std::vector<std::string> new_words)
     
     // [len|chars]
     for (std::string word: new_words) {
+        cout << "Adding: " << word << " to word index of size " <<word.size() << endl;
         // output len in bytes
         // NOTE: current length of word is 32
         bitWriter.write(word.size(), 8);
@@ -266,9 +274,11 @@ std::vector<widx> Collection::serialize(std::vector<std::string> doc)
 {
     std::vector<widx> idxs;
     for(std::string s: doc) {
-        assert(word2idx.count(s) > 0);
-        widx idx = word2idx[s];
-        idxs.push_back(idx);
+        if(s != "") {
+            assert(word2idx.count(s) > 0);
+            widx idx = word2idx[s];
+            idxs.push_back(idx);
+        }
     }
     return idxs;
 }
@@ -284,35 +294,33 @@ std::vector<std::string> Collection::deserialize(std::vector<widx> doc)
     return stringdoc;
 }
 
-std::vector<std::string> Collection::get(std::string name)
+std::string Collection::get(std::string name)
 {
     for (std::pair<std::string, std::vector<widx>> p: storage) {
         if (p.first == name) {
-            return deserialize(p.second);
+            return reassembleText(deserialize(p.second));
         }
     }
     if(load(name)) {
         cout << "loaded! " << storage[name].size() << endl;
-        return deserialize(storage[name]);
+        return reassembleText(deserialize(storage[name]));
     } else {
-        return std::vector<std::string>();
+        return "";
     }
 }
 
 std::string Collection::getSentence(std::string name, size_t start)
 {
     std::vector<widx> doc = storage[name];
-    std:string sentence = "";
-        for (size_t i = start; i < doc.size(); i++) {
-            widx idx = doc[i];
-            sentence += " " + idx2word[idx];
-            for (char c: idx2word[idx]) {
-                if (c == '.') {
-                    return sentence;
-                }
-            }
+    std::vector<std::string> subset;
+    for (size_t i = start; i < doc.size(); i++) {
+        std::string word = idx2word[doc[i]];
+        subset.push_back(word);
+        if (word[0] == '.') {
+            break;
         }
-    return sentence;
+    }
+    return reassembleText(subset);
 }
 
 bool Collection::remove(std::string name)
@@ -358,4 +366,16 @@ std::vector<std::string> Collection::getWords()
 bool Collection::exists(std::string name)
 {
     return fs::exists(collectionPath / "files" / (name + ".fyle"));
+}
+
+
+std::string Collection::reassembleText(const std::vector<std::string>& words)
+{
+    std::string text = "";
+    int i = 0;
+    for (std::string word: words) {
+        text += ((!i || ispunct(word[0])) ? "" : " ") + word;
+        i++;
+    }
+    return text;
 }

@@ -24,7 +24,7 @@ public:
     
     void loadSentimentWords(fs::path p, fs::path n);
     void fileToWordMap(fs::path p, std::map<std::string, double>& m, double score);
-    double analyse(const std::vector<std::string>& text);
+    double analyse(const std::string& text);
 };
 
 #endif /* defined(__TextDB__sentiment__) */

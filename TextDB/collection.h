@@ -58,7 +58,7 @@ public:
     bool add(std::string name, std::vector<std::string> text);
 
     // get
-    std::vector<std::string> get(std::string name);
+    std::string get(std::string name);
     std::string getSentence(std::string name, size_t start);
 
     // remove
@@ -103,6 +103,7 @@ private:
     void aow(fs::path path, std::vector<widx> doc);
     void aow_words(std::vector<std::string> new_words);
 
+    std::string reassembleText(const std::vector<std::string>& words);
     
     
     std::map<std::string, std::vector<std::string> > search(std::string queryString);

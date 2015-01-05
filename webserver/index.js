@@ -49,8 +49,8 @@ app.get("/list", function(req, res) {
     async.waterfall([
         function(callback) {
             request.get("http://localhost/listcollections/", function(error, response, body){
-                console.log(body.split("\n"));
-                callback(null, {"availableDocs": body.split("\n")});
+                console.log(body);
+                callback(null, body);
             });
         }
     ], function(err, result) {
@@ -65,8 +65,8 @@ app.get("/list/:collection", function(req, res) {
     async.waterfall([
         function(callback) {
             request.get("http://localhost/listdocs/"+collection+"/", function(error, response, body){
-                console.log(body.split("\n"));
-                callback(null, {"availableDocs": body.split("\n")});
+                console.log(body);
+                callback(null, body);
             });
         }
     ], function(err, result) {
@@ -84,6 +84,19 @@ app.get("/get/:collection/:name", function(req, res) {
     // verify key before serving request
     console.log("(new API) Getting: " + name);
     var url = "http://localhost/get/" + collection + "/" + name;
+    request.get(url, function(error, response, body) {
+        res.type('text/plain');
+        console.log(body);
+        res.send(body);
+    });
+});
+
+app.get("/get/:collection/", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+    var key = req.query.key;
+    // verify key before serving request
+    console.log("(new API) Getting: " + name);
+    var url = "http://localhost/listdocs/" + collection + "/";
     request.get(url, function(error, response, body) {
         res.type('text/plain');
         console.log(body);

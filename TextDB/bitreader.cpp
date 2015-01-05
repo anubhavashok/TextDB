@@ -69,7 +69,7 @@ void BitReader::read(std::string path, bool compressed)
         }
         snappy::Uncompress(compresseddatastring.data(), compresseddatastring.size(), &datastring);
     } else {
-        fin >> datastring;
+        datastring = std::string((std::istreambuf_iterator<char>(fin)), std::istreambuf_iterator<char>());
     }
     
     std::vector<char> uncompresseddata(datastring.begin(), datastring.end());

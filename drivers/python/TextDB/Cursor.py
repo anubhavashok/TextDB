@@ -33,8 +33,10 @@ class Cursor():
             "This is the second sentence of a."
 
         """
+        if self.sentencePtr >= self.get_size():
+            return None
         r = requests.get(self.endpoint + "/sentence/{0}".format(self.sentencePtr))
-        text = urllib.unquote_plus(r.text)
+        text = urllib.unquote(r.text)
         self.sentencePtr += self.num_words(text)
         if strip:
             return text.strip().replace('\n', '')
@@ -56,7 +58,7 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/wordFrequency")
-        return urllib.unquote_plus(r.text)
+        return urllib.unquote(r.text)
 
     def get_text(self, start=0, limit=0):
         """Get the text in the document.
@@ -77,7 +79,7 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint)
-        return urllib.unquote_plus(r.text)
+        return urllib.unquote(r.text)
 
     def get_sentiment(self):
         """Get the sentiment score of the document.
@@ -94,7 +96,7 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/sentiment")
-        return float(urllib.unquote_plus(r.text))
+        return float(urllib.unquote(r.text))
 
     def get_size(self):
         """Get size of the document.
@@ -111,4 +113,4 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/size")
-        return int(urllib.unquote_plus(r.text))
+        return int(urllib.unquote(r.text))
