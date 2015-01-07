@@ -64,6 +64,7 @@ public:
     bool add(std::string collection, std::string name, std::vector<std::string> text);
     bool remove(std::string collection, std::string name);
     std::string get(std::string collection, std::string name);
+    void drop(std::string collection);
     widx uint2widx(unsigned long i);
     std::string getSentence(std::string collection, std::string name, size_t start);
 

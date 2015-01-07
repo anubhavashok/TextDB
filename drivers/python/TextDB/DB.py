@@ -27,13 +27,59 @@ class TextDB():
         else:
             self.key = None
 
-    def list(self):
-        r = requests.get("{0}/{1}".format(self.endpoint, "list"))
-        return r.json()
-
     def __getattr__(self, item):
         collections = self.list()
         if item not in collections:
-            print "WARNING! collection doesn't exist"
-            return None
-        return Collection.Collection(self.endpoint, item, self.key)
+            raise AttributeError("WARNING! collection doesn't exist")
+        else:
+            return Collection.Collection(self.endpoint, item, self.key)
+
+    def __getitem__(self, item):
+        self.__getattr__(item)
+
+    def __repr__(self):
+        return "<TextDB at %s>" % self.endpoint
+
+    def list(self):
+
+        r = requests.get("{0}/{1}".format(self.endpoint, "list"))
+        return r.json()
+
+    def drop(self, collection):
+        """Drops a particular collection from TextDB.
+
+        Makes a POST request to TextDB server.
+
+        Args:
+
+        Examples:
+            >>> db.list()
+            ['a', 'b', 'c', 'd']
+            >>> db.drop('d')
+            >>> db.list()
+            ['a', 'b', 'c']
+
+        """
+        r = requests.post("{0}/{1}/{2}".format(self.endpoint, "drop", collection))
+        return r.text
+
+    def create_collection(self, collection, encoding):
+        """Creates a new collection in TextDB.
+
+        Makes a POST request to TextDB server.
+
+        Args:
+
+        Examples:
+            >>> db.list()
+            ['a', 'b', 'c', 'd']
+            >>> db.create_collection('1')
+            >>> db.list()
+            ['1', 'a', 'b', 'c']
+
+        """
+        if not collection.isalpha():
+            print "Collection name has to be alphabetical"
+        else:
+            r = requests.post("{0}/{1}/{2}/{3}".format(self.endpoint, "create", collection, encoding))
+            return r.text

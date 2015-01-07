@@ -4,6 +4,14 @@ TextDB package
 Submodules
 ----------
 
+TextDB.Collection module
+------------------------
+
+.. automodule:: TextDB.Collection
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 TextDB.Cursor module
 --------------------
 
@@ -11,7 +19,6 @@ TextDB.Cursor module
     :members:
     :undoc-members:
     :show-inheritance:
-
 
 TextDB.DB module
 ----------------

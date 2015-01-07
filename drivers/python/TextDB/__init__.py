@@ -1,1 +1,1 @@
-from DB import TextDB
+from DB import *

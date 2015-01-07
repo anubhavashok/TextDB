@@ -1,4 +1,5 @@
 setup.py
+TextDB/Collection.py
 TextDB/Cursor.py
 TextDB/DB.py
 TextDB/__init__.py

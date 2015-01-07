@@ -140,28 +140,6 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         // TODO: mark words in deprecated text document in word list and lazy remove
         bool success = remove(collection, name);
         htmlout << success << endl;
-    } else if (cmd == "adddoc") {
-        assert(in.size() >= 3);
-        htmlout << "ADDDOC " << name << "\n";
-        
-        // have either text or path to doc
-        fs::path docPath = in[3];
-        // read doc and load
-        std::vector<std::string> text;
-        ifstream fin(docPath.string());
-        std::string line;
-        std::vector<std::string> words;
-        while (!fin.eof()) {
-            std::getline(fin, line);
-            boost::split(words, line, boost::is_any_of(DB::allowed_puncs));
-            for(std::string word: words) {
-                text.push_back(word);
-            }
-            text.push_back("\n");
-        }
-        add(collection, name, text);
-        htmlout << "Added " << in[3] << endl;
-        
     } else if (cmd == "get") {
         //assert(in.size() == 2);
         std::string res;
@@ -221,14 +199,22 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     } else if (cmd == "size") {
         std::string words = collections[collection]->get(name);
         htmlout << boost::count(words, ' ') + 1;
-    } else if (cmd == "sentence"){
+    } else if (cmd == "sentence") {
         try {
             size_t start = boost::lexical_cast<int>(in[3]);
             htmlout << getSentence(collection, name, start);
         } catch (boost::bad_lexical_cast&) {
         }
+    } else if (cmd == "drop") {
+        if (collections.count(collection)) {
+            drop(collection);
+        }
+    } else if (cmd == "create") {
+        if (!collections.count(collection)) {
+            createCollection(collection, Encoder::str2encoding(name));
+        }
     } else {
-        cout << "Unknown query" << endl;
+        cout << "(DB): Unknown query" << endl;
     }
 }
 
@@ -311,6 +297,30 @@ std::string DB::get(std::string collection, std::string name)
 
     lru.access(collection+":"+name);
     return c->get(name);
+}
+
+void DB::drop(std::string collection)
+{
+    fs::path collectionsPath = datapath / "collections";
+    if (!fs::exists(collectionsPath)) {
+        fs::create_directories(collectionsPath);
+    }
+    fs::directory_iterator it(collectionsPath), eod;
+    std::vector<std::string> collectionNames;
+    BOOST_FOREACH(fs::path p, std::make_pair(it, eod))
+    {
+        if(fs::is_directory(p))
+        {
+            std::vector<std::string> args;
+            boost::split(args, p.stem().string(), boost::is_any_of("-"));
+            if (args[0] == collection) {
+                delete collections[args[0]];
+                collections.erase(args[0]);
+                fs::remove_all(p);
+            }
+        }
+    }
+    
 }
 
 int DB::get_occupied_space()
@@ -534,7 +544,6 @@ void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encodin
     if (!fs::exists(collectionPath)) {
         fs::create_directories(collectionPath);
     }
-    cout << collectionPath;
     // add collection to db
     Collection* c = new Collection(collectionPath, _encoding);
     collections[_name] = c;

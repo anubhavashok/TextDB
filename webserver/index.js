@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
+var url = "http://localhost";
 
 
 // HTML initialization
@@ -30,9 +31,13 @@ db.keys.drop();
 
 // Web console
 app.get("/console", function(req, res) {
+    var uri = joinSlash(url, "listcollections");
+
+    logEntry(req.method, req.path);
+
     async.waterfall([
         function(callback) {
-            request.get("http://localhost/listcollections/", function(error, response, body){
+            request.get(uri, function(error, response, body){
                 var urls = _.map(body.split("\n"), function(val){return querystring.escape(val)});
                 console.log(body.split("\n"));
                 callback(null, {"availableDocs": body.split("\n"), urls: urls});
@@ -46,9 +51,13 @@ app.get("/console", function(req, res) {
 
 // List API for drivers
 app.get("/list", function(req, res) {
+    var uri = joinSlash(url, "listcollections");
+
+    logEntry(req.method, req.path);
+
     async.waterfall([
         function(callback) {
-            request.get("http://localhost/listcollections/", function(error, response, body){
+            request.get(uri, function(error, response, body){
                 console.log(body);
                 callback(null, body);
             });
@@ -62,9 +71,14 @@ app.get("/list", function(req, res) {
 
 app.get("/list/:collection", function(req, res) {
     var collection = decodeURI(req.params.collection);
+
+    var uri = joinSlash(url, "listdocs", collection);
+
+    logEntry(req.method, req.path);
+
     async.waterfall([
         function(callback) {
-            request.get("http://localhost/listdocs/"+collection+"/", function(error, response, body){
+            request.get(uri, function(error, response, body){
                 console.log(body);
                 callback(null, body);
             });
@@ -81,10 +95,14 @@ app.get("/get/:collection/:name", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var key = req.query.key;
+
+
+    var uri = joinSlash(url, "get", collection, name);
+
+    logEntry(req.method, req.path);
+
     // verify key before serving request
-    console.log("(new API) Getting: " + name);
-    var url = "http://localhost/get/" + collection + "/" + name;
-    request.get(url, function(error, response, body) {
+    request.get(uri, function(error, response, body) {
         res.type('text/plain');
         console.log(body);
         res.send(body);
@@ -95,10 +113,13 @@ app.get("/get/:collection/", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var key = req.query.key;
     // verify key before serving request
-    console.log("(new API) Getting: " + name);
-    var url = "http://localhost/listdocs/" + collection + "/";
-    request.get(url, function(error, response, body) {
-        res.type('text/plain');
+
+    var uri = joinSlash(url, "listdocs", collection);
+
+    logEntry(req.method, req.path);
+
+    request.get(uri, function(error, response, body) {
+        res.type('application/json');
         console.log(body);
         res.send(encodeURI(body));
     });
@@ -109,48 +130,40 @@ app.get("/get/:collection/:name/sentence/:start", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var start = decodeURI(req.params.start);
-    console.log("Getting sentence from doc: " + name);
-    var url = "http://localhost/sentence/" + collection + "/" + name + "/" + start;
-    console.log(url);
-    request.get(url, function(error, response, body) {
+
+    var uri = joinSlash(url, "sentence", collection, name, start);
+
+    logEntry(req.method, req.path);
+
+    request.get(uri, function(error, response, body) {
         res.type('text/plain');
         res.send(body);
     });
 });
 
-
-app.get("/adddoc/:collection", function(req, res) {
-
-    var collection = decodeURI(req.params.collection);
-    var query = req.query;
-    var name = query.name;
-    var path = query.path;
-    var url = "http://localhost/adddoc/"+name+"/"+path;
-    console.log(name);
-    request.get(url, function(error, response, body) {
-        res.send("Added: " +  name);
-    });
-
-});
-
-
 app.post("/add/:collection/:name/:text", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
     var text = decodeURI(req.params.text);
-    console.log("Add: " + name + ", " + text);
-    var url = "http://localhost/add";
-    request.get(url + "/" + collection + "/" + name + "/" + text, function(err, r, body) {
-        res.send("Added: " + name);
+
+    var uri = joinSlash(url, "add", collection, name, text);
+
+    logEntry(req.method, req.path);
+
+    request.get(uri, function(err, r, body) {
+        //
+        res.send("True");
     });
 });
 
 app.post("/remove/:collection/:name", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
-    console.log("Removing: " + name);
-    var url = "http://localhost/remove";
-    request.get(url + "/" + collection + "/" + name, function(err, r, body) {
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "remove", collection, name);
+    request.get(uri, function(err, r, body) {
         console.log(body);
         res.send(body);
     });
@@ -160,20 +173,51 @@ app.post("/remove/:collection/:name", function(req, res) {
 app.get("/get/:collection/:name/sentiment", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
-    console.log("Getting sentiment for: " + name);
-    var url = "http://localhost/sentiment";
-    request.get(url + "/" + collection + "/" + name, function(err, r, body){
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "sentiment", collection, name);
+
+    request.get(uri, function(err, r, body){
         res.send(body);
     });
 });
 
 
-app.get("/get/:collection/:name/size", function(req, res){
+app.get("/get/:collection/:name/size", function(req, res) {
     var collection = decodeURI(req.params.collection);
     var name = decodeURI(req.params.name);
-    var url = "http://localhost/size";
-    request.get(url + "/" + collection + "/" + name, function(err, r, body) {
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "size", collection, name);
+
+    request.get(uri, function(err, r, body) {
         res.send(body);
+    });
+});
+
+app.post("/drop/:collection", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "drop", collection);
+
+    request.get(uri, function(err, r, body){
+        res.send("True");
+    });
+});
+
+app.post("/create/:collection/:encoding", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+    var encoding = decodeURI(req.params.encoding);
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "create", collection, encoding);
+    request.get(uri, function(err, r, body){
+        res.send("True");
     });
 });
 
@@ -181,6 +225,9 @@ app.get("/auth", function(req, res) {
     var username = req.query.username;
     var passhash = req.query.password;
     var sha256 = crypto.createHash('sha256');
+
+    logEntry(req.method, req.path);
+
     db.accounts.find({'username': username}, function(err, accts) {
         if (accts.length == 0) {
             // invalid username, return nothing
@@ -205,7 +252,8 @@ app.get("/auth", function(req, res) {
 app.post("/auth/create", function(req, res) {
     var username = req.body.username;
     var password = req.body.password;
-    console.log("creating account with credentials: " +username + " " + password);
+
+    logEntry(req.method, req.path);
 
     var sha256 = crypto.createHash('sha256');
     sha256.update(password);
@@ -216,13 +264,35 @@ app.post("/auth/create", function(req, res) {
     });
 });
 app.get("/auth/create", function(req, res) {
+
+    logEntry(req.method, req.path);
+
     res.render("create.html");
 });
 
 app.get("/", function(req, res) {
+
+    logEntry(req.method, req.path);
+
     res.redirect("/console");
 });
 
+// function that takes in a list of arguments and returns a string of then joined by slashes
+function joinSlash()
+{
+    var arr = [];
+    var args = arguments;
+    Object.keys(args).forEach(function(k) {
+        arr.push(args[k]);
+    });
+    return arr.join('/') + '/';
+}
+
+function logEntry(method, path)
+{
+    //console.log("(Node): " + arguments[0] + " " + joinSlash.apply(this, arguments.slice(1)));
+    console.log("(Node): " + method + " " + path);
+}
 
 var server = app.listen(PORT_NUM);
 console.log('Listening on port ' + server.address().port);

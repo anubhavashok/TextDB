@@ -1,5 +1,5 @@
-TextDB
-======
+.
+=
 
 .. toctree::
    :maxdepth: 4

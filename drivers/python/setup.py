@@ -10,4 +10,3 @@ setup(name='TextDB',
       packages=['TextDB'],
       
      )
-
