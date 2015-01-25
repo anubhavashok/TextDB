@@ -12,6 +12,7 @@
 #include <ctime>
 #include <boost/foreach.hpp>
 #include <set>
+#include <algorithm>
 
 
 using widx = boost::dynamic_bitset<>;
@@ -41,7 +42,6 @@ void Collection::aow(fs::path path, std::vector<widx> doc)
     // create file to store all docs
     
     // output number of words in doc
-    cout << "saving doc of size: " << doc.size() << endl;
     bitWriter.write(doc.size(), 32);
     
     // output nbits in case nbits changes
@@ -80,8 +80,6 @@ void Collection::loadWordIndex()
         std::string word = bitReader.getNextString(len);
         // add to in memory word index
         if(word != "") {
-            cout << len << endl;
-            cout << word << endl;
             words.push_back(word);
         }
     }
@@ -111,12 +109,10 @@ bool Collection::load(std::string name)
     }
     bitReader.read(filePath.string(), true);
     size_t size = bitReader.getNextBits(32).to_ulong();
-    cout << "size: " << size << endl;
     size_t nbits = bitReader.getNextBits(32).to_ulong();
     std::vector<widx> doc;
     while (!bitReader.eof()) {
         widx idx = bitReader.getNextBits(nbits);
-        cout << "read word!" << endl;
         doc.push_back(idx);
         if (bitReader.remainingChars() <= 1) {
             break;
@@ -150,6 +146,20 @@ size_t Collection::size()
     return sum;
 }
 
+
+size_t Collection::disk_size()
+{
+    size_t size=0;
+    for(fs::recursive_directory_iterator it(collectionPath);
+        it!=fs::recursive_directory_iterator();
+        ++it)
+    {
+        if(!fs::is_directory(*it))
+            size+=fs::file_size(*it);
+    }
+    return size;
+}
+
 size_t Collection::size(std::string name)
 {
     fs::path path = collectionPath / "files" / (name + ".fyle");
@@ -171,6 +181,11 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
     for (std::string word: new_words) {
         if (word != "")
             addWord(word);
+        // add doc to idx->docs mapping
+        if (!idx2docs.count(word2idx[word])) {
+            idx2docs[word2idx[word]] = std::vector<std::string>();
+        }
+        idx2docs[word2idx[word]].push_back(name);
     }
     storage[name] = serialize(doc);
     aow(path, storage[name]);
@@ -181,7 +196,7 @@ widx Collection::addWord(std::string word)
 {
     if (idx2word.size() >= pow(2, nbits)-1) {
         nbits++;
-        cout << "increasing index size to " << nbits << endl;
+        //cout << "increasing index size to " << nbits << endl;
     }
     if (word2idx.count(word)) {
         widx idx = word2idx[word];
@@ -243,7 +258,6 @@ void Collection::aow_words(std::vector<std::string> new_words)
     // ensure aow_words is called prior to updating idx2word with new words
     fs::path widx_path = collectionPath / "word.idx";
     size_t size = (int)idx2word.size() + (int)new_words.size();
-    cout << size << endl;
     
     // output size of word index
     fstream fout;
@@ -258,7 +272,6 @@ void Collection::aow_words(std::vector<std::string> new_words)
     
     // [len|chars]
     for (std::string word: new_words) {
-        cout << "Adding: " << word << " to word index of size " <<word.size() << endl;
         // output len in bytes
         // NOTE: current length of word is 32
         bitWriter.write(word.size(), 8);
@@ -302,7 +315,6 @@ std::string Collection::get(std::string name)
         }
     }
     if(load(name)) {
-        cout << "loaded! " << storage[name].size() << endl;
         return reassembleText(deserialize(storage[name]));
     } else {
         return "";
@@ -333,8 +345,22 @@ bool Collection::remove(std::string name)
     std::string newName = name+".remove."+std::to_string(timestamp);
     // mark file for removal with timestamp
     fs::rename(files / (name + ".fyle"), files / newName);
+    // removeWordsFromMapping(name);
+    storage.erase(name);
     // let cron take care of remove
+    // remove doc name from idx2docs
     return true;
+}
+
+void Collection::removeWordsFromMapping(std::string name)
+{
+    for (widx idx: storage[name]) {
+        for (size_t i = 0; i < idx2docs[idx].size(); i++) {
+            if (idx2docs[idx][i] == name) {
+                idx2docs[idx].erase(idx2docs[idx].begin() + i);
+            }
+        }
+    }
 }
 
 std::vector<std::string> Collection::listFiles()
@@ -368,7 +394,6 @@ bool Collection::exists(std::string name)
     return fs::exists(collectionPath / "files" / (name + ".fyle"));
 }
 
-
 std::string Collection::reassembleText(const std::vector<std::string>& words)
 {
     std::string text = "";
@@ -378,4 +403,32 @@ std::string Collection::reassembleText(const std::vector<std::string>& words)
         i++;
     }
     return text;
+}
+
+
+bool Collection::is_cached(std::string name, std::string attr)
+{
+    if (cache.count(name)) {
+        return cache[name].is_cached(attr);
+    } else {
+        return false;
+    }
+}
+
+boost::any Collection::get_cached(std::string name, std::string attr)
+{
+    if (is_cached(name, attr))
+        return cache[name].get(attr);
+    else
+        return NULL;
+}
+
+void Collection::clear_cache(std::string name)
+{
+    cache.erase(name);
+}
+
+void Collection::add_to_cache(std::string name, std::string attr, boost::any val)
+{
+    cache[name].add(attr, val);
 }

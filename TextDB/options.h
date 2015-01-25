@@ -23,17 +23,10 @@ namespace {
     /*! @brief Define command line options for this entrypoint */
     struct Options {
         
-        // path to store.bindb
-        std::string dbpath;
-        
-        // path to data - sentiment analysis etc.
-        std::string datapath;
-        
-        // verbose flag
-        static bool verbose;
-        
-        // memory_limit
-        size_t memory_limit;
+        std::string dbpath;           // path to store.bindb
+        std::string datapath;         // path to data - sentiment analysis etc.
+        static bool verbose;          // verbose flag
+        size_t memory_limit;          // memory_limit
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
@@ -50,7 +43,7 @@ namespace {
             ("help,h", "Print this help")
             ;
             desc.add(inputOpts);
-            
+
             po::store(po::parse_command_line(argc, argv, desc), vm);
             
             // handle command-line options
@@ -58,11 +51,7 @@ namespace {
                 std::cout << desc << std::endl;
                 exit(0);
             }
-            if (vm.count("verbose")) {
-                Options::verbose = true;
-            } else {
-                Options::verbose = false;
-            }
+            Options::verbose = vm.count("verbose");
             po::notify(vm);
             return vm;
         }

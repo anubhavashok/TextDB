@@ -2,6 +2,7 @@ import sys
 sys.path.append("../")
 
 from DB import *
+import os
 import unittest
 
 
@@ -21,8 +22,8 @@ class TestSequenceFunctions(unittest.TestCase):
         l = self.db.list()
         self.assertFalse("a" in l)
 
-    def test_collection_doesnt_exist(self):
-        self.assertEqual(self.db.abcde, None)
+    # def test_collection_doesnt_exist(self):
+    #     self.assertEqual(self.db.abcde, None)
 
     def test_collection_exists(self):
         self.assertNotEqual(self.c, None)
@@ -44,7 +45,6 @@ class TestSequenceFunctions(unittest.TestCase):
         l = self.c.list()
         self.assertFalse(name in l)
 
-
     def test_doc_doesnt_exist(self):
         self.assertEqual(self.c.get('zzzzzzzzzz'), None)
 
@@ -55,6 +55,24 @@ class TestSequenceFunctions(unittest.TestCase):
         self.assertEqual(e.get_next_sentence(), text.split('.')[0].strip() + ".")
         self.assertEqual(e.get_next_sentence(), text.split('.')[1].strip())
 
-
+    def test_compression(self):
+        # create compressed collection
+        self.db.create_collection("compr", "compressed")
+        comp = self.db.compr
+        self.db.create_collection("unic", "unicode")
+        uni = self.db.unic
+        for p in os.listdir('./files'):
+            print p
+            f = open("./files/" + p)
+            name = os.path.basename(p).split('.')[0]
+            comp.add(name, f)
+            uni.add(name, f)
+        # get size in bytes for both
+        c_size = comp.disk_size()
+        u_size = uni.disk_size()
+        self.db.drop("compr")
+        self.db.drop("unic")
+        ratio = 100 * c_size/float(u_size)
+        print str(ratio) + "%"
 if __name__ == '__main__':
     unittest.main()

@@ -18,6 +18,8 @@
 #include "encoder.h"
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include "cache.h"
+#include <boost/any.hpp>
 
 // Each collection has its own encoding type
 // Each collection has its own storage and word table
@@ -63,6 +65,7 @@ public:
 
     // remove
     bool remove(std::string name);
+    void removeWordsFromMapping(std::string name);
     
     // sentiment
     double getSentimentScore(std::string name);
@@ -74,6 +77,14 @@ public:
     
     bool exists(std::string name);
     
+    // cache
+    bool is_cached(std::string name, std::string attr);
+    boost::any get_cached(std::string name, std::string attr);
+    void clear_cache(std::string name);
+    void add_to_cache(std::string name, std::string attr, boost::any val);
+    
+    size_t disk_size();
+    
 private:
     
     Collection(fs::path collectionPath);
@@ -81,9 +92,11 @@ private:
     // WORD INDEX
     std::map<widx, std::string, Comparer> idx2word;
     std::map<std::string, widx> word2idx;
+    std::map<widx, std::vector<std::string>> idx2docs;
 
     // STORAGE
     std::map<std::string, std::vector<widx>> storage;
+    std::map<std::string, Cache> cache;
 
     // I/O
     size_t nbits;

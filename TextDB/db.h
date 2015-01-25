@@ -27,8 +27,8 @@ namespace fs = boost::filesystem;
 class DB
 {
 private:
-    size_t memory_limit = 150;//2000000000;
-    size_t memory_epsilon = 1;
+    size_t memory_limit = 2000000000;
+    size_t memory_epsilon = 10000;
     // index of word
     // max value is ~250,000 since there are only that many english words
     using widx = boost::dynamic_bitset<>;
@@ -40,10 +40,12 @@ private:
         }
     };
     
+    std::map<std::string, std::function<void(DB* db, ostream& htmlout, std::vector<std::string> args)>> queryFunctions;
+    void init_query_operations();
+    
     // Sentiment Analysis
     SentimentAnalysis sentimentAnalysis;
     
-    std::map<std::string, Collection*> collections;
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
     
     LRU lru;
@@ -57,6 +59,8 @@ public:
     DB(fs::path data);
     fs::path datapath;
     
+    
+    std::map<std::string, Collection*> collections;
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
     
     

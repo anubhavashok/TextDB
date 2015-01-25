@@ -221,6 +221,18 @@ app.post("/create/:collection/:encoding", function(req, res) {
     });
 });
 
+app.get("/disk_size/:collection", function(req, res) {
+    var collection = decodeURI(req.params.collection);
+
+    logEntry(req.method, req.path);
+
+    var uri = joinSlash(url, "collectionsize", collection);
+
+    request.get(uri, function(err, r, body) {
+        res.send(body);
+    });
+});
+
 app.get("/auth", function(req, res) {
     var username = req.query.username;
     var passhash = req.query.password;

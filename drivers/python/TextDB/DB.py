@@ -78,8 +78,11 @@ class TextDB():
             ['1', 'a', 'b', 'c']
 
         """
+        encoding = encoding.lower()
         if not collection.isalpha():
             print "Collection name has to be alphabetical"
+        elif (encoding != "compressed") and (encoding != "unicode"):
+            print "Invalid type '%s'. Allowed types are 'compressed' or 'unicode'" % encoding
         else:
             r = requests.post("{0}/{1}/{2}/{3}".format(self.endpoint, "create", collection, encoding))
             return r.text

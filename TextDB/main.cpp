@@ -9,20 +9,7 @@
 #include "options.h"
 #include <iostream>
 #include <vector>
-
 #include <boost/program_options.hpp>
-
-using namespace std;
-
-namespace po = boost::program_options;
-const char* toolName = "tdb";
-
-
-// TODO: enable regex
-// 1. parse
-// 2. run queries
-
-
 #include <bitset>
 #include <boost/algorithm/string.hpp>
 #include "db.h"
@@ -33,16 +20,22 @@ const char* toolName = "tdb";
 #include "preformatter.h"
 #include <signal.h>
 
+using namespace std;
+namespace fs=boost::filesystem;
+namespace po = boost::program_options;
+
+DB* db = nullptr;
+static std::string dbpath;
+const char* toolName = "tdb";
+
+
 // TODO: VARY WORD INDEX DEPENDING ON NUMBER OF UNIQUE WORDS THERE ARE
 // TODO: Make word-text mappings persistent
 // TODO: make a preformatter to preformat all text before saving
 // TODO: growing index for chars too
-// TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29, 
+// TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29,
+// TODO: if doc is modified, remove cache
 
-// Globals in order to handle SIGTERM signals
-namespace fs=boost::filesystem;
-DB* db = nullptr;
-static std::string dbpath;
 
 /*
  * DBSigHandler
@@ -54,43 +47,26 @@ static std::string dbpath;
 void DBSigHandler(int signum);
 void DBSigHandler(int signum)
 {
-    //fs::path uncompresseddbpath = fs::path(dbpath).parent_path() / "store.text";
-    //db->encodeAndSave(dbpath);
-    //db->saveUncompressed(uncompresseddbpath.string());
+    // safe to exit since stuff is persisted on write
     exit(0);
 }
 
 int main(int argc, char ** argv) {
-    po::options_description desc("Shows the search space");
+    
+    po::options_description desc("Welcome to TexteDB");
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
     signal(SIGTERM, DBSigHandler);
-
     fs::path datapath = options.datapath;
-    
     dbpath = options.dbpath;
     db = new DB(datapath);
+    
     assert(db != nullptr);
-    if (Options::verbose) {
-        cout << "Initializing DB object...";
-    }
-    if (Options::verbose) {
-        cout << "done" << endl;
-    }
     
     if (Options::verbose) {
+        cout << "Initializing DB object...";
+        cout << "done" << endl;
         cout << "Decoding and loading db file...";
-    }
-//    if (boost::filesystem::exists(dbpath)) {
-//        db->decodeAndLoad(dbpath);
-//    } else {
-//        // just create file
-//        fstream dbfile;
-//        dbfile.open(dbpath, ios::out);
-//        dbfile.close();
-//        cout << "Created new db file at " << dbpath << "..." << endl;
-//    }
-    if (Options::verbose) {
         cout << "done" << endl;
     }
     
@@ -103,7 +79,7 @@ int main(int argc, char ** argv) {
     
     FCGX_Init();
     FCGX_InitRequest(&request, 0, 0);
-    std::string query_string = "";
+    std::string request_uri = "";
     
     while (FCGX_Accept_r(&request) == 0) {
         
@@ -111,10 +87,10 @@ int main(int argc, char ** argv) {
         fcgi_streambuf cout_fcgi_streambuf(request.out);
         fcgi_streambuf cerr_fcgi_streambuf(request.err);
         
-        query_string = FCGX_GetParam("REQUEST_URI", request.envp);
-        query_string = query_string.substr(1, query_string.size());
+        request_uri = FCGX_GetParam("REQUEST_URI", request.envp);
+        request_uri = request_uri.substr(1, request_uri.size());
         std::vector<std::string> in;
-        boost::split(in, query_string, boost::is_any_of("&/"));
+        boost::split(in, request_uri, boost::is_any_of("&/"));
 
         // set buffers
         cin.rdbuf(&cin_fcgi_streambuf);
