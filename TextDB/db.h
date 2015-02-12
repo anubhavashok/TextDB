@@ -10,7 +10,7 @@
 #define __TextDB__db__
 
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
 #include "sentiment.h"
@@ -40,7 +40,7 @@ private:
         }
     };
     
-    std::map<std::string, std::function<void(DB* db, ostream& htmlout, std::vector<std::string> args)>> queryFunctions;
+    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, std::vector<std::string> args)>> queryFunctions;
     void init_query_operations();
     
     // Sentiment Analysis
@@ -58,12 +58,12 @@ public:
 
     DB(fs::path data);
     fs::path datapath;
+    std::unordered_map<std::string, Collection*> collections;
+
     
-    
-    std::map<std::string, Collection*> collections;
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
     
-    
+    // Q
     bool add(std::string collection, std::string name, std::string path);
     bool add(std::string collection, std::string name, std::vector<std::string> text);
     bool remove(std::string collection, std::string name);
@@ -72,7 +72,7 @@ public:
     widx uint2widx(unsigned long i);
     std::string getSentence(std::string collection, std::string name, size_t start);
 
-    //std::map<std::string, std::vector<std::string> > search(std::string queryString);
+    //std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
 
     // Text Mining
     double getSentimentScore(std::string collection, std::string name);
@@ -81,7 +81,6 @@ public:
     
     static std::string urlDecode(string &SRC);
     
-    ///////POST COLLECTIONS ERA
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();
 };

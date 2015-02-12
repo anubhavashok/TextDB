@@ -23,6 +23,9 @@
 #include "collection.h"
 #include <boost/tokenizer.hpp>
 #include <boost/range/algorithm/count.hpp>
+#include <boost/regex.hpp>
+#include "html.h"
+
 
 namespace fs = boost::filesystem;
 
@@ -32,9 +35,8 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
-
 DB::DB(fs::path data)
-: sentimentAnalysis(data / fs::path("positive.txt"), data / fs::path("negative.txt")), datapath(data)
+: sentimentAnalysis(data), datapath(data)
 {
     fs::path d = data / "collections";
     if (!fs::exists(d)) {
@@ -61,45 +63,13 @@ DB::DB(fs::path data)
     init_query_operations();
 }
 
-std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string filename)
+std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string directory)
 {
-    // split at ., return both in pair
+    // split at - return <collection, type>
     std::vector<std::string> args;
-    boost::split(args, filename, boost::is_any_of("-"));
+    boost::split(args, directory, boost::is_any_of("-"));
     return std::make_pair(args[0], args[1]);
 }
-
-/*
- * serializeDoc
- * A function that converts each word in a text document into its equivalent index in the Word Index
- * Adds an entry to the word index on encountering a new unique word
- * @param doc a vector of strings representing a text document
- * @return a vector of widxs representing the right index to each word
- */
-
-
-/*
- * uint2widx
- * A helper function to generate a bitset of nbits containing input value
- * NOTE: nbits is a member variable to db indicating the current size of a Word Index index
- * @param i an unsigned long that will be the numerical value of the bitset when created
- * @return a widx (boost::dynamic_bitset<>) that is nbits large and holds the value of i
- */
-
-/*
- * addWord
- * A function that adds the word to the Word Index if new and unique OR returns the words appropriate widx
- * @param word a string containing the word that is to be added/looked up
- * @return a widx representing the index of the input word in the Word Index
- */
-
-
-/*
- * handleQuery
- * A function that takes in a query string and performs the correct query (ADD, ADDDOC, GET), outputting updates to the provided out stream
- * @param in a vector of tokenized strings representing the input command and args
- * @param htmlout an ostream& referring to the appropriate output stream (in this case plaintext html)
- */
 
 
 void DB::init_query_operations()
@@ -108,6 +78,7 @@ void DB::init_query_operations()
     // disk_size
     queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
         std::string collection = args[0];
+        
         htmlout << db->collections[collection]->disk_size();
     };
     
@@ -117,16 +88,14 @@ void DB::init_query_operations()
         std::string name = args[1];
         std::string t = args[2];
         
-        htmlout << "ADD " << name << "\n";
-        
-        // have either text or path to doc
         std::string rawtext = db->urlDecode(t);
-        std::vector<std::string> text;
-        // TODO: fix this, keep punctuation
-        // boost::split(text, rawtext, boost::is_any_of(DB::allowed_puncs));
         
+        /* Tokenize words */
         boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
         boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+        
+        std::vector<std::string> text;
+
         for (std::string t : tokens) {
             boost::trim(t);
             if (t != "") {
@@ -134,8 +103,6 @@ void DB::init_query_operations()
             }
         }
         
-        
-        // index word and add to db
         db->add(collection, name, text);
         for (std::string word: text) {
             htmlout << word << " ";
@@ -245,6 +212,38 @@ void DB::init_query_operations()
         htmlout << json;
 
     };
+    
+    queryFunctions["searchdoc"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+        std::string collection = args[0];
+        std::string name = args[1];
+        std::string search_expression = args[2];
+        std::string doc = db->get(collection, name);
+        boost::regex regex(search_expression);
+        boost::sregex_iterator it(doc.begin(), doc.end(), regex);
+        boost::sregex_iterator end;
+        htmlout << "[" << endl;
+        bool start = true;
+        for (; it != end; ++it) {
+            if (!start) {
+                htmlout << ", " << endl;
+            } else {
+                start = false;
+            }
+            htmlout <<"\"" << it->str() << "\" ";
+        }
+        htmlout << "]" << endl;
+
+    };
+    
+    queryFunctions["htmldoc"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+        std::string uri = "http://" + urlDecode(args[0]);
+        cout << uri << endl;
+        std::string page = HTML::get(uri);
+        cout << page << endl;
+        std::string text = HTML::parseText(page);
+        cout << text << endl;
+        htmlout << text << endl;
+    };
 }
 
 
@@ -257,6 +256,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     
     if (queryFunctions.count(cmd)) {
         // call appropriate query
+        cout << "Query: " << cmd << endl;
         queryFunctions[cmd](this, htmlout, args);
     } else {
         cout << "(DB): Unknown query" << endl;
@@ -338,7 +338,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 //            htmlout << w << " ";
 //        }
 //        htmlout << endl;
-//        std::map<std::string, std::vector<std::string> > results = this->search(queryString);
+//        std::unordered_map<std::string, std::vector<std::string> > results = this->search(queryString);
 //        std::string resultString = "{\n";
 //        for (auto resultPair : results) {
 //            resultString += "\"";
@@ -513,11 +513,11 @@ bool widxMatch (const widx& a, const widx& b) {
     return (a.to_ulong() == b.to_ulong());
 }
 //
-//std::map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
+//std::unordered_map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
 //    std::vector<std::string> query;
 //    boost::split(query, queryString, boost::is_any_of(" +"));
 //    
-//    std::map<std::string, std::vector<std::string> > results;
+//    std::unordered_map<std::string, std::vector<std::string> > results;
 //    std::vector<widx> queryIndexes;
 //    // get all widxs
 //    for (std::string queryWord: query) {

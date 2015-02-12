@@ -115,3 +115,5 @@ std::string Encoder::encoding2str(CharacterEncoding _encoding)
     }
 }
 
+
+

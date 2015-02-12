@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <boost/dynamic_bitset.hpp>
 #include "bitreader.h"
 #include "bitwriter.h"
@@ -90,13 +90,13 @@ private:
     Collection(fs::path collectionPath);
     
     // WORD INDEX
-    std::map<widx, std::string, Comparer> idx2word;
-    std::map<std::string, widx> word2idx;
-    std::map<widx, std::vector<std::string>> idx2docs;
+    std::unordered_map<widx, std::string, Comparer> idx2word;
+    std::unordered_map<std::string, widx> word2idx;
+    std::unordered_map<widx, std::vector<std::string>> idx2docs;
 
     // STORAGE
-    std::map<std::string, std::vector<widx>> storage;
-    std::map<std::string, Cache> cache;
+    std::unordered_map<std::string, std::vector<widx>> storage;
+    std::unordered_map<std::string, Cache> cache;
 
     // I/O
     size_t nbits;
@@ -106,20 +106,20 @@ private:
     //Encoder::CharacterEncoding encoding;
     
     // widx-string (vice-versa)
-    std::vector<widx> serialize(std::vector<std::string> doc);
+    std::vector<widx> serialize(const std::vector<std::string>& doc);
     std::vector<std::string> deserialize(std::vector<widx> doc);
     
     // add - helpers
     widx addWord(std::string word);
     widx uint2widx(unsigned long i);
-    std::vector<std::string> find_new_words(std::vector<std::string> doc);
+    std::vector<std::string> find_new_words(const std::vector<std::string>& doc);
     void aow(fs::path path, std::vector<widx> doc);
-    void aow_words(std::vector<std::string> new_words);
+    void aow_words(const std::vector<std::string>& new_words);
 
     std::string reassembleText(const std::vector<std::string>& words);
     
     
-    std::map<std::string, std::vector<std::string> > search(std::string queryString);
+    std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
 };
 
 #endif /* defined(__TextDB__collection__) */

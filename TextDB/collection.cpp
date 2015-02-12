@@ -221,7 +221,7 @@ widx Collection::uint2widx(unsigned long i)
     return res;
 }
 
-std::vector<std::string> Collection::find_new_words(std::vector<std::string> doc)
+std::vector<std::string> Collection::find_new_words(const std::vector<std::string>& doc)
 {
     std::set<std::string> new_words;
     for (std::string word: doc) {
@@ -249,7 +249,7 @@ std::vector<std::string> Collection::find_new_words(std::vector<std::string> doc
 //}
 //int calcPosition();
 
-void Collection::aow_words(std::vector<std::string> new_words)
+void Collection::aow_words(const std::vector<std::string>& new_words)
 {
     if (new_words.size() == 0) {
         return;
@@ -283,7 +283,7 @@ void Collection::aow_words(std::vector<std::string> new_words)
     bitWriter.clear();
 }
 
-std::vector<widx> Collection::serialize(std::vector<std::string> doc)
+std::vector<widx> Collection::serialize(const std::vector<std::string>& doc)
 {
     std::vector<widx> idxs;
     for(std::string s: doc) {

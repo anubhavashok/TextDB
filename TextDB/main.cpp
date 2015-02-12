@@ -20,6 +20,16 @@
 #include "preformatter.h"
 #include <signal.h>
 
+#include "Poco/Net/HTTPServer.h"
+#include "Poco/Net/HTTPRequestHandler.h"
+#include "Poco/Net/HTTPRequestHandlerFactory.h"
+#include "Poco/Net/HTTPResponse.h"
+#include "Poco/Net/HTTPServerResponse.h"
+#include "Poco/Net/HTTPServerRequest.h"
+#include "Poco/Util/ServerApplication.h"
+
+using namespace Poco::Net;
+using namespace Poco::Util;
 using namespace std;
 namespace fs=boost::filesystem;
 namespace po = boost::program_options;
@@ -36,76 +46,76 @@ const char* toolName = "tdb";
 // TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29,
 // TODO: if doc is modified, remove cache
 
-
-/*
- * DBSigHandler
- * A function that encodes and saves DB to file on SIGTERM
- * @param signum an int that represents the signal recieved
- * In this case signum corressponds to SIGTERM (15)
- */
-
-void DBSigHandler(int signum);
-void DBSigHandler(int signum)
+class RequestHandler : public HTTPRequestHandler
 {
-    // safe to exit since stuff is persisted on write
-    exit(0);
-}
+public:
+    virtual void handleRequest(HTTPServerRequest &req, HTTPServerResponse &resp)
+    {
+        resp.setStatus(HTTPResponse::HTTP_OK);
+        resp.setContentType("text/html");
+        
+        ostream& out = resp.send();
+        
+        
+        std::string request_uri = req.getURI();
+        
+        std::vector<std::string> in;
+        boost::split(in, request_uri, boost::is_any_of("&/"));
+        in.erase(in.begin() + 0);
+
+        cout << endl
+        << "(TextDB): " << req.getMethod() << " " << req.getURI() << endl;
+
+        db->handleQuery(in, out);
+        out.flush();
+        
+    }
+};
+
+class RequestHandlerFactory : public HTTPRequestHandlerFactory
+{
+public:
+    virtual HTTPRequestHandler* createRequestHandler(const HTTPServerRequest &)
+    {
+        return new RequestHandler;
+    }
+};
+
+class TextDBServer : public ServerApplication
+{
+protected:
+    int main(const vector<string> &)
+    {
+        HTTPServer s(new RequestHandlerFactory, ServerSocket(9090), new HTTPServerParams);
+        
+        s.start();
+        cout << endl << "Welcome to TextDB!" << endl;
+        
+        waitForTerminationRequest();  // wait for CTRL-C or kill
+        
+        cout << endl << "Shutting down..." << endl;
+        s.stop();
+        
+        return Application::EXIT_OK;
+    }
+};
+
 
 int main(int argc, char ** argv) {
     
     po::options_description desc("Welcome to TexteDB");
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
-    signal(SIGTERM, DBSigHandler);
+
     fs::path datapath = options.datapath;
     dbpath = options.dbpath;
     db = new DB(datapath);
-    
+
     assert(db != nullptr);
+    TextDBServer app;
+    std::vector<std::string> args;
+    args.push_back(" ");
     
-    if (Options::verbose) {
-        cout << "Initializing DB object...";
-        cout << "done" << endl;
-        cout << "Decoding and loading db file...";
-        cout << "done" << endl;
-    }
-    
-    // Backup the stdio streambufs
-    streambuf * cin_streambuf  = cin.rdbuf();
-    streambuf * cout_streambuf = cout.rdbuf();
-    streambuf * cerr_streambuf = cerr.rdbuf();
-    
-    FCGX_Request request;
-    
-    FCGX_Init();
-    FCGX_InitRequest(&request, 0, 0);
-    std::string request_uri = "";
-    
-    while (FCGX_Accept_r(&request) == 0) {
-        
-        fcgi_streambuf cin_fcgi_streambuf(request.in);
-        fcgi_streambuf cout_fcgi_streambuf(request.out);
-        fcgi_streambuf cerr_fcgi_streambuf(request.err);
-        
-        request_uri = FCGX_GetParam("REQUEST_URI", request.envp);
-        request_uri = request_uri.substr(1, request_uri.size());
-        std::vector<std::string> in;
-        boost::split(in, request_uri, boost::is_any_of("&/"));
-
-        // set buffers
-        cin.rdbuf(&cin_fcgi_streambuf);
-        cout.rdbuf(&cout_fcgi_streambuf);
-        cerr.rdbuf(&cerr_fcgi_streambuf);
-        
-        std::string cmd = in[0];
-        cout << "Content-type: text/plain\r\n"
-        << "\r\n";
-
-        db->handleQuery(in, cout);
-    }
-    // restore stdio streambufs
-    cin.rdbuf(cin_streambuf);
-    cout.rdbuf(cout_streambuf);
-    cerr.rdbuf(cerr_streambuf);
+    return app.run(args);
 
 }

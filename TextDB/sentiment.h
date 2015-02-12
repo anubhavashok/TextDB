@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
@@ -19,11 +19,11 @@ namespace fs = boost::filesystem;
 class SentimentAnalysis
 {
 public:
-    SentimentAnalysis(fs::path p, fs::path n);
-    std::map<std::string, double> sentimentMap;
+    SentimentAnalysis(fs::path data);
+    std::unordered_map<std::string, double> sentimentMap;
     
     void loadSentimentWords(fs::path p, fs::path n);
-    void fileToWordMap(fs::path p, std::map<std::string, double>& m, double score);
+    void fileToWordMap(fs::path p, std::unordered_map<std::string, double>& m, double score);
     double analyse(const std::string& text);
 };
 

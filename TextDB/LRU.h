@@ -10,7 +10,7 @@
 #define __TextDB__LRU__
 
 #include <stdio.h>
-#include <map>
+#include <unordered_map>
 #include <list>
 
 class LRU

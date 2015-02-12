@@ -10,7 +10,7 @@
 #define __TextDB__cache__
 
 #include <stdio.h>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <boost/any.hpp>
 
@@ -23,7 +23,7 @@ public:
     bool clear(std::string attr);
     
 private:
-    std::map<std::string, boost::any> cache;
+    std::unordered_map<std::string, boost::any> cache;
 };
 
 #endif /* defined(__TextDB__cache__) */

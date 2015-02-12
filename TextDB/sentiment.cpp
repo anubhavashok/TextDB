@@ -17,8 +17,10 @@
 namespace fs = boost::filesystem;
 using namespace std;
 
-SentimentAnalysis::SentimentAnalysis(fs::path p, fs::path n)
+SentimentAnalysis::SentimentAnalysis(fs::path data)
 {
+    fs::path p = data / fs::path("positive.txt");
+    fs::path n = data / fs::path("negative.txt");
     loadSentimentWords(p, n);
 }
 
@@ -33,7 +35,7 @@ void SentimentAnalysis::loadSentimentWords(fs::path p, fs::path n)
     fileToWordMap(n, sentimentMap, -1);
 }
 
-void SentimentAnalysis::fileToWordMap(fs::path f, map<string, double>& v, double score)
+void SentimentAnalysis::fileToWordMap(fs::path f, unordered_map<string, double>& v, double score)
 {
     ifstream in(f.string());
     string w;

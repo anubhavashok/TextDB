@@ -15,6 +15,10 @@
 		44752F671A5070650029C2D8 /* encoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F651A5070650029C2D8 /* encoder.cpp */; };
 		44752F6A1A5081230029C2D8 /* bitwriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F681A5081230029C2D8 /* bitwriter.cpp */; };
 		44752F6D1A56937C0029C2D8 /* LRU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44752F6B1A56937C0029C2D8 /* LRU.cpp */; };
+		44D627CB1A7491E700B67CB5 /* requesthandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44D627C91A7491E700B67CB5 /* requesthandler.cpp */; };
+		44D627CE1A76036000B67CB5 /* html.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44D627CC1A76036000B67CB5 /* html.cpp */; };
+		44D627D11A78976D00B67CB5 /* clustering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44D627CF1A78976D00B67CB5 /* clustering.cpp */; };
+		44D627D41A7A132700B67CB5 /* similarity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44D627D21A7A132700B67CB5 /* similarity.cpp */; };
 		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
 		44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69CB19ADC6CF00219F7B /* bitreader.cpp */; };
 /* End PBXBuildFile section */
@@ -49,6 +53,14 @@
 		44752F691A5081230029C2D8 /* bitwriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bitwriter.h; sourceTree = "<group>"; };
 		44752F6B1A56937C0029C2D8 /* LRU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LRU.cpp; sourceTree = "<group>"; };
 		44752F6C1A56937C0029C2D8 /* LRU.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LRU.h; sourceTree = "<group>"; };
+		44D627C91A7491E700B67CB5 /* requesthandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = requesthandler.cpp; sourceTree = "<group>"; };
+		44D627CA1A7491E700B67CB5 /* requesthandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = requesthandler.h; sourceTree = "<group>"; };
+		44D627CC1A76036000B67CB5 /* html.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = html.cpp; sourceTree = "<group>"; };
+		44D627CD1A76036000B67CB5 /* html.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = html.h; sourceTree = "<group>"; };
+		44D627CF1A78976D00B67CB5 /* clustering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clustering.cpp; sourceTree = "<group>"; };
+		44D627D01A78976D00B67CB5 /* clustering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clustering.h; sourceTree = "<group>"; };
+		44D627D21A7A132700B67CB5 /* similarity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = similarity.cpp; sourceTree = "<group>"; };
+		44D627D31A7A132700B67CB5 /* similarity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = similarity.h; sourceTree = "<group>"; };
 		44FB69C819ADB29000219F7B /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = db.cpp; sourceTree = "<group>"; };
 		44FB69C919ADB29000219F7B /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = db.h; sourceTree = "<group>"; };
 		44FB69CB19ADC6CF00219F7B /* bitreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitreader.cpp; sourceTree = "<group>"; };
@@ -93,9 +105,17 @@
 				44FB69C919ADB29000219F7B /* db.h */,
 				44752F621A5065EE0029C2D8 /* collection.cpp */,
 				44752F631A5065EE0029C2D8 /* collection.h */,
+				44D627C91A7491E700B67CB5 /* requesthandler.cpp */,
+				44D627CA1A7491E700B67CB5 /* requesthandler.h */,
+				44D627CF1A78976D00B67CB5 /* clustering.cpp */,
+				44D627D21A7A132700B67CB5 /* similarity.cpp */,
+				44D627D31A7A132700B67CB5 /* similarity.h */,
+				44D627D01A78976D00B67CB5 /* clustering.h */,
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
 				44752F651A5070650029C2D8 /* encoder.cpp */,
+				44D627CC1A76036000B67CB5 /* html.cpp */,
+				44D627CD1A76036000B67CB5 /* html.h */,
 				44752F6B1A56937C0029C2D8 /* LRU.cpp */,
 				44752F6C1A56937C0029C2D8 /* LRU.h */,
 				44752F661A5070650029C2D8 /* encoder.h */,
@@ -162,14 +182,18 @@
 			files = (
 				44752F6D1A56937C0029C2D8 /* LRU.cpp in Sources */,
 				440DEBC319B56DA9000DCA90 /* preformatter.cpp in Sources */,
+				44D627CE1A76036000B67CB5 /* html.cpp in Sources */,
 				44747FFA1A5D901C0053BE17 /* cache.cpp in Sources */,
 				44752F671A5070650029C2D8 /* encoder.cpp in Sources */,
 				44752F6A1A5081230029C2D8 /* bitwriter.cpp in Sources */,
+				44D627D41A7A132700B67CB5 /* similarity.cpp in Sources */,
 				44752F641A5065EE0029C2D8 /* collection.cpp in Sources */,
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,
 				44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */,
 				44FB69CA19ADB29000219F7B /* db.cpp in Sources */,
 				440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */,
+				44D627D11A78976D00B67CB5 /* clustering.cpp in Sources */,
+				44D627CB1A7491E700B67CB5 /* requesthandler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,6 +300,10 @@
 					"-L/usr/local/Cellar/fcgi/2.4.0/lib",
 					"-lfcgi",
 					"-lfcgi++",
+					"-lPocoFoundation",
+					"-lPocoUtil",
+					"-lPocoNet",
+					"-lboost_regex-mt",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

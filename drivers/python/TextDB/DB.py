@@ -42,7 +42,7 @@ class TextDB():
 
     def list(self):
 
-        r = requests.get("{0}/{1}".format(self.endpoint, "list"))
+        r = requests.get("{0}/{1}".format(self.endpoint, "listcollections"))
         return r.json()
 
     def drop(self, collection):
