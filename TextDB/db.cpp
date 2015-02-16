@@ -16,7 +16,6 @@
 #include <snappy.h>
 #include <boost/filesystem/path.hpp>
 #include "options.h"
-#include "preformatter.h"
 #include <boost/algorithm/string.hpp>
 #include <string.h>
 #include <boost/foreach.hpp>
@@ -25,6 +24,8 @@
 #include <boost/range/algorithm/count.hpp>
 #include <boost/regex.hpp>
 #include "html.h"
+#include <unordered_map>
+#include "similarity.h"
 
 
 namespace fs = boost::filesystem;
@@ -39,9 +40,12 @@ DB::DB(fs::path data)
 : sentimentAnalysis(data), datapath(data)
 {
     fs::path d = data / "collections";
+    cout << "Entered TDB Constructor" <<endl;
     if (!fs::exists(d)) {
         fs::create_directories(d);
     }
+    cout << "Initialized directories" << endl;
+    
     fs::directory_iterator it(d), eod;
     std::vector<std::string> collectionNames;
     BOOST_FOREACH(fs::path p, std::make_pair(it, eod))
@@ -76,14 +80,14 @@ void DB::init_query_operations()
 {
     
     // disk_size
-    queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
         htmlout << db->collections[collection]->disk_size();
     };
     
     // add
-    queryFunctions["add"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["add"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         std::string t = args[2];
@@ -110,7 +114,7 @@ void DB::init_query_operations()
     };
     
     // remove
-    queryFunctions["remove"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["remove"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -120,7 +124,7 @@ void DB::init_query_operations()
     };
     
     // get
-    queryFunctions["get"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["get"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -130,7 +134,7 @@ void DB::init_query_operations()
     };
     
     // list documents in a collection
-    queryFunctions["listdocs"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["listdocs"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
         // get all doc names
@@ -148,12 +152,12 @@ void DB::init_query_operations()
     };
     
     // search - full text search for a term
-    queryFunctions["search"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["search"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         
     };
     
     // sentiment - gets sentiment of specified document
-    queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -163,7 +167,7 @@ void DB::init_query_operations()
     };
     
     // size - size of specified document
-    queryFunctions["size"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -172,7 +176,7 @@ void DB::init_query_operations()
     };
     
     // sentence
-    queryFunctions["sentence"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["sentence"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         std::string s = args[2];
@@ -184,14 +188,14 @@ void DB::init_query_operations()
         }
         
     };
-    queryFunctions["drop"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["drop"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
         if (db->collections.count(collection)) {
             db->drop(collection);
         }
     };
-    queryFunctions["create"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["create"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -199,7 +203,7 @@ void DB::init_query_operations()
             db->createCollection(collection, Encoder::str2encoding(name));
         }};
 
-    queryFunctions["listcollections"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["listcollections"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         // get all collectionNames
         std::string json = "[";
         int i = 0;
@@ -213,7 +217,7 @@ void DB::init_query_operations()
 
     };
     
-    queryFunctions["searchdoc"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["searchdoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         std::string search_expression = args[2];
@@ -235,7 +239,7 @@ void DB::init_query_operations()
 
     };
     
-    queryFunctions["htmldoc"] = [](DB* db, ostream& htmlout, std::vector<std::string> args){
+    queryFunctions["htmldoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string uri = "http://" + urlDecode(args[0]);
         cout << uri << endl;
         std::string page = HTML::get(uri);
@@ -243,6 +247,51 @@ void DB::init_query_operations()
         std::string text = HTML::parseText(page);
         cout << text << endl;
         htmlout << text << endl;
+    };
+    
+    queryFunctions["termfrequency"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        std::string collection = args[0];
+        std::string name = args[1];
+        if (db->collections.count(collection)) {
+            std::string frequency_table = db->collections[collection]->get_frequency_table(name);
+            htmlout << frequency_table;
+        }
+    };
+    
+    queryFunctions["tfidf"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        using namespace IDF;
+        using namespace TF;
+        using namespace TFIDF;
+        string collection = args[0];
+        string name = args[1];
+        // make sure document is loaded 
+        db->get(collection, name);
+        auto doc = db->collections[collection]->get_vector(name);
+        vector<vector<string>> docs = db->collections[collection]->get_all();
+        unordered_map<string, double> idf = inverse_document_frequency(db->collections[collection]->get_vector(name), docs);
+        auto tf = term_frequency(doc);
+        auto tfidf_m = tfidf(tf, idf);
+        for (auto p: tfidf_m) {
+            htmlout << p.first << " " << p.second << endl;
+        }
+    };
+    
+    queryFunctions["similarity"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        string collection = args[0];
+        string doc1 = args[1];
+        string doc2 = args[2];
+        
+        using namespace Similarity;
+        // NOTE: potential memory overflow
+        db->get(collection, doc1);
+        db->get(collection, doc2);
+        auto doc1_v = db->collections[collection]->get_vector(doc1);
+        auto doc2_v = db->collections[collection]->get_vector(doc2);
+
+        vector<vector<string>> docs = db->collections[collection]->get_all();
+
+        double similarity = document_similarity(doc1_v, doc2_v, docs);
+        htmlout << similarity << endl;
     };
 }
 
@@ -256,131 +305,12 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     
     if (queryFunctions.count(cmd)) {
         // call appropriate query
-        cout << "Query: " << cmd << endl;
+        cout << "(DB) Query: " << cmd << endl;
         queryFunctions[cmd](this, htmlout, args);
     } else {
-        cout << "(DB): Unknown query" << endl;
+        cout << "(DB) Unknown query" << endl;
     }
 }
-/*
-void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
-{
-    
-    
-    std::string cmd = in[0];
-    std::string collection = in[1];
-    std::string name = in[2];
-
-    std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
-    if (cmd == "add") {
-        assert(in.size() >= 3);
-        htmlout << "ADD " << name << "\n";
-
-        // have either text or path to doc
-        std::string rawtext = urlDecode(in[3]);
-        std::vector<std::string> text;
-        // TODO: fix this, keep punctuation
-        // boost::split(text, rawtext, boost::is_any_of(DB::allowed_puncs));
-        
-        boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
-        boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
-        for (std::string t : tokens) {
-            boost::trim(t);
-            if (t != "") {
-                text.push_back(t);
-            }
-        }
-
-
-        // index word and add to db
-        add(collection, name, text);
-        for (std::string word: text) {
-            htmlout << word << " ";
-        }
-
-    } else if (cmd == "remove") {
-        // TODO: mark words in deprecated text document in word list and lazy remove
-        bool success = remove(collection, name);
-        htmlout << success << endl;
-    } else if (cmd == "get") {
-        std::string res;
-        res = get(collection, name);
-        htmlout << res;
-    } else if (cmd == "listcollections") {
-        // get all collectionNames
-        std::string json = "[";
-        int i = 0;
-        for (std::string s: listCollections()) {
-            json += ((i == 0) ? "": ",");
-            json += '"' + s + '"';
-            i++;
-        }
-        json += "]";
-        htmlout << json;
-    } else if (cmd == "listdocs") {
-        // get all doc names
-        Collection* c = collections[collection];
-        std::string json = "[";
-        int i = 0;
-        for (std::string s: c->listFiles()) {
-            json += ((i == 0)? "": ",");
-            json += '"' + s + '"';
-            i++;
-        }
-        json += "]";
-        htmlout << json;
-//    }else if (cmd == "search") {
-//        std::string queryString = in[1].substr(2) + "+";
-//        htmlout << "Search: ";
-//        std::vector<std::string> query;
-//        boost::split(query, queryString, boost::is_any_of(" +"));
-//        for (std::string w: query) {
-//            htmlout << w << " ";
-//        }
-//        htmlout << endl;
-//        std::unordered_map<std::string, std::vector<std::string> > results = this->search(queryString);
-//        std::string resultString = "{\n";
-//        for (auto resultPair : results) {
-//            resultString += "\"";
-//            resultString += resultPair.first;
-//            resultString += "\":";
-//
-//            resultString += "[";
-//            for (std::string str : resultPair.second) {
-//                resultString += "\"" + str + "\",\n";
-//            }
-//            resultString += "],\n";
-//        }
-//        resultString += "}";
-//        htmlout << resultString << endl;
-    } else if (cmd == "sentiment") {
-        double score = getSentimentScore(collection, name);
-        //htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
-        htmlout << score;
-    } else if (cmd == "size") {
-        std::string words = collections[collection]->get(name);
-        htmlout << boost::count(words, ' ') + 1;
-    } else if (cmd == "sentence") {
-        try {
-            size_t start = boost::lexical_cast<int>(in[3]);
-            htmlout << getSentence(collection, name, start);
-        } catch (boost::bad_lexical_cast&) {
-        }
-    } else if (cmd == "drop") {
-        if (collections.count(collection)) {
-            drop(collection);
-        }
-    } else if (cmd == "create") {
-        if (!collections.count(collection)) {
-            createCollection(collection, Encoder::str2encoding(name));
-        }
-    } else if (cmd == "collectionsize") {
-        htmlout << collections[collection]->disk_size();
-    } else {
-        cout << "(DB): Unknown query" << endl;
-    }
-}
-*/
 
 /*
  * add
@@ -389,7 +319,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
  * @param text a vector of strings representing the value (text document)
  */
 
-bool DB::add(std::string collection, std::string name, std::vector<std::string> text)
+bool DB::add(std::string collection, std::string name, const std::vector<std::string>& text)
 {
     if (!collections.count(collection)) {
         cout << "Collection: " << collection << " does not exist!" << endl;
@@ -434,7 +364,7 @@ std::string DB::get(std::string collection, std::string name)
     }
     if (!lru.cached(collection+":"+name)) {
         int total_size = get_occupied_space();
-        int required = c->size(name);
+        size_t required = c->size(name);
         
         while ((int)memory_limit - (total_size + required) < (int)memory_epsilon) {
             // kick till enough space left
@@ -508,61 +438,57 @@ void DB::printIndex()
 }
 
 
-
-bool widxMatch (const widx& a, const widx& b) {
-    return (a.to_ulong() == b.to_ulong());
+/*
+std::unordered_map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
+    std::vector<std::string> query;
+    boost::split(query, queryString, boost::is_any_of(" +"));
+    
+    std::unordered_map<std::string, std::vector<std::string> > results;
+    std::vector<widx> queryIndexes;
+    // get all widxs
+    for (std::string queryWord: query) {
+        if (word2idx.count(queryWord)) {
+            queryIndexes.push_back(word2idx[queryWord]);
+        }
+    }
+    if (queryIndexes.empty()) {
+        // return results not found;
+        return results;
+    }
+    for (auto docPair : storage) {
+        std::string docName = docPair.first;
+        std::vector<widx> doc = docPair.second;
+        for (size_t i = 0; i < doc.size(); i++) {
+            widx word = doc[i];
+            size_t j = 0;
+            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
+                j++;
+            }
+            if (j >= queryIndexes.size() - 1) {
+                // full match
+                // get 5 before start and 5 after start
+                int low = (int)i - std::min((int)i, 5);
+                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
+                std::string resString = "";
+                for (size_t k = low; k < high; k++) {
+                    std::string resWord = idx2word[doc[k]];
+                    if (results.count(docName) == 0) {
+                        results[docName] = std::vector<std::string>();
+                        assert(results.count(docName) > 0);
+                    }
+                    resString += resWord + " ";
+                }
+                results[docName].push_back(resString);
+            } else if (j >= queryIndexes.size()/2) {
+                // partial match
+            } else {
+                // TODO: output error or something
+            }
+        }
+    }
+    return results;
 }
-//
-//std::unordered_map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
-//    std::vector<std::string> query;
-//    boost::split(query, queryString, boost::is_any_of(" +"));
-//    
-//    std::unordered_map<std::string, std::vector<std::string> > results;
-//    std::vector<widx> queryIndexes;
-//    // get all widxs
-//    for (std::string queryWord: query) {
-//        if (word2idx.count(queryWord)) {
-//            queryIndexes.push_back(word2idx[queryWord]);
-//        }
-//    }
-//    if (queryIndexes.empty()) {
-//        // return results not found;
-//        return results;
-//    }
-//    for (auto docPair : storage) {
-//        std::string docName = docPair.first;
-//        std::vector<widx> doc = docPair.second;
-//        for (size_t i = 0; i < doc.size(); i++) {
-//            widx word = doc[i];
-//            size_t j = 0;
-//            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
-//                j++;
-//            }
-//            if (j >= queryIndexes.size() - 1) {
-//                // full match
-//                // get 5 before start and 5 after start
-//                int low = (int)i - std::min((int)i, 5);
-//                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
-//                std::string resString = "";
-//                for (size_t k = low; k < high; k++) {
-//                    std::string resWord = idx2word[doc[k]];
-//                    if (results.count(docName) == 0) {
-//                        results[docName] = std::vector<std::string>();
-//                        assert(results.count(docName) > 0);
-//                    }
-//                    resString += resWord + " ";
-//                }
-//                results[docName].push_back(resString);
-//            } else if (j >= queryIndexes.size()/2) {
-//                // partial match
-//            } else {
-//                // TODO: output error or something
-//            }
-//        }
-//    }
-//    return results;
-//}
-
+*/
 double DB::getSentimentScore(std::string collection, std::string name)
 {
     // handle case that collection doesnt exist
@@ -614,7 +540,7 @@ const char HEX2DEC[256] =
     /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
 };
 
-std::string DB::urlDecode(std::string & sSrc)
+std::string DB::urlDecode(const std::string & sSrc)
 {
     // Note from RFC1630: "Sequences which start with a percent
     // sign but are not followed by two hexadecimal characters
@@ -663,10 +589,8 @@ void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encodin
     if (!fs::exists(collectionPath)) {
         fs::create_directories(collectionPath);
     }
-    // add collection to db
     Collection* c = new Collection(collectionPath, _encoding);
     collections[_name] = c;
-    // create collection file to save
 }
 
 std::vector<std::string> DB::listCollections()

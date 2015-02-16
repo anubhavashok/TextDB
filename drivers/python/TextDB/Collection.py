@@ -13,6 +13,9 @@ class Collection:
     def __init__(self, endpoint, collection, key=None):
         self.endpoint = endpoint
         self.collection = collection
+    
+    def __repr__(self):
+        return "<Collection %s>" % (self.collection)
 
     def get(self, name):
         """Gets a cursor for document.
@@ -39,7 +42,7 @@ class Collection:
             print "WARNING! Document not found"
             return None
         safe_name = urllib.quote(name)
-        return Cursor.Cursor(self.endpoint + "/get/{0}/{1}".format(self.collection, safe_name), self.key)
+        return Cursor.Cursor(self.endpoint, self.collection, safe_name, self.key)
 
     def list(self):
         """Lists all documents in DB.

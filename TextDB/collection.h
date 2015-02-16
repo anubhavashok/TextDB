@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <unordered_map>
+#include <map>
 #include <boost/dynamic_bitset.hpp>
 #include "bitreader.h"
 #include "bitwriter.h"
@@ -28,6 +29,7 @@
 // Create Collection
 
 namespace fs = boost::filesystem;
+using namespace std;
 
 class Collection
 {
@@ -82,17 +84,20 @@ public:
     boost::any get_cached(std::string name, std::string attr);
     void clear_cache(std::string name);
     void add_to_cache(std::string name, std::string attr, boost::any val);
-    
+    string get_frequency_table(string name);
+    vector<vector<string>> get_all();
     size_t disk_size();
+    vector<string> get_vector(std::string name);
+
     
 private:
     
     Collection(fs::path collectionPath);
     
     // WORD INDEX
-    std::unordered_map<widx, std::string, Comparer> idx2word;
+    std::map<widx, std::string, Comparer> idx2word;
     std::unordered_map<std::string, widx> word2idx;
-    std::unordered_map<widx, std::vector<std::string>> idx2docs;
+    std::map<widx, std::vector<std::string>> idx2docs;
 
     // STORAGE
     std::unordered_map<std::string, std::vector<widx>> storage;
@@ -107,19 +112,19 @@ private:
     
     // widx-string (vice-versa)
     std::vector<widx> serialize(const std::vector<std::string>& doc);
-    std::vector<std::string> deserialize(std::vector<widx> doc);
+    std::vector<std::string> deserialize(const std::vector<widx>& doc);
     
     // add - helpers
     widx addWord(std::string word);
     widx uint2widx(unsigned long i);
     std::vector<std::string> find_new_words(const std::vector<std::string>& doc);
-    void aow(fs::path path, std::vector<widx> doc);
+    void aow(fs::path path, const std::vector<widx>& doc);
     void aow_words(const std::vector<std::string>& new_words);
 
     std::string reassembleText(const std::vector<std::string>& words);
     
-    
     std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
+
 };
 
 #endif /* defined(__TextDB__collection__) */

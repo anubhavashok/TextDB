@@ -11,9 +11,9 @@ class TextDB():
     key = None
     exp = None
 
-    def __init__(self, _endpoint="http://localhost:3001", username=None, password=None):
+    def __init__(self, _endpoint="http://localhost:9090", username=None, password=None):
         try:
-            r = requests.get("http://localhost:3001/")
+            r = requests.get(_endpoint)
         except Exception:
             print "Error! TextDB is not running"
             raise
@@ -39,6 +39,9 @@ class TextDB():
 
     def __repr__(self):
         return "<TextDB at %s>" % self.endpoint
+
+    def get(self, name):
+        return self.__getattr__(name)
 
     def list(self):
 

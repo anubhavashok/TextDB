@@ -27,30 +27,37 @@ namespace fs = boost::filesystem;
 class DB
 {
 private:
+    /* CONSTANTS 
+       memory_limit
+            max memory usage of TextDB in bytes
+            default 2GB
+       memory_epsilon 
+            memory buffer before caching
+            default 10MB
+    */
     size_t memory_limit = 2000000000;
     size_t memory_epsilon = 10000;
+    
+    /* OBJECTS */
+    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
+    SentimentAnalysis sentimentAnalysis;
+    LRU lru;
+
+
     // index of word
     // max value is ~250,000 since there are only that many english words
     using widx = boost::dynamic_bitset<>;
     
-    // maps index to word
     struct Comparer {
         bool operator() (const boost::dynamic_bitset<> &b1, const boost::dynamic_bitset<> &b2) const {
             return b1.to_ulong() < b2.to_ulong();
         }
     };
     
-    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, std::vector<std::string> args)>> queryFunctions;
     void init_query_operations();
     
-    // Sentiment Analysis
-    SentimentAnalysis sentimentAnalysis;
-    
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
-    
-    LRU lru;
     int get_occupied_space();
-
     std::string reassembleText(const std::vector<std::string>& words);
 
 public:
@@ -65,21 +72,21 @@ public:
     
     // Q
     bool add(std::string collection, std::string name, std::string path);
-    bool add(std::string collection, std::string name, std::vector<std::string> text);
+    bool add(std::string collection, std::string name, const std::vector<std::string>& text);
     bool remove(std::string collection, std::string name);
     std::string get(std::string collection, std::string name);
     void drop(std::string collection);
     widx uint2widx(unsigned long i);
     std::string getSentence(std::string collection, std::string name, size_t start);
 
-    //std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
+    //std::unordered_map<std::string, const std::vector<std::string>& > search(std::string queryString);
 
     // Text Mining
     double getSentimentScore(std::string collection, std::string name);
     
     void printIndex();
     
-    static std::string urlDecode(string &SRC);
+    static std::string urlDecode(const string &SRC);
     
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();

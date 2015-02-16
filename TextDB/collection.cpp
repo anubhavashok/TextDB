@@ -11,6 +11,7 @@
 #include <cmath>
 #include <ctime>
 #include <boost/foreach.hpp>
+#include <boost/algorithm/string.hpp>
 #include <set>
 #include <algorithm>
 
@@ -36,7 +37,7 @@ Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
  */
 // TODO: make function modifiable
 
-void Collection::aow(fs::path path, std::vector<widx> doc)
+void Collection::aow(fs::path path, const std::vector<widx>& doc)
 {
     bitWriter.clear();
     // create file to store all docs
@@ -108,7 +109,7 @@ bool Collection::load(std::string name)
         return false;
     }
     bitReader.read(filePath.string(), true);
-    size_t size = bitReader.getNextBits(32).to_ulong();
+    //size_t size = bitReader.getNextBits(32).to_ulong();
     size_t nbits = bitReader.getNextBits(32).to_ulong();
     std::vector<widx> doc;
     while (!bitReader.eof()) {
@@ -232,22 +233,6 @@ std::vector<std::string> Collection::find_new_words(const std::vector<std::strin
     return vector<std::string>(new_words.begin(), new_words.end());
 }
 
-//int calcPosition()
-//{
-//    // init with 32 bits
-//    int pos = 32;
-//    // calculate existing number of written bits
-//    for (auto p: word2idx) {
-//        std::string word = p.first;
-//        // add len
-//        pos += 5;
-//        // add chars
-//        pos += word.size() * bitWriter.encoder->charSize();
-//    }
-//    // start writing at pos in file
-//    return pos;
-//}
-//int calcPosition();
 
 void Collection::aow_words(const std::vector<std::string>& new_words)
 {
@@ -277,8 +262,6 @@ void Collection::aow_words(const std::vector<std::string>& new_words)
         bitWriter.write(word.size(), 8);
         bitWriter.write(word);
     }
-    // bitWriter.print();
-    // int pos = calcPosition();
     bitWriter.appendToFile(widx_path.string(), false);
     bitWriter.clear();
 }
@@ -296,28 +279,44 @@ std::vector<widx> Collection::serialize(const std::vector<std::string>& doc)
     return idxs;
 }
 
-std::vector<std::string> Collection::deserialize(std::vector<widx> doc)
+std::vector<std::string> Collection::deserialize(const std::vector<widx>& doc)
 {
     // convert from widx to std::string by looking up in wordIndex
     std::vector<std::string> stringdoc;
     for (widx idx: doc) {
+        if (!idx2word.count(idx)) cout << "BUG in deserialize " << idx.to_ulong() << endl;
+        else {
         std::string s = idx2word.find(idx)->second;
+        //cout << "Word is: " << s << endl;
         stringdoc.push_back(s);
+        }
     }
     return stringdoc;
 }
 
 std::string Collection::get(std::string name)
 {
-    for (std::pair<std::string, std::vector<widx>> p: storage) {
-        if (p.first == name) {
-            return reassembleText(deserialize(p.second));
-        }
+    if (storage.count(name))
+    {
+        return reassembleText(deserialize(storage[name]));
     }
     if(load(name)) {
         return reassembleText(deserialize(storage[name]));
     } else {
         return "";
+    }
+}
+
+vector<string> Collection::get_vector(std::string name)
+{
+    if (storage.count(name))
+    {
+        return deserialize(storage[name]);
+    }
+    if(load(name)) {
+        return deserialize(storage[name]);
+    } else {
+        return vector<string>();
     }
 }
 
@@ -345,7 +344,7 @@ bool Collection::remove(std::string name)
     std::string newName = name+".remove."+std::to_string(timestamp);
     // mark file for removal with timestamp
     fs::rename(files / (name + ".fyle"), files / newName);
-    // removeWordsFromMapping(name);
+    //removeWordsFromMapping(name);
     storage.erase(name);
     // let cron take care of remove
     // remove doc name from idx2docs
@@ -354,12 +353,9 @@ bool Collection::remove(std::string name)
 
 void Collection::removeWordsFromMapping(std::string name)
 {
-    for (widx idx: storage[name]) {
-        for (size_t i = 0; i < idx2docs[idx].size(); i++) {
-            if (idx2docs[idx][i] == name) {
-                idx2docs[idx].erase(idx2docs[idx].begin() + i);
-            }
-        }
+    const vector<widx>& doc = storage[name];
+    for (widx idx: doc) {
+        idx2docs[idx].erase(std::remove(idx2docs[idx].begin(), idx2docs[idx].end(), name), idx2docs[idx].end());
     }
 }
 
@@ -431,4 +427,36 @@ void Collection::clear_cache(std::string name)
 void Collection::add_to_cache(std::string name, std::string attr, boost::any val)
 {
     cache[name].add(attr, val);
+}
+
+string Collection::get_frequency_table(string name)
+{
+    unordered_map<string, int> frequency_table;
+    vector<string> words = get_vector(name);
+    for (string w: words) {
+        if (!frequency_table.count(w)) {
+            frequency_table[w] = 0;
+        }
+        frequency_table[w]++;
+    }
+    // convert frequency_table into json
+    string res = "{ \"tf\": {";
+    for (auto p: frequency_table) {
+        res += "\"" + p.first + "\": " + to_string(p.second) + ", ";
+    }
+    // remove last ,
+    res.pop_back();
+    res.pop_back();
+
+    res += "}}";
+    return res;
+}
+
+vector<vector<string>> Collection::get_all()
+{
+    vector<vector<string>> docs;
+    for (string p: listFiles()) {
+        docs.push_back(get_vector(p));
+    }
+    return docs;
 }
