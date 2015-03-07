@@ -19,6 +19,7 @@
 #include "collection.h"
 #include "encoder.h"
 #include "LRU.h"
+#include "oplog.h"
 
 
 using namespace std;
@@ -63,7 +64,7 @@ private:
 public:
     const static std::string allowed_puncs;
 
-    DB(fs::path data);
+    DB(fs::path data, vector<string> replicas);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
 
@@ -90,6 +91,8 @@ public:
     
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();
+    
+    Oplog oplog;
 };
 
 

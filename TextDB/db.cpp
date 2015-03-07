@@ -26,6 +26,7 @@
 #include "html.h"
 #include <unordered_map>
 #include "similarity.h"
+#include "operation.h"
 
 
 namespace fs = boost::filesystem;
@@ -36,8 +37,8 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
-DB::DB(fs::path data)
-: sentimentAnalysis(data), datapath(data)
+DB::DB(fs::path data, vector<string> replicas)
+: sentimentAnalysis(data), datapath(data), oplog(replicas)
 {
     fs::path d = data / "collections";
     cout << "Entered TDB Constructor" <<endl;
@@ -292,6 +293,15 @@ void DB::init_query_operations()
 
         double similarity = document_similarity(doc1_v, doc2_v, docs);
         htmlout << similarity << endl;
+    };
+    
+    queryFunctions["replog"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        string operation = args[0];
+        Operation op = db->oplog.insert(operation);
+        // tcp guarantees ordering and consistency
+        assert(op.cmd != "replog");
+        // perform operation
+        db->queryFunctions[op.cmd](db, htmlout, op.args);
     };
 }
 

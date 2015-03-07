@@ -109,7 +109,7 @@ int main(int argc, char ** argv) {
     fs::path datapath = options.datapath;
     dbpath = options.dbpath;
     cout << "Building DB: " << datapath << endl;;
-    db = new DB(datapath);
+    db = new DB(datapath, options.replicas);
 
     assert(db != nullptr);
     TextDBServer app;
