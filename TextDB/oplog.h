@@ -15,6 +15,8 @@
 #include <map>
 #include <sstream>
 #include "operation.h"
+#include "acceptor.h"
+#include "proposer.h"
 
 using namespace std;
 
@@ -32,6 +34,9 @@ public:
     static unordered_map<int, string> ip_table;
     Operation insert(string serialized);
     void updateTable(int replicaID, map<Operation, bool> table);
+    static vector<string> replicas;
+    Acceptor<Operation> acceptor;
+    Proposer<Operation> proposer;
     
 };
 

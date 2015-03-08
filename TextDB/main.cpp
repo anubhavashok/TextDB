@@ -83,12 +83,12 @@ public:
 class TextDBServer : public ServerApplication
 {
 protected:
-    int main(const vector<string> &)
+    int main(const vector<string> & args)
     {
-        HTTPServer s(new RequestHandlerFactory, ServerSocket(9090), new HTTPServerParams);
+        HTTPServer s(new RequestHandlerFactory, ServerSocket(stoi(args[0])), new HTTPServerParams);
         
         s.start();
-        cout << endl << "Welcome to TextDB!" << endl;
+        cout << endl << "Welcome to TextDB! [" << s.port() << "]" << endl;
         
         waitForTerminationRequest();  // wait for CTRL-C or kill
         
@@ -114,7 +114,7 @@ int main(int argc, char ** argv) {
     assert(db != nullptr);
     TextDBServer app;
     std::vector<std::string> args;
-    args.push_back(" ");
+    args.push_back(to_string(options.port));
     
     return app.run(args);
 

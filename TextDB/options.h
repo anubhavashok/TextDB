@@ -28,6 +28,7 @@ namespace {
         std::string datapath;         // path to data - sentiment analysis etc.
         static bool verbose;          // verbose flag
         size_t memory_limit;          // memory_limit
+        int port;
         vector<string> replicas;      // ip addresses of replicas
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
@@ -39,6 +40,7 @@ namespace {
             ("datapath,a", po::value(&datapath), "Path to data files")
             ("mlimit,m", po::value(&memory_limit), "Memory limit in bytes")
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")
+            ("port,p", po::value(&port), "Port for TextDB IO")
             ("verbose,v", "(optional) verbose")
             ;
             

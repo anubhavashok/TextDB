@@ -9,8 +9,10 @@
 #include "oplog.h"
 #include "operation.h"
 #include <future>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include "proposer.cpp"
+#include "acceptor.cpp"
 
 // Static variables
 unordered_map<int, map<Operation, bool>> Oplog::replicated;
@@ -32,10 +34,11 @@ void Oplog::replicate(Operation op)
     for (auto& m: Oplog::replicated) {
         if (!m.second.count(op)) {
             // send op, wait for reciept, timeout after 14 seconds
-            stringstream outstream(ios_base::binary | ios_base::out);
-            boost::archive::binary_oarchive ar(outstream);
+            stringstream outstream(ios_base::out);
+            boost::archive::text_oarchive ar(outstream);
             ar << op;
             string outstring = outstream.str();
+            cout << outstring << endl;
             // send string to replica ip_table[m.first]
             m.second[op] = true;
         }
@@ -46,8 +49,9 @@ void Oplog::replicate(Operation op)
 Operation Oplog::insert(string serialized)
 {
     cout << "Deserializing operation" << endl;
-    stringstream instream(ios_base::binary | ios_base::in);
-    boost::archive::binary_iarchive ar(instream);
+    stringstream instream(ios_base::in | ios_base::out);
+    instream << serialized;
+    boost::archive::text_iarchive ar(instream);
     Operation op;
     ar >> op;
     insert(op);
@@ -65,6 +69,7 @@ void Oplog::updateTable(int replicaID, map<Operation, bool> table)
 }
 
 Oplog::Oplog(vector<string> replicas)
+: proposer(replicas), acceptor()
 {
     int i = 0;
     for (string replica: replicas) {

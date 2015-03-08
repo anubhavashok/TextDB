@@ -27,6 +27,15 @@
 #include <unordered_map>
 #include "similarity.h"
 #include "operation.h"
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include "acceptor.h"
+#include "proposer.h"
+#include "oplog.h"
+#include "acceptor.cpp"
+#include "proposer.cpp"
+
+
 
 
 namespace fs = boost::filesystem;
@@ -303,6 +312,48 @@ void DB::init_query_operations()
         // perform operation
         db->queryFunctions[op.cmd](db, htmlout, op.args);
     };
+    
+    queryFunctions["paxos"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        string stage = args[0];
+        long long n = stoll(args[1]);
+        if (stage == "accept") {
+            stringstream instream(ios_base::in | ios_base::out);
+            instream << curlpp::unescape(args[2]);
+            boost::archive::text_iarchive ar(instream);
+            Operation op;
+            ar >> op;
+            
+            bool ok = db->oplog.acceptor.accept(n, op);
+            if (ok) {
+                out << 1;
+            } else {
+                out << -1;
+            }
+            
+        } else if (stage == "prepare") {
+            bool ok = db->oplog.acceptor.promise(n);
+            if (ok) {
+                long long acceptedProposal = db->oplog.acceptor.acceptedProposal;
+                Operation op = db->oplog.acceptor.acceptedValue;
+                stringstream outstream(ios_base::out);
+                boost::archive::text_oarchive ar(outstream);
+                ar << op;
+                string outstring = outstream.str();
+                string res =  to_string(acceptedProposal) + "|" + curlpp::escape(outstring);
+                out << res;
+            } else {
+                out << -1;
+            }
+        }
+        
+    };
+    queryFunctions["propose"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        string cmd = args[0];
+        Operation op;
+        op.cmd = cmd;
+        op.args = vector<string>(args.begin()+1, args.end());
+        db->oplog.proposer.propose(op);
+    };
 }
 
 
@@ -526,7 +577,7 @@ std::string DB::getSentence(std::string collection, std::string name, size_t sta
 }
 
 
-const char HEX2DEC[256] =
+static const char HEX2DEC[256] =
 {
     /*       0  1  2  3   4  5  6  7   8  9  A  B   C  D  E  F */
     /* 0 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
