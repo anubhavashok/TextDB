@@ -22,6 +22,8 @@ using namespace std;
 class Operation
 {
 public:
+    // consensus ordering number
+    long long n;
     string cmd;
     vector<string> args;
     bool operator<(const Operation& op1) const
@@ -33,9 +35,24 @@ private:
     template<class Archive>
     void serialize(Archive& ar, const unsigned int version)
     {
+        ar & n;
         ar & cmd;
         ar & args;
     }
+};
+
+class OperationContainer
+{
+public:
+    vector<Operation> operations;
+private:
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive& ar, const unsigned int version)
+    {
+        ar & operations;
+    }
+
 };
 
 #endif /* defined(__TextDB__operation__) */

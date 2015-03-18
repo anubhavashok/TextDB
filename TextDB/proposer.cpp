@@ -35,25 +35,31 @@ Proposer<Operation>::Proposer(vector<string> _replicas)
 }
 
 template <class Operation>
-void Proposer<Operation>::propose(Operation val)
+bool Proposer<Operation>::propose(Operation val)
 {
     // pick n,
-    milliseconds ms = duration_cast< milliseconds >(high_resolution_clock::now().time_since_epoch());
+    milliseconds ms = duration_cast< milliseconds >(steady_clock::now().time_since_epoch());
     long long n = ms.count(); // Risky but it should work assuming no clock drift
+    cout << n << endl;
     // Note: v is getting modified, so if retry, use original v
     Operation v = val;
+    v.n = n;
     vector<string> promised = prepare_ok(n, v);
     if (promised.size() >= majority) {
         // ready to accept
         vector<string> accepted = accept_ok(v, n, promised);
         if (accepted.size() >= majority) {
+            cout << "Chosen: " << v.cmd << endl;
             // chosen, commit
-            commit(v);
+            //commit(v);
+            return true;
         } else {
             // retry
+            return false;
         }
     } else {
         // retry
+        return false;
     }
 }
 
@@ -92,6 +98,7 @@ vector<string> Proposer<Operation>::prepare_ok(long long n, Operation& val)
             promised.push_back(replica);
         }
     }
+    // This part is incorrect because Paxos protocol requires value V to be accepted even if another proposal of a higher number arrives
     if (maxAccepted > n) {
         // a value was found
         val = maxAcceptedValue;

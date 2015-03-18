@@ -17,27 +17,32 @@
 #include "operation.h"
 #include "acceptor.h"
 #include "proposer.h"
-
+#include <fstream>
+class DB;
 using namespace std;
 
 class Oplog
 {
+private:
     size_t size;
     vector<Operation> operations;
+    vector<pair<long long, string>> ordered_replicas;
+    ofstream oplog_disk;
+    long long max_n;
+    vector<pair<long long, string>> pingAllReplicas(vector<string> replicas);
+    shared_ptr<DB> db;
 public:
-    Oplog(vector<string> replicas);
+    Oplog(vector<string> replicas, fs::path replpath, shared_ptr<DB> db);
     void insert(Operation op);
-    vector<Operation> get(int n);
-    static void replicate(Operation op);
     // N vectors of bools where N is the number of replica sets
-    static unordered_map<int, map<Operation, bool>> replicated;
-    static unordered_map<int, string> ip_table;
     Operation insert(string serialized);
-    void updateTable(int replicaID, map<Operation, bool> table);
     static vector<string> replicas;
     Acceptor<Operation> acceptor;
     Proposer<Operation> proposer;
-    
+    bool propose(Operation op);
+    void sync();
+    void commit(Operation op);
+    vector<Operation> helpSync(long long n);
 };
 
 #endif /* defined(__TextDB__oplog__) */

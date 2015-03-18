@@ -28,6 +28,6 @@ private:
 
 public:
     Proposer(vector<string> _replicas);
-    void propose(Value v);
+    bool propose(Value v);
 };
 #endif /* defined(__TextDB__proposer__) */

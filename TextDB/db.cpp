@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include "similarity.h"
 #include "operation.h"
+#include <boost/serialization/vector.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include "acceptor.h"
@@ -34,11 +35,20 @@
 #include "oplog.h"
 #include "acceptor.cpp"
 #include "proposer.cpp"
+#include <curlpp/cURLpp.hpp>
 
 
 
+/*
+ * class DB
+ * Main database controller
+ * Ideally should not contain any functionality
+ */
 
 namespace fs = boost::filesystem;
+
+// ready - flag that indicates when request handler is ready
+bool DB::ready = false;
 
 // index of word
 // max value is ~250,000 since there are only that many english words
@@ -46,16 +56,17 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
-DB::DB(fs::path data, vector<string> replicas)
-: sentimentAnalysis(data), datapath(data), oplog(replicas)
+DB::DB(fs::path data, vector<string> replicas, int port)
+: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this))
 {
+    
+    // Create {data_path}/collections folder
     fs::path d = data / "collections";
-    cout << "Entered TDB Constructor" <<endl;
     if (!fs::exists(d)) {
         fs::create_directories(d);
     }
-    cout << "Initialized directories" << endl;
     
+    // Initialize all collections
     fs::directory_iterator it(d), eod;
     std::vector<std::string> collectionNames;
     BOOST_FOREACH(fs::path p, std::make_pair(it, eod))
@@ -66,7 +77,7 @@ DB::DB(fs::path data, vector<string> replicas)
             collectionNames.push_back(p.stem().string());
         }
     }
-
+    
     for (std::string collectionName: collectionNames) {
         std::string name, type;
         std::tie(name, type) = parseCollectionsDirName(collectionName);
@@ -88,21 +99,25 @@ std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string dire
 
 void DB::init_query_operations()
 {
+    /* ---------------------------------------------------------------------------------------- */
     
-    // disk_size
+    
     queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
         htmlout << db->collections[collection]->disk_size();
     };
     
-    // add
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["add"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         std::string t = args[2];
         
-        std::string rawtext = db->urlDecode(t);
+        std::string rawtext = curlpp::unescape(t);
         
         /* Tokenize words */
         boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
@@ -123,7 +138,10 @@ void DB::init_query_operations()
         }
     };
     
-    // remove
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["remove"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -133,7 +151,10 @@ void DB::init_query_operations()
         htmlout << success << endl;
     };
     
-    // get
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["get"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -143,7 +164,10 @@ void DB::init_query_operations()
         htmlout << res;
     };
     
-    // list documents in a collection
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["listdocs"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
@@ -161,12 +185,18 @@ void DB::init_query_operations()
         
     };
     
-    // search - full text search for a term
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["search"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         
     };
     
-    // sentiment - gets sentiment of specified document
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -176,7 +206,10 @@ void DB::init_query_operations()
         htmlout << score;
     };
     
-    // size - size of specified document
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -185,7 +218,10 @@ void DB::init_query_operations()
         htmlout << boost::count(words, ' ') + 1;
     };
     
-    // sentence
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["sentence"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -198,6 +234,11 @@ void DB::init_query_operations()
         }
         
     };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
     queryFunctions["drop"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         
@@ -205,6 +246,11 @@ void DB::init_query_operations()
             db->drop(collection);
         }
     };
+
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
     queryFunctions["create"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -213,6 +259,10 @@ void DB::init_query_operations()
             db->createCollection(collection, Encoder::str2encoding(name));
         }};
 
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
     queryFunctions["listcollections"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         // get all collectionNames
         std::string json = "[";
@@ -226,6 +276,10 @@ void DB::init_query_operations()
         htmlout << json;
 
     };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
     
     queryFunctions["searchdoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
@@ -249,8 +303,12 @@ void DB::init_query_operations()
 
     };
     
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    
     queryFunctions["htmldoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        std::string uri = "http://" + urlDecode(args[0]);
+        std::string uri = "http://" +  curlpp::unescape(args[0]);
         cout << uri << endl;
         std::string page = HTML::get(uri);
         cout << page << endl;
@@ -258,6 +316,10 @@ void DB::init_query_operations()
         cout << text << endl;
         htmlout << text << endl;
     };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
     
     queryFunctions["termfrequency"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
@@ -267,6 +329,10 @@ void DB::init_query_operations()
             htmlout << frequency_table;
         }
     };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
     
     queryFunctions["tfidf"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         using namespace IDF;
@@ -286,6 +352,10 @@ void DB::init_query_operations()
         }
     };
     
+
+    /* ---------------------------------------------------------------------------------------- */
+
+    
     queryFunctions["similarity"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         string collection = args[0];
         string doc1 = args[1];
@@ -304,7 +374,11 @@ void DB::init_query_operations()
         htmlout << similarity << endl;
     };
     
-    queryFunctions["replog"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
+    metaFunctions["replog"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         string operation = args[0];
         Operation op = db->oplog.insert(operation);
         // tcp guarantees ordering and consistency
@@ -313,7 +387,11 @@ void DB::init_query_operations()
         db->queryFunctions[op.cmd](db, htmlout, op.args);
     };
     
-    queryFunctions["paxos"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
+    metaFunctions["paxos"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
         string stage = args[0];
         long long n = stoll(args[1]);
         if (stage == "accept") {
@@ -347,27 +425,74 @@ void DB::init_query_operations()
         }
         
     };
-    queryFunctions["propose"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
+    metaFunctions["propose"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
         string cmd = args[0];
         Operation op;
         op.cmd = cmd;
         op.args = vector<string>(args.begin()+1, args.end());
-        db->oplog.proposer.propose(op);
+        db->oplog.propose(op);
     };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
+    metaFunctions["ping"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        out << "OK" << endl;
+    };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    
+    metaFunctions["helpsync"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        long long n = stoll(args[0]);
+        vector<Operation> operations = db->oplog.helpSync(n);
+        OperationContainer container;
+        container.operations = operations;
+        stringstream outstream(ios_base::out);
+        boost::archive::text_oarchive ar(outstream);
+        ar << container;
+        string outstring = outstream.str();
+        out << outstring;
+    };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
 }
 
 
 void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
 {
+    if (!DB::ready) {
+        cout << "(DB) Database is not ready to accept requests" << endl;
+        return;
+    }
     std::string cmd = in[0];
     std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
     std::vector<std::string> args(in.begin() + 1, in.end());
     
+    Operation op;
+    op.cmd = cmd;
+    op.args = args;
+    
     if (queryFunctions.count(cmd)) {
         // call appropriate query
         cout << "(DB) Query: " << cmd << endl;
+        bool success = this->oplog.propose(op);
+        if (!success) {
+            cout << "(DB) Failed to reach majority consensus" << endl;
+            htmlout << "ERR (M4J0R17Y)" << endl;
+        }
         queryFunctions[cmd](this, htmlout, args);
+    } else if(metaFunctions.count(cmd)) {
+        metaFunctions[cmd](this, htmlout, args);
     } else {
         cout << "(DB) Unknown query" << endl;
     }
@@ -447,6 +572,12 @@ std::string DB::get(std::string collection, std::string name)
     return c->get(name);
 }
 
+/*
+ * drop
+ * A function that deletes a collection
+ * @param collection a string representing the name of the collection to be deleted
+ */
+
 void DB::drop(std::string collection)
 {
     fs::path collectionsPath = datapath / "collections";
@@ -472,6 +603,11 @@ void DB::drop(std::string collection)
     
 }
 
+/*
+ * get_occupied_space
+ * A function that gets the total in-memory space that all the collections currently occupy
+ */
+
 int DB::get_occupied_space()
 {
     size_t sum = 0;
@@ -480,6 +616,7 @@ int DB::get_occupied_space()
     }
     return (int) sum;
 }
+
 /*
  * printIndex
  * A debug function that prints the words present in the Word Index
@@ -550,6 +687,8 @@ std::unordered_map<std::string, std::vector<std::string> >  DB::search(std::stri
     return results;
 }
 */
+
+
 double DB::getSentimentScore(std::string collection, std::string name)
 {
     // handle case that collection doesnt exist
@@ -575,73 +714,6 @@ std::string DB::getSentence(std::string collection, std::string name, size_t sta
     }
     return collections[collection]->getSentence(name, start);
 }
-
-
-static const char HEX2DEC[256] =
-{
-    /*       0  1  2  3   4  5  6  7   8  9  A  B   C  D  E  F */
-    /* 0 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 1 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 2 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 3 */  0, 1, 2, 3,  4, 5, 6, 7,  8, 9,-1,-1, -1,-1,-1,-1,
-    
-    /* 4 */ -1,10,11,12, 13,14,15,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 5 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 6 */ -1,10,11,12, 13,14,15,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 7 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    
-    /* 8 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* 9 */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* A */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* B */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    
-    /* C */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* D */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* E */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    /* F */ -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1
-};
-
-std::string DB::urlDecode(const std::string & sSrc)
-{
-    // Note from RFC1630: "Sequences which start with a percent
-    // sign but are not followed by two hexadecimal characters
-    // (0-9, A-F) are reserved for future extension"
-    
-    const unsigned char * pSrc = (const unsigned char *)sSrc.c_str();
-    const size_t SRC_LEN = sSrc.length();
-    const unsigned char * const SRC_END = pSrc + SRC_LEN;
-    // last decodable '%'
-    const unsigned char * const SRC_LAST_DEC = SRC_END - 2;
-    
-    char * const pStart = new char[SRC_LEN];
-    char * pEnd = pStart;
-    
-    while (pSrc < SRC_LAST_DEC)
-    {
-        if (*pSrc == '%')
-        {
-            char dec1, dec2;
-            if (-1 != (dec1 = HEX2DEC[*(pSrc + 1)])
-                && -1 != (dec2 = HEX2DEC[*(pSrc + 2)]))
-            {
-                *pEnd++ = (dec1 << 4) + dec2;
-                pSrc += 3;
-                continue;
-            }
-        }
-        
-        *pEnd++ = *pSrc++;
-    }
-    
-    // the last 2- chars
-    while (pSrc < SRC_END)
-        *pEnd++ = *pSrc++;
-    
-    std::string sResult(pStart, pEnd);
-    delete [] pStart;
-    return sResult;
-}
-
 
 
 void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encoding)

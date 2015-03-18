@@ -39,8 +39,11 @@ private:
     size_t memory_limit = 2000000000;
     size_t memory_epsilon = 10000;
     
+    friend class Oplog;
+    
     /* OBJECTS */
     std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
+    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> metaFunctions;
     SentimentAnalysis sentimentAnalysis;
     LRU lru;
 
@@ -60,11 +63,13 @@ private:
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
     int get_occupied_space();
     std::string reassembleText(const std::vector<std::string>& words);
+    static bool ready;
 
 public:
     const static std::string allowed_puncs;
+    Oplog oplog;
 
-    DB(fs::path data, vector<string> replicas);
+    DB(fs::path data, vector<string> replicas, int port);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
 
@@ -87,12 +92,10 @@ public:
     
     void printIndex();
     
-    static std::string urlDecode(const string &SRC);
     
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();
     
-    Oplog oplog;
 };
 
 
