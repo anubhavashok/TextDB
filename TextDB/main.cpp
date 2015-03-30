@@ -30,20 +30,13 @@
 using namespace Poco::Net;
 using namespace Poco::Util;
 using namespace std;
-namespace fs=boost::filesystem;
+namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
 DB* db = nullptr;
 static std::string dbpath;
 const char* toolName = "tdb";
 
-
-// TODO: VARY WORD INDEX DEPENDING ON NUMBER OF UNIQUE WORDS THERE ARE
-// TODO: Make word-text mappings persistent
-// TODO: make a preformatter to preformat all text before saving
-// TODO: growing index for chars too
-// TODO: Save new line chars as idx 27, periods as idx 28, commas as idx 29,
-// TODO: if doc is modified, remove cache
 
 class RequestHandler : public HTTPRequestHandler
 {
@@ -57,6 +50,18 @@ public:
         
         
         std::string request_uri = req.getURI();
+        /*
+        Parameters
+        NameValueCollection::ConstIterator i = req.begin();
+        
+        while(i!=form.end()){
+            
+            name=i->first;
+            value=i->second;
+            cout << name << "=" << value << endl << flush;
+            ++i;
+        }
+         */
         
         std::vector<std::string> in;
         boost::split(in, request_uri, boost::is_any_of("&/"));
@@ -89,6 +94,10 @@ protected:
         
         s.start();
         cout << endl << "Welcome to TextDB! [" << s.port() << "]" << endl;
+        while (true) {
+            // if leader, call appendEntries RPC as heartbeat
+            db->raft.leaderLoop();
+        }
         
         waitForTerminationRequest();  // wait for CTRL-C or kill
         
@@ -107,7 +116,6 @@ int main(int argc, char ** argv) {
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
 
     fs::path datapath = options.datapath;
-    dbpath = options.dbpath;
     cout << "Building DB: " << datapath << endl;;
     db = new DB(datapath, options.replicas, options.port);
 
@@ -115,6 +123,7 @@ int main(int argc, char ** argv) {
     TextDBServer app;
     std::vector<std::string> args;
     args.push_back(to_string(options.port));
+    
     
     return app.run(args);
 

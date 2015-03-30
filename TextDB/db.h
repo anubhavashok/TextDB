@@ -20,6 +20,8 @@
 #include "encoder.h"
 #include "LRU.h"
 #include "oplog.h"
+#include "entry.h"
+#include "raft.h"
 
 
 using namespace std;
@@ -96,6 +98,9 @@ public:
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();
     
+    
+    // Log
+    Raft raft;
 };
 
 

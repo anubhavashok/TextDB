@@ -175,76 +175,6 @@ bool BitReader::eof()
     return end;
 }
 
-///*
-// * setNextBit
-// * A function that sets the next bit to true or false
-// * @param bit a bool that the next bit is set to
-// */
-//
-//void BitReader::setNextBit(bool bit)
-//{
-//    size_t idx = pos / charsize;
-//    size_t offset = pos % charsize;
-//    
-//    if (idx >= data.size()) {
-//        char newchar = 0;
-//        data.push_back(newchar);
-//    }
-//    int mask = bit;
-//    mask <<= offset;
-//    data[idx] = data[idx] | mask;
-//    pos++;
-//}
-//
-///*
-// * setNextBits
-// * A function that sets the next nbits to match mydata
-// * @param mydata an unsigned long representing the value to set the next nbits tos
-// * @param nbits a size_t representing the number of bits to set
-// */
-//
-//void BitReader::setNextBits(unsigned long mydata, size_t nbits)
-//{
-//    size_t mask = 1;
-//    for (size_t i = 0; i < nbits; i ++) {
-//        if (mask & mydata) {
-//            setNextBit(true);
-//        } else {
-//            setNextBit(false);
-//        }
-//        mask <<= 1;
-//    }
-//}
-//
-///*
-// * setNextString
-// * A function that sets the next bits to word (where each character is 5bits)
-// * @param word a string that contains the value to set the next bits to
-// */
-//
-//void BitReader::setNextString(std::string word)
-//{
-//    setNextString(word, 5);
-//}
-//
-///*
-// * setNextString
-// * A function that sets the next bits to word (where each character is ncharbits)
-// * @param word a string that contains the value to set the next bits to
-// * @param ncharbits a size_t representing the number of bits to encode a character in
-// */
-//
-//void BitReader::setNextString(std::string word, size_t ncharbits)
-//{
-//    for (char c: word) {
-//        size_t charnum = encoder->encode(c);
-//        // we can still accomodate for 6 more characters
-//        // to be decided
-//        assert(charnum < 32);
-//        setNextBits(charnum, ncharbits);
-//    }
-//}
-
 /*
  * remainingChars
  * A function that returns the number of bits remaining in the current character
@@ -256,24 +186,6 @@ size_t BitReader::remainingChars()
     return data.size() - pos/charsize;
 }
 
-///*
-// * saveToFile
-// * A function that compresses and saves the current data to file
-// * @param path a string that contains the absolute path to the file the data is to be saved to
-// */
-//
-//void BitReader::saveToFile(std::string path)
-//{
-//    assert(data.size() >= 5);
-//    ofstream fout(path, ios::out | ios::binary);
-//    std::string datastring(data.begin(), data.end());
-//    std::string compresseddatastring;
-//    snappy::Compress(datastring.data(), datastring.size(), &compresseddatastring);
-//    for (char c: compresseddatastring) {
-//        fout.put(c);
-//    }
-//    fout.close();
-//}
 
 /*
  * print
@@ -286,55 +198,6 @@ void BitReader::print()
         cout << c << endl;
     }
 }
-
-///*
-// * char2num
-// * A convenience function that converts a character to a number for encoding
-// * @param c a char representing the character to be converted
-// * @param a size_t representing the number
-// */
-//
-//size_t BitReader::char2num(char c)
-//{
-//    if (isalpha(c) && islower(c)) {
-//        return c - 'a';
-//    } else if (c == '\n') {
-//        return 27;
-//    } else if (c == '.') {
-//        return 28;
-//    } else if (c == ',') {
-//        return 29;
-//    } else if (c == '(') {
-//        return 30;
-//    } else if (c == ')') {
-//        return 31;
-//    } else {
-//        // invalid character
-//        cout << "char is :" << c << endl;
-//        assert(false);
-//    }
-//}
-//
-///*
-// * num2char
-// * A convenience function that converts a number to the appropriate character
-// * @param num a size_t representing the number to be converted
-// * @param a char representing the converted char
-// */
-//
-//char BitReader::num2char(size_t num)
-//{
-//    assert(num < 32);
-//    switch(num)
-//    {
-//        case 27: return '\n';
-//        case 28: return '.';
-//        case 29: return ',';
-//        case 30: return '(';
-//        case 31: return ')';
-//        default: return num + 'a';
-//    }
-//}
 
 
 

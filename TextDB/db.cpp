@@ -23,7 +23,6 @@
 #include <boost/tokenizer.hpp>
 #include <boost/range/algorithm/count.hpp>
 #include <boost/regex.hpp>
-#include "html.h"
 #include <unordered_map>
 #include "similarity.h"
 #include "operation.h"
@@ -36,7 +35,8 @@
 #include "acceptor.cpp"
 #include "proposer.cpp"
 #include <curlpp/cURLpp.hpp>
-
+#include "entry.h"
+#include "raft.h"
 
 
 /*
@@ -57,7 +57,7 @@ const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port)
-: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this))
+: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas)
 {
     
     // Create {data_path}/collections folder
@@ -189,14 +189,6 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     
     
-    queryFunctions["search"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-    
-    
     queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
@@ -206,17 +198,6 @@ void DB::init_query_operations()
         htmlout << score;
     };
     
-    
-    /* ---------------------------------------------------------------------------------------- */
-    
-    
-    queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        std::string collection = args[0];
-        std::string name = args[1];
-        
-        std::string words = db->collections[collection]->get(name);
-        htmlout << boost::count(words, ' ') + 1;
-    };
     
     
     /* ---------------------------------------------------------------------------------------- */
@@ -275,46 +256,6 @@ void DB::init_query_operations()
         json += "]";
         htmlout << json;
 
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-
-    
-    queryFunctions["searchdoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        std::string collection = args[0];
-        std::string name = args[1];
-        std::string search_expression = args[2];
-        std::string doc = db->get(collection, name);
-        boost::regex regex(search_expression);
-        boost::sregex_iterator it(doc.begin(), doc.end(), regex);
-        boost::sregex_iterator end;
-        htmlout << "[" << endl;
-        bool start = true;
-        for (; it != end; ++it) {
-            if (!start) {
-                htmlout << ", " << endl;
-            } else {
-                start = false;
-            }
-            htmlout <<"\"" << it->str() << "\" ";
-        }
-        htmlout << "]" << endl;
-
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-    
-    
-    queryFunctions["htmldoc"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        std::string uri = "http://" +  curlpp::unescape(args[0]);
-        cout << uri << endl;
-        std::string page = HTML::get(uri);
-        cout << page << endl;
-        std::string text = HTML::parseText(page);
-        cout << text << endl;
-        htmlout << text << endl;
     };
     
     
@@ -464,6 +405,113 @@ void DB::init_query_operations()
     
     
     /* ---------------------------------------------------------------------------------------- */
+    
+    metaFunctions["appendentries"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+         /*
+         Arguments:
+         term leader’s term
+         leaderId so follower can redirect clients
+         prevLogIndex index of log entry immediately preceding
+         new ones
+         prevLogTerm term of prevLogIndex entry
+         entries[] log entries to store (empty for heartbeat;
+         may send more than one for efficiency)
+         leaderCommit leader’s commitIndex
+        */
+        
+        db->raft.role = Raft::Follower;
+        db->raft.lastHeartbeat = chrono::system_clock::now();
+        
+        int leaderId = stoi(args[1]);
+        if (!db->raft.leaders.count(leaderId)) {
+            db->raft.leaders.insert(leaderId);
+            if (db->raft.leaders.size() > 1) {
+                cout << "More than 1 leader" << endl;
+            }
+        }
+        
+        int term = stoi(args[0]);
+        int prevLogIndex = stoi(args[2]);
+        int prevLogTerm = stoi(args[3]);
+        string entriesString = args[4];
+        int leaderCommit = stoi(args[5]);
+        
+        Entries entries;
+        stringstream oss(ios_base::in | ios_base::out);
+        oss << entriesString;
+        boost::archive::text_iarchive ar(oss);
+        ar >> entries;
+        
+        /*
+         Receiver implementation:
+         1. Reply false if term < currentTerm (§5.1)
+         2. Reply false if log doesn’t contain an entry at prevLogIndex
+         whose term matches prevLogTerm (§5.3)
+         3. If an existing entry conflicts with a new one (same index
+         but different terms), delete the existing entry and all that
+         follow it (§5.3)
+         4. Append any new entries not already in the log
+         5. If leaderCommit > commitIndex, set commitIndex =
+         min(leaderCommit, index of last new entry)
+         */
+        if (
+            (term < db->raft.currentTerm) ||
+            (!db->raft.log.count(prevLogIndex) || (db->raft.log[prevLogIndex].term != prevLogTerm))
+            )
+        {
+            out << -1 << endl;
+            return;
+        }
+        // ensure sorted
+        sort(entries.entries.begin(), entries.entries.end(), [](Entry& e1, Entry& e2){ return e1.index - e2.index;});
+        for (Entry& e: entries.entries) {
+            if (db->raft.log[e.index] != e) {
+                // remove current entry in log and everything else since
+                for (int i = e.index; i < db->raft.log.size(); i++) {
+                    db->raft.log.erase(i);
+                }
+            }
+            // append new entries to log
+            db->raft.log[e.index] = e;
+        }
+        int lastNewEntryIndex = entries.entries.back().index;
+        if (leaderCommit > db->raft.commitIndex) {
+            db->raft.commitIndex = min(leaderCommit, lastNewEntryIndex);
+        }
+        
+    };
+    
+    
+    /* ---------------------------------------------------------------------------------------- */
+
+    metaFunctions["requestvote"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        cout << "requestVote" << endl;
+        int term = stoi(args[0]);
+        int candidateId = stoi(args[1]);
+        int lastIndex = stoi(args[2]);
+        int lastTerm = stoi(args[3]);
+        if (
+            (term < db->raft.currentTerm) ||
+            ((term == db->raft.currentTerm) && (db->raft.lastApplied > lastIndex))
+            )
+        {
+            out << -1 << endl;
+            return;
+        }
+        switch (db->raft.role) {
+            case Raft::Candidate:
+                out << "-1";
+                break;
+            case Raft::Follower:
+                if (db->raft.votedFor == boost::none) {
+                    out << "OK";
+                }
+                break;
+            default:
+                out << "-1";
+                break;
+        }
+    };
 }
 
 
@@ -492,6 +540,7 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         }
         queryFunctions[cmd](this, htmlout, args);
     } else if(metaFunctions.count(cmd)) {
+        cout << "(DB) Query: " << cmd << endl;
         metaFunctions[cmd](this, htmlout, args);
     } else {
         cout << "(DB) Unknown query" << endl;
@@ -617,78 +666,6 @@ int DB::get_occupied_space()
     return (int) sum;
 }
 
-/*
- * printIndex
- * A debug function that prints the words present in the Word Index
- */
-
-void DB::printIndex()
-{
-    std::set<std::string> uniqueWords;
-    for (auto p: collections) {
-        Collection* c = p.second;
-        std::vector<std::string> words = c->getWords();
-        uniqueWords.insert(words.begin(), words.end());
-    }
-    for (std::string word: uniqueWords) {
-        cout << word << endl;
-    }
-}
-
-
-/*
-std::unordered_map<std::string, std::vector<std::string> >  DB::search(std::string queryString) {
-    std::vector<std::string> query;
-    boost::split(query, queryString, boost::is_any_of(" +"));
-    
-    std::unordered_map<std::string, std::vector<std::string> > results;
-    std::vector<widx> queryIndexes;
-    // get all widxs
-    for (std::string queryWord: query) {
-        if (word2idx.count(queryWord)) {
-            queryIndexes.push_back(word2idx[queryWord]);
-        }
-    }
-    if (queryIndexes.empty()) {
-        // return results not found;
-        return results;
-    }
-    for (auto docPair : storage) {
-        std::string docName = docPair.first;
-        std::vector<widx> doc = docPair.second;
-        for (size_t i = 0; i < doc.size(); i++) {
-            widx word = doc[i];
-            size_t j = 0;
-            while ((j < queryIndexes.size()) && (i + j < doc.size()) && (widxMatch(doc[i + j], queryIndexes[j]))) {
-                j++;
-            }
-            if (j >= queryIndexes.size() - 1) {
-                // full match
-                // get 5 before start and 5 after start
-                int low = (int)i - std::min((int)i, 5);
-                int high = (int)(i + j) + std::min((int)(doc.size() - i), 5);
-                std::string resString = "";
-                for (size_t k = low; k < high; k++) {
-                    std::string resWord = idx2word[doc[k]];
-                    if (results.count(docName) == 0) {
-                        results[docName] = std::vector<std::string>();
-                        assert(results.count(docName) > 0);
-                    }
-                    resString += resWord + " ";
-                }
-                results[docName].push_back(resString);
-            } else if (j >= queryIndexes.size()/2) {
-                // partial match
-            } else {
-                // TODO: output error or something
-            }
-        }
-    }
-    return results;
-}
-*/
-
-
 double DB::getSentimentScore(std::string collection, std::string name)
 {
     // handle case that collection doesnt exist
@@ -698,9 +675,7 @@ double DB::getSentimentScore(std::string collection, std::string name)
             return boost::any_cast<double>(c->get_cached(name, "sentiment"));
         }
     }
-//    if (!lru.cached(collection+":"+name)) {
-//        get(collection, name);
-//    }
+
     std::string text = get(collection, name);
     double sentiment = sentimentAnalysis.analyse(text);
     collections[collection]->add_to_cache(name, "sentiment", boost::any(sentiment));

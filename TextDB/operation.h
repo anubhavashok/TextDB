@@ -30,6 +30,18 @@ public:
     {
         return cmd < op1.cmd;
     }
+    bool operator==(const Operation& op1) const
+    {
+        if (args.size() != op1.args.size()) return false;
+        for (int i = 0; i < args.size(); i++) {
+            if (args[i] != op1.args[i]) return false;
+        }
+        return (cmd == op1.cmd) && (n == op1.n);
+    }
+    bool operator!=(const Operation& op1) const
+    {
+        return !(op1 == *this);
+    }
 private:
     friend class boost::serialization::access;
     template<class Archive>

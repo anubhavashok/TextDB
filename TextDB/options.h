@@ -24,7 +24,6 @@ namespace {
     /*! @brief Define command line options for this entrypoint */
     struct Options {
         
-        std::string dbpath;           // path to store.bindb
         std::string datapath;         // path to data - sentiment analysis etc.
         static bool verbose;          // verbose flag
         size_t memory_limit;          // memory_limit
@@ -36,7 +35,6 @@ namespace {
             po::variables_map vm;
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
-            ("dbpath,d", po::value(&dbpath), "Path to a database file")
             ("datapath,a", po::value(&datapath), "Path to data files")
             ("mlimit,m", po::value(&memory_limit), "Memory limit in bytes")
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")
