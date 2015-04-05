@@ -71,12 +71,13 @@ public:
     const static std::string allowed_puncs;
     Oplog oplog;
 
-    DB(fs::path data, vector<string> replicas, int port);
+    DB(fs::path data, vector<string> replicas, int port, int candidateId);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
 
     
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
+    void commit(const Operation& op);
     
     // Q
     bool add(std::string collection, std::string name, std::string path);

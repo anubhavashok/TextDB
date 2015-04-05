@@ -12,18 +12,21 @@
 #include <map>
 #include <boost/optional.hpp>
 #include <unordered_set>
-
+#include <unordered_map>
 #include <stdio.h>
+
 using namespace std;
+class DB;
 class Raft
 {
 public:
-    Raft(vector<string> _replicas);
+    friend class DB;
+
+    Raft(vector<string> _replicas, int candidateId, shared_ptr<DB> db);
     void appendEntries(int term, int leaderId, int prevLogIndex, int prevLogTerm, int leaderCommit);
     int requestVote(int term, int candidateId, int lastLogIndex, int lasLogTerm);
     void leaderLoop();
     void startElection();
-    friend class DB;
     
 private:
     enum Role {
@@ -33,7 +36,8 @@ private:
     };
     Role role;
     
-    int id;
+    int candidateId;
+    shared_ptr<DB> db;
     
     // persistent variables
     int currentTerm;
@@ -41,8 +45,8 @@ private:
     map<int, Entry> log;
     
     // volatile variables
-    int commitIndex;
-    int lastApplied;
+    int commitIndex = 0;
+    int lastApplied = -1;
     
     // volatile leader variables
     vector<int> nextIndex;
@@ -52,6 +56,8 @@ private:
     string get(string addr);
     
     vector<string> replicas;
+    vector<int> replicaId;
+    unordered_map<int, int> replicaIdReverseMap;
     
     // heartbeat
     boost::optional<chrono::time_point<chrono::system_clock>> lastHeartbeat;

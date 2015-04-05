@@ -29,12 +29,14 @@ namespace {
         size_t memory_limit;          // memory_limit
         int port;
         vector<string> replicas;      // ip addresses of replicas
+        int candidateId;
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
             po::variables_map vm;
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
+            ("id,i", po::value(&candidateId), "Id of candidate")
             ("datapath,a", po::value(&datapath), "Path to data files")
             ("mlimit,m", po::value(&memory_limit), "Memory limit in bytes")
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")

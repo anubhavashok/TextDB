@@ -117,14 +117,14 @@ int main(int argc, char ** argv) {
 
     fs::path datapath = options.datapath;
     cout << "Building DB: " << datapath << endl;;
-    db = new DB(datapath, options.replicas, options.port);
+    db = new DB(datapath, options.replicas, options.port, options.candidateId);
 
     assert(db != nullptr);
     TextDBServer app;
     std::vector<std::string> args;
     args.push_back(to_string(options.port));
     
-    
+
     return app.run(args);
 
 }

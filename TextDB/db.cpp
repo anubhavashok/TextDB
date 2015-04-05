@@ -56,8 +56,8 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
-DB::DB(fs::path data, vector<string> replicas, int port)
-: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas)
+DB::DB(fs::path data, vector<string> replicas, int port, int candidateId)
+: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, candidateId, shared_ptr<DB>(this))
 {
     
     // Create {data_path}/collections folder
@@ -419,6 +419,7 @@ void DB::init_query_operations()
          leaderCommit leader’s commitIndex
         */
         
+        
         db->raft.role = Raft::Follower;
         db->raft.lastHeartbeat = chrono::system_clock::now();
         
@@ -429,18 +430,37 @@ void DB::init_query_operations()
                 cout << "More than 1 leader" << endl;
             }
         }
-        
+    
         int term = stoi(args[0]);
         int prevLogIndex = stoi(args[2]);
         int prevLogTerm = stoi(args[3]);
-        string entriesString = args[4];
+        string entriesString = curlpp::unescape(args[4]);
         int leaderCommit = stoi(args[5]);
+        
+        
+        cout << "currentTerm: " << db->raft.currentTerm << endl;
+        cout << "leaderTerm: " << term << endl;
+        cout << "prevLogIndex: " << prevLogIndex << endl;
+        cout << "prevLogTerm: " << prevLogTerm << endl;
+        cout << "leaderCommit: " << leaderCommit << endl;
         
         Entries entries;
         stringstream oss(ios_base::in | ios_base::out);
         oss << entriesString;
         boost::archive::text_iarchive ar(oss);
         ar >> entries;
+        
+        if (term < db->raft.currentTerm) {
+            out << -1;
+            return;
+        }
+        
+        // output entries to console
+        for (Entry& e: entries.entries) {
+            cout << "Command received: " << e.op.cmd <<  endl;
+        }
+        db->raft.currentTerm = max(db->raft.currentTerm, term);
+
         
         /*
          Receiver implementation:
@@ -454,30 +474,36 @@ void DB::init_query_operations()
          5. If leaderCommit > commitIndex, set commitIndex =
          min(leaderCommit, index of last new entry)
          */
-        if (
-            (term < db->raft.currentTerm) ||
-            (!db->raft.log.count(prevLogIndex) || (db->raft.log[prevLogIndex].term != prevLogTerm))
-            )
+        if ((db->raft.log.count(prevLogIndex)) && (db->raft.log[prevLogIndex].term != prevLogTerm))
         {
-            out << -1 << endl;
+            cout << "Entry at index: " << prevLogIndex << " exists but doesn't match" << endl;
+            cout << "Entry at index: " << prevLogIndex << " has command " << db->raft.log[prevLogIndex].op.cmd << endl;
+            cout << "Size of log: " << db->raft.log.size() << endl;
+            out << -1;
             return;
         }
         // ensure sorted
         sort(entries.entries.begin(), entries.entries.end(), [](Entry& e1, Entry& e2){ return e1.index - e2.index;});
+        cout << "entries.entries.size(): " << entries.entries.size() << endl;
         for (Entry& e: entries.entries) {
-            if (db->raft.log[e.index] != e) {
+            if ((db->raft.log.count(e.index)) && (db->raft.log[e.index].term != e.term)) {
                 // remove current entry in log and everything else since
-                for (int i = e.index; i < db->raft.log.size(); i++) {
+                for (int i = e.index; i < db->raft.lastApplied; i++) {
                     db->raft.log.erase(i);
                 }
             }
             // append new entries to log
             db->raft.log[e.index] = e;
+            db->raft.lastApplied = e.index;
         }
-        int lastNewEntryIndex = entries.entries.back().index;
-        if (leaderCommit > db->raft.commitIndex) {
-            db->raft.commitIndex = min(leaderCommit, lastNewEntryIndex);
+        cout << "Reached commitIndex point, entries size: " << entries.entries.size() << endl;
+        for(int i=db->raft.commitIndex; i <= leaderCommit; i++) {
+            if (db->raft.log.count(i)) {
+                db->commit(db->raft.log[i].op);
+            }
         }
+        db->raft.commitIndex = leaderCommit;
+        out << "OK";
         
     };
     
@@ -488,30 +514,43 @@ void DB::init_query_operations()
         cout << "requestVote" << endl;
         int term = stoi(args[0]);
         int candidateId = stoi(args[1]);
-        int lastIndex = stoi(args[2]);
-        int lastTerm = stoi(args[3]);
+        int lastLogIndex = stoi(args[2]);
+        int lastLogTerm = stoi(args[3]);
+        
+        
+        //||((term == db->raft.currentTerm) && (db->raft.lastApplied > lastLogIndex))
         if (
-            (term < db->raft.currentTerm) ||
-            ((term == db->raft.currentTerm) && (db->raft.lastApplied > lastIndex))
+            (term < db->raft.currentTerm)
             )
         {
-            out << -1 << endl;
+            out << db->raft.currentTerm << "/" << 0;
             return;
         }
         switch (db->raft.role) {
             case Raft::Candidate:
-                out << "-1";
+                out << db->raft.currentTerm << "/" << 0;
                 break;
             case Raft::Follower:
                 if (db->raft.votedFor == boost::none) {
-                    out << "OK";
+                    cout << "Authorizing vote for " << candidateId << endl;
+                    out << db->raft.currentTerm << "/" << 1;
+                    db->raft.currentTerm = term;
+                    db->raft.votedFor = candidateId;
+                } else {
+                    out << db->raft.currentTerm << "/" << 0;
                 }
                 break;
             default:
-                out << "-1";
+                out << db->raft.currentTerm << "/" << 0;
                 break;
         }
     };
+    
+    
+    metaFunctions["getid"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+        out << db->raft.candidateId;
+    };
+    
 }
 
 
@@ -533,11 +572,12 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
     if (queryFunctions.count(cmd)) {
         // call appropriate query
         cout << "(DB) Query: " << cmd << endl;
-        bool success = this->oplog.propose(op);
-        if (!success) {
-            cout << "(DB) Failed to reach majority consensus" << endl;
-            htmlout << "ERR (M4J0R17Y)" << endl;
-        }
+        this->raft.addEntry(op);
+        //bool success = this->oplog.propose(op);
+        //if (!success) {
+        //  cout << "(DB) Failed to reach majority consensus" << endl;
+        //    htmlout << "ERR (M4J0R17Y)" << endl;
+        //}
         queryFunctions[cmd](this, htmlout, args);
     } else if(metaFunctions.count(cmd)) {
         cout << "(DB) Query: " << cmd << endl;
@@ -710,3 +750,16 @@ std::vector<std::string> DB::listCollections()
     return collectionNames;
 }
 
+void DB::commit(const Operation& op)
+{
+    string cmd = op.cmd;
+    vector<string> args = op.args;
+    ostream out(0);
+    if (queryFunctions.count(cmd)) {
+        queryFunctions[cmd](this, out, args);
+    } else if (metaFunctions.count(cmd)) {
+        metaFunctions[cmd](this, out, args);
+    } else {
+        cout << "(DB): Unknown query: " << cmd << " , commit failed" << endl;
+    }
+}

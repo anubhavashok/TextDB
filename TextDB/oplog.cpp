@@ -71,7 +71,7 @@ vector<pair<long long, string>> Oplog::pingAllReplicas(vector<string> replicas)
 Oplog::Oplog(vector<string> replicas, fs::path replpath, shared_ptr<DB> db)
 : proposer(replicas), acceptor(replpath), db(db)
 {
-    ordered_replicas = pingAllReplicas(replicas);
+    //ordered_replicas = pingAllReplicas(replicas);
     
     oplog_disk.open((replpath / "oplog.var").string(), ios::app);
     
