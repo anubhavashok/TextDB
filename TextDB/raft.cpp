@@ -8,7 +8,7 @@
 
 #include "raft.h"
 #include <boost/format.hpp>
-#include <cURLpp.hpp>
+#include <curlpp/cURLpp.hpp>
 #include "entry.h"
 #include <boost/serialization/serialization.hpp>
 #include <sstream>
@@ -16,7 +16,6 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <curlpp/Options.hpp>
 #include <curlpp/Easy.hpp>
-#include <cURLpp.hpp>
 #include <chrono>
 #include <thread>
 #include <boost/optional.hpp>
@@ -28,6 +27,7 @@ using namespace std;
 Raft::Raft(vector<string> _replicas, int candidateId, shared_ptr<DB> db)
 : role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0)
 {
+    backlog = map<int, vector<Entry>>();
     for (int i = 0; i < _replicas.size(); i++) {
         vector<string> args;
         boost::split(args, _replicas[i], boost::is_any_of(","));

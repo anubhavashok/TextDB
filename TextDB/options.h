@@ -36,12 +36,12 @@ namespace {
             po::variables_map vm;
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
-            ("id,i", po::value(&candidateId), "Id of candidate")
-            ("datapath,a", po::value(&datapath), "Path to data files")
+            ("id,i", po::value(&candidateId)->required(), "Id of candidate (REQUIRED)")
+            ("datapath,a", po::value(&datapath)->required(), "Path to data files (REQUIRED)")
             ("mlimit,m", po::value(&memory_limit), "Memory limit in bytes")
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")
-            ("port,p", po::value(&port), "Port for TextDB IO")
-            ("verbose,v", "(optional) verbose")
+            ("port,p", po::value(&port)->required(), "Port for TextDB IO (REQUIRED)")
+            ("verbose,v", "Verbose")
             ;
             
             desc.add_options()
@@ -57,7 +57,13 @@ namespace {
                 exit(0);
             }
             Options::verbose = vm.count("verbose");
-            po::notify(vm);
+            try {
+                po::notify(vm);
+            } catch (exception& e) {
+                std::cout << desc << std::endl;
+                exit(0);
+                
+            }
             return vm;
         }
     };
