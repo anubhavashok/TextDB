@@ -17,15 +17,21 @@ var force = d3.layout.force()
 var nodes = {};
 var links = {};
 var nodeNames = [];
+var data;
+var node;
+var link;
 
 d3.json("data.json", function(error, json) {
+    data = json;
+    console.log(json);
     force
         .nodes(json.nodes)
         .links(json.links)
         .start();
 
-    var link = svg.selectAll(".link")
-        .data(json.links)
+    link = svg.selectAll(".link");
+    link = link.data(json.links);
+    link
         .enter().append("line")
         .attr("class", "link");
 
@@ -43,13 +49,14 @@ d3.json("data.json", function(error, json) {
     }
     console.log(links);
 
-    var node = svg.selectAll(".node")
-        .data(json.nodes)
-        .enter().append("g")
+    node = svg.selectAll(".node");
+    node = node.data(json.nodes);
+    node.enter()
+        .append("g")
         .attr("class", "node")
         .call(force.drag);
-
     for (var i=0; i < node[0].length; i++) {
+        console.log(i);
         var n = node[0][i].__data__.name;
         nodes[n] = node[0][i];
         nodeNames.push({"id":i, "text":n});
@@ -63,6 +70,7 @@ d3.json("data.json", function(error, json) {
 
     $('#replicas').editable({
         inputclass: 'input-large',
+        url: addLinks,
         source: nodeNames,
         select2: {
             width: 200,
@@ -92,6 +100,7 @@ d3.json("data.json", function(error, json) {
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
     });
+    update(data);
 });
 
 $(document).ready(function(){
@@ -100,3 +109,43 @@ $(document).ready(function(){
 
 
 });
+
+
+function update(json)
+{
+
+    link = link.data(json.links);
+    link
+        .enter()
+        .insert("line", ".node")
+        .attr("class", "link");
+
+    node = node.data(json.nodes);
+    node
+        .enter().append("g")
+        .attr("class", "node")
+        .call(force.drag);
+
+    node.append("image")
+        .attr("xlink:href", "https://cdn3.iconfinder.com/data/icons/programming/100/database_1-128.png")
+        .attr("x", -40)
+        .attr("y", -8)
+        .attr("width", 80)
+        .attr("height", 80);
+
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", 85)
+        .text(function(d) { return d.name });
+    node.on("click", onNodeClick);
+
+    force.start();
+    force.on("tick", function() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+}
