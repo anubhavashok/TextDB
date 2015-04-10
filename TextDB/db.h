@@ -71,7 +71,7 @@ public:
     const static std::string allowed_puncs;
     Oplog oplog;
 
-    DB(fs::path data, vector<string> replicas, int port, int candidateId);
+    DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
 

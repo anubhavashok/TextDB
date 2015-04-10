@@ -56,8 +56,8 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
-DB::DB(fs::path data, vector<string> replicas, int port, int candidateId)
-: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, candidateId, shared_ptr<DB>(this))
+DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
+: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this))
 {
     
     // Create {data_path}/collections folder

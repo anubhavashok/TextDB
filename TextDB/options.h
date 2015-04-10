@@ -30,6 +30,7 @@ namespace {
         int port;
         vector<string> replicas;      // ip addresses of replicas
         int candidateId;
+        string config;
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
@@ -42,6 +43,7 @@ namespace {
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")
             ("port,p", po::value(&port)->required(), "Port for TextDB IO (REQUIRED)")
             ("verbose,v", "Verbose")
+            ("config,c", po::value(&config)->required(), "Configuration file (REQUIRED)")
             ;
             
             desc.add_options()

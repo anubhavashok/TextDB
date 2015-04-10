@@ -24,17 +24,23 @@
 
 using namespace std;
 
-Raft::Raft(vector<string> _replicas, int candidateId, shared_ptr<DB> db)
-: role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0)
+Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db)
+: role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0), replicas(_replicas), replicaId(_replicaIds)
 {
     backlog = map<int, vector<Entry>>();
-    for (int i = 0; i < _replicas.size(); i++) {
-        vector<string> args;
-        boost::split(args, _replicas[i], boost::is_any_of(","));
-        int rid = stoi(args[1]);
-        replicas.push_back(args[0]);
-        replicaId.push_back(rid);
+    for (int i = 0; i < _replicaIds.size(); i++) {
+        int rid = _replicaIds[i];
         replicaIdReverseMap[rid] = i;
+//        boost::split(args, _replicas[i], boost::is_any_of(","));
+//        try {
+//            int rid = stoi(args[1]);
+//            replicas.push_back(args[0]);
+//            replicaId.push_back(rid);
+//            replicaIdReverseMap[rid] = i;
+//        } catch (exception& e) {
+//            cout << "Cannot parse id of replica, format: <hostname>,<id>" << endl;
+//        }
+
     }
     cout << "RAFT started" << endl;
 }
