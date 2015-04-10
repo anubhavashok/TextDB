@@ -42,7 +42,6 @@ var addNode = function() {
     var name = $("#anname").val(),
         host = $("#anhost").val(),
         port = $("#anport").val();
-
     var sum_x = 0, sum_y = 0;
     data.nodes.forEach(function(n) {
 
@@ -56,6 +55,7 @@ var addNode = function() {
 
     var node = {x: center_x, y: center_y, name: name, host: host, port: port, status: status, replicas: []};
     data.nodes.push(node);
+    nodeNames.push({id:data.nodes.length-1, text:name});
     $('#myModal').modal('hide');
     update(data);
 };
@@ -68,6 +68,7 @@ var addLinks = function(l, t){
         var source = data.nodes[currentNode.index];
         data.nodes[currentNode.index].replicas.push(index);
         data.nodes[index].replicas.push(currentNode.index);
+        console.log();
         console.log(target);
         console.log(source);
         data.links.push({source: source, target: target});

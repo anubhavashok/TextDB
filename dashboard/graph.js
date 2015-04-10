@@ -68,17 +68,7 @@ d3.json("data.json", function(error, json) {
     }
     console.log(node);
 
-    $('#replicas').editable({
-        inputclass: 'input-large',
-        url: addLinks,
-        source: nodeNames,
-        select2: {
-            width: 200,
-            placeholder: 'Select node',
-            allowClear: true,
-            multiple: true
-        }
-    });
+
     node.append("image")
         .attr("xlink:href", "https://cdn3.iconfinder.com/data/icons/programming/100/database_1-128.png")
         .attr("x", -40)
@@ -147,5 +137,16 @@ function update(json)
             .attr("y2", function(d) { return d.target.y; });
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+    $('#replicas').editable({
+        inputclass: 'input-large',
+        url: addLinks,
+        source: nodeNames,
+        select2: {
+            width: 200,
+            placeholder: 'Select node',
+            allowClear: true,
+            multiple: true
+        }
     });
 }
