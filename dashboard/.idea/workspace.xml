@@ -26,8 +26,8 @@
       <file leaf-file-name="dashboard.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dashboard.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.4" vertical-offset="2495" max-vertical-offset="3015">
-              <caret line="181" column="97" selection-start-line="181" selection-start-column="92" selection-end-line="181" selection-end-column="97" />
+            <state vertical-scroll-proportion="-32.6" vertical-offset="560" max-vertical-offset="2895">
+              <caret line="146" column="102" selection-start-line="146" selection-start-column="102" selection-end-line="146" selection-end-column="102" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -35,21 +35,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="graph.js" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="graph.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/graph.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.87145555" vertical-offset="1961" max-vertical-offset="2580">
-              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+            <state vertical-scroll-proportion="-18.538462" vertical-offset="1993" max-vertical-offset="2595">
+              <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="controller.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="controller.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/controller.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.692307" vertical-offset="521" max-vertical-offset="1335">
-              <caret line="57" column="7" selection-start-line="57" selection-start-column="7" selection-end-line="57" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.80038023" vertical-offset="1874" max-vertical-offset="2415">
+              <caret line="155" column="43" selection-start-line="155" selection-start-column="43" selection-end-line="155" selection-end-column="43" />
               <folding>
                 <element signature="e#0#40#0" expanded="false" />
               </folding>
@@ -60,8 +60,8 @@
       <file leaf-file-name="hosts.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hosts.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.875" vertical-offset="1809" max-vertical-offset="2400">
-              <caret line="146" column="30" selection-start-line="146" selection-start-column="30" selection-end-line="146" selection-end-column="30" />
+            <state vertical-scroll-proportion="5.5" vertical-offset="1805" max-vertical-offset="2325">
+              <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -79,10 +79,10 @@
       <list>
         <option value="$PROJECT_DIR$/data.json" />
         <option value="$PROJECT_DIR$/admin.html" />
-        <option value="$PROJECT_DIR$/dashboard.html" />
         <option value="$PROJECT_DIR$/hosts.html" />
-        <option value="$PROJECT_DIR$/controller.js" />
+        <option value="$PROJECT_DIR$/dashboard.html" />
         <option value="$PROJECT_DIR$/graph.js" />
+        <option value="$PROJECT_DIR$/controller.js" />
       </list>
     </option>
   </component>
@@ -303,26 +303,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hosts.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.875" vertical-offset="1809" max-vertical-offset="2400">
-          <caret line="146" column="30" selection-start-line="146" selection-start-column="30" selection-end-line="146" selection-end-column="30" />
+        <state vertical-scroll-proportion="5.5" vertical-offset="1805" max-vertical-offset="2325">
+          <caret line="102" column="22" selection-start-line="102" selection-start-column="22" selection-end-line="102" selection-end-column="22" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controller.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.692307" vertical-offset="521" max-vertical-offset="1335">
-          <caret line="57" column="7" selection-start-line="57" selection-start-column="7" selection-end-line="57" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#40#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dashboard.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.4" vertical-offset="2495" max-vertical-offset="3015">
-          <caret line="181" column="97" selection-start-line="181" selection-start-column="92" selection-end-line="181" selection-end-column="97" />
+        <state vertical-scroll-proportion="-32.6" vertical-offset="560" max-vertical-offset="2895">
+          <caret line="146" column="102" selection-start-line="146" selection-start-column="102" selection-end-line="146" selection-end-column="102" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
@@ -331,9 +321,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/graph.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.87145555" vertical-offset="1961" max-vertical-offset="2580">
-          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+        <state vertical-scroll-proportion="-18.538462" vertical-offset="1993" max-vertical-offset="2595">
+          <caret line="165" column="0" selection-start-line="165" selection-start-column="0" selection-end-line="165" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controller.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.80038023" vertical-offset="1874" max-vertical-offset="2415">
+          <caret line="155" column="43" selection-start-line="155" selection-start-column="43" selection-end-line="155" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#40#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

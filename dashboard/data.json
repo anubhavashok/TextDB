@@ -1,8 +1,8 @@
 {
     "nodes": [
-        {"name": "node1", "group": 1, "status": "OK", "host": "http://localhost", "port": 27001},
-        {"name": "node2", "group": 1, "status": "OK", "host": "http://localhost", "port": 27002},
-        {"name": "node3", "group": 1, "status": "OK", "host": "http://localhost", "port": 27003}
+        {"name": "node1", "group": 1, "status": "OK", "host": "http://localhost:27001"},
+        {"name": "node2", "group": 1, "status": "OK", "host": "http://localhost:27002"},
+        {"name": "node3", "group": 1, "status": "OK", "host": "http://localhost:27003"}
 
     ],
 

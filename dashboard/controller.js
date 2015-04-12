@@ -23,7 +23,7 @@ var onNodeClick = function(d) {
     currentNode = d;
     $('#name').editable('option', 'value', d.name);
 
-    $('#host').editable('option', 'value', d.host);
+    $('#host').text(d.host);
 
     $('#port').editable('option', 'value', d.port);
 
@@ -40,7 +40,24 @@ var onNodeClick = function(d) {
 };
 
 var onSaveClick = function() {
+    // Update links
+    var newLinks = $("#replicas").editable('getValue')["replicas"];
+    console.log(newLinks);
+    newLinks = newLinks.map(function(l) {
+        return parseInt(l);
+    });
+    updateLinks(data.nodes[currentNode.index].replicas, newLinks);
+
+    // Update name
+    data.nodes[currentNode.index].name = $("#name")
     $("#savealert").append($('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Saved!</strong></div>'));
+
+    // if delete node,
+    if ($("#deleteNode").is(':checked')) {
+        // stop node
+        // remove node
+        deleteNode(currentNode.index);
+    }
 };
 
 var addNode = function() {
@@ -82,4 +99,60 @@ var addLinks = function(l){
         data.links.push({source: source, target: target});
     });
     update(data);
+};
+
+var deleteNode = function(id)
+{
+    // stop node
+    data.nodes.splice(id, 1);
+    for (var i = 0; i < data.links.length; i++) {
+        var l = data.links[i];
+        if ((l.source.index == id) || (l.target.index == id)) {
+            data.links.splice(i, 1);
+            i--;
+        }
+    }
+    nodeNames.splice(id, 1);
+    update(data);
+    resetOptionsTab();
+};
+
+var updateLinks = function(o, n)
+{
+    console.log("updating links");
+    console.log(o);
+    console.log(n);
+    // o - old links
+    // n - new links
+    // old - intersection of sets = to be removed
+    // new - intersection of sets = to be added
+    var intersection = _.intersection(o, n);
+
+    var tbremoved = _.difference(o, intersection);
+    var tbadded = _.difference(n, intersection);
+    console.log(tbremoved);
+    console.log(tbadded);
+    data.nodes[currentNode.index].replicas = _.difference(data.nodes[currentNode.index].replicas, tbremoved);
+    data.nodes[currentNode.index].replicas.concat(tbadded);
+    for (var i = 0; i < data.links.length; i++) {
+        tbremoved.forEach(function(r){
+            if ((data.links[i].source.index == currentNode.index) && (data.links[i].target.index == r) ||
+                (data.links[i].target.index == currentNode.index) && (data.links[i].source.index == r)
+                ) {
+                data.links.splice(i, 1);
+            }
+        });
+    }
+    update(data);
+};
+
+var resetOptionsTab = function()
+{
+    $("#replicas").editable('setValue', "-");
+    $("#host").text("-");
+    $("#status").text("-");
+    $("#name").editable('setValue', "-");
+    $("#name").editable('disable');
+    $("#deleteNode").removeAttr('checked');
+
 };

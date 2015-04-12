@@ -153,7 +153,6 @@ function ping()
 {
     data.nodes.forEach(function(n){
         $.get(n.host+"/ping", function(data) {
-            console.log("PING: www.google.com");
             console.log(data);
             n.status = "OK";
         })
@@ -164,4 +163,6 @@ function ping()
     });
 
 }
+
+
 //setTimeout(ping, 25000);
