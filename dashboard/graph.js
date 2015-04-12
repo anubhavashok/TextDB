@@ -49,7 +49,7 @@ d3.json("data.json", function(error, json) {
     }
     console.log(links);
 
-    node = svg.selectAll(".node");
+    node = svg.selectAll("g.node");
     node = node.data(json.nodes);
     node.enter()
         .append("g")
@@ -67,21 +67,6 @@ d3.json("data.json", function(error, json) {
         //node[0][i].replicas = [];
     }
     console.log(node);
-
-
-    node.append("image")
-        .attr("xlink:href", "https://cdn3.iconfinder.com/data/icons/programming/100/database_1-128.png")
-        .attr("x", -40)
-        .attr("y", -8)
-        .attr("width", 80)
-        .attr("height", 80);
-
-    node.append("text")
-        .attr("dx", 12)
-        .attr("dy", 85)
-        .text(function(d) { return d.name });
-    node.on("click", onNodeClick);
-
     force.on("tick", function() {
         link.attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
@@ -101,43 +86,55 @@ $(document).ready(function(){
 });
 
 
-function update(json)
-{
-
-    link = link.data(json.links);
+function update(json) {
+    link.remove();
+    link = svg.selectAll(".link")
+        .data(json.links);
     link
         .enter()
         .insert("line", ".node")
         .attr("class", "link");
 
-    node = node.data(json.nodes);
+    node.remove();
+    node = svg.selectAll("g.node")
+        .data(json.nodes);
+
+    force
+        .nodes(json.nodes)
+        .links(json.links)
+        .start();
     node
         .enter().append("g")
-        .attr("class", "node")
-        .call(force.drag);
+        .attr("class", "node");
+        node.call(force.drag);
 
-    node.append("image")
-        .attr("xlink:href", "https://cdn3.iconfinder.com/data/icons/programming/100/database_1-128.png")
+    node.insert("svg:image")
+        .attr("xlink:href", "http://www.rw-designer.com/icon-image/7506-256x256x32.png")
         .attr("x", -40)
         .attr("y", -8)
         .attr("width", 80)
         .attr("height", 80);
 
-    node.append("text")
+    node.insert("text")
         .attr("dx", 12)
         .attr("dy", 85)
-        .text(function(d) { return d.name });
+        .text(function (d) {
+            return d.name
+        });
+    node.insert("image")
+        .attr("xlink:href", function(d){
+            if(d.status == "OK") {
+                return "http://files.softicons.com/download/toolbar-icons/16x16-free-application-icons-by-aha-soft/png/16x16/Yes.png";
+            } else {
+                return "http://files.softicons.com/download/toolbar-icons/max-mini-icons-by-ashung/ico/crossout.ico";
+            }
+        })
+        .attr("x", 11)
+        .attr("y", -4)
+        .attr("width", 20)
+        .attr("height", 20);
     node.on("click", onNodeClick);
 
-    force.start();
-    force.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-    });
     $('#replicas').editable({
         inputclass: 'input-large',
         url: addLinks,
@@ -150,3 +147,21 @@ function update(json)
         }
     });
 }
+
+// ping each replica every 2.5 seconds to get status
+function ping()
+{
+    data.nodes.forEach(function(n){
+        $.get(n.host+"/ping", function(data) {
+            console.log("PING: www.google.com");
+            console.log(data);
+            n.status = "OK";
+        })
+        .fail(function(data) {
+            n.status = "Down";
+        });
+        setTimeout(ping, 25000);
+    });
+
+}
+//setTimeout(ping, 25000);

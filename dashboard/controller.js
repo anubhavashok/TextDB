@@ -6,12 +6,16 @@ var currentNode;
 
 var onToggleStart = function()
 {
-    if (isStarted) {
-        $("#togglestart").text("Stop");
-        isStarted = false;
+    var button = $("#togglestart");
+    if(currentNode.status == "OK") {
+        // try to stop node
+        console.log("Stopping " + currentNode.name);
+        $.post(currentNode.host+":"+currentNode.port+"/"+"stop", function() {
+
+        });
     } else {
-        $("#togglestart").text("Start");
-        isStarted = true;
+        // try to start node
+        console.log("Starting " + currentNode.name);
     }
 };
 
@@ -27,13 +31,16 @@ var onNodeClick = function(d) {
     console.log(d);
     $('#replicas').editable('option', 'value', d.replicas);
 
+    if (currentNode.status == "OK") {
+        $("#togglestart").text("Stop");
+    } else {
+        $("#togglestart").text("Start");
+    }
     //.append($( "<div id='object1'> "+d.status+" </div>" ));
 };
 
 var onSaveClick = function() {
-
     $("#savealert").append($('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Saved!</strong></div>'));
-
 };
 
 var addNode = function() {
@@ -58,10 +65,11 @@ var addNode = function() {
     nodeNames.push({id:data.nodes.length-1, text:name});
     $('#myModal').modal('hide');
     update(data);
+    $("#addNodeForm")[0].reset();
 };
 
 
-var addLinks = function(l, t){
+var addLinks = function(l){
     l.value.forEach(function(value){
         var index = parseInt(value[0]);
         var target = data.nodes[index];
