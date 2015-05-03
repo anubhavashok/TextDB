@@ -77,7 +77,7 @@ public:
 
     
     void handleQuery(std::vector<std::string> in, ostream& htmlout);
-    void commit(const Operation& op);
+    void commit(const Entry& op);
     
     // Q
     bool add(std::string collection, std::string name, std::string path);

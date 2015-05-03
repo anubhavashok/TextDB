@@ -49,9 +49,9 @@ var onSaveClick = function() {
     updateLinks(data.nodes[currentNode.index].replicas, newLinks);
 
     // Update name
-    data.nodes[currentNode.index].name = $("#name")
-    $("#savealert").append($('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Saved!</strong></div>'));
-
+    data.nodes[currentNode.index].name = $("#name");
+    $("#savealert").append($('<div id="dismissablesavealert" class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><strong>Saved!</strong></div>'));
+    $("#dismissablesavealert").fadeOut(2500);
     // if delete node,
     if ($("#deleteNode").is(':checked')) {
         // stop node

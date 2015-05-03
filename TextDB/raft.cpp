@@ -14,6 +14,7 @@
 #include <sstream>
 #include "entry.h"
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 #include <curlpp/Options.hpp>
 #include <curlpp/Easy.hpp>
 #include <chrono>
@@ -24,8 +25,8 @@
 
 using namespace std;
 
-Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db)
-: role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0), replicas(_replicas), replicaId(_replicaIds)
+Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db, fs::path _persistence)
+: role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0), replicas(_replicas), replicaId(_replicaIds), persistence(_persistence)
 {
     backlog = map<int, vector<Entry>>();
     for (int i = 0; i < _replicaIds.size(); i++) {
@@ -42,6 +43,8 @@ Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, s
 //        }
 
     }
+    // read log
+    read_log();
     cout << "RAFT started" << endl;
 }
 
@@ -87,7 +90,7 @@ void Raft::appendEntries(int term, int leaderId, int prevLogIndex, int prevLogTe
             if (log.count(i)) {
                 cout << "Size of log: " << log.size() << endl;
                 cout << "Applying command" << i << ": " << log[i].op.cmd << endl;
-                db->commit(log[i].op);
+                db->commit(log[i]);
             } else {
                 cout << "Why is there no entry in i: " << i << "commitIndex: " << commitIndex << "lastCommitted: "  << lastCommitted << endl;
             }
@@ -243,5 +246,38 @@ void Raft::forwardRequestToLeader(const Operation& op)
         }
         string url = addr + "/" + cmd + "/" + query;
         get(url);
+    }
+}
+
+void Raft::aow_log(const Entry& e)
+{
+    stringstream outstream(ios_base::out);
+    boost::archive::text_oarchive ar(outstream);
+    ar << e;
+    string entryString = outstream.str();
+    // append opString to disk
+    ofstream of((persistence/"log.var").string(), ios::app);
+    of << entryString << endl;
+
+}
+
+
+void Raft::read_log()
+{
+    if (!fs::exists((persistence / "log.var"))) return;
+    ifstream in((persistence / "log.var").string());
+    cout << "Reading persisted log: " << endl;
+    while (!in.eof()) {
+        string line;
+        getline(in, line);
+        if (line == "") break;
+        cout << line << endl;
+        stringstream instream(ios_base::in | ios_base::out);
+        instream << line;
+        boost::archive::text_iarchive ar(instream);
+        Entry e;
+        ar >> e;
+        log[e.index] = e;
+        cout << "[" << e.index << "] " << e.op.cmd << endl;
     }
 }

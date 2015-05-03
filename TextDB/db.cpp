@@ -57,7 +57,7 @@ const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
-: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this))
+: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port))
 {
     
     // Create {data_path}/collections folder
@@ -499,7 +499,7 @@ void DB::init_query_operations()
         cout << "Reached commitIndex point, entries size: " << entries.entries.size() << endl;
         for(int i=db->raft.commitIndex; i <= leaderCommit; i++) {
             if (db->raft.log.count(i)) {
-                db->commit(db->raft.log[i].op);
+                db->commit(db->raft.log[i]);
             }
         }
         db->raft.commitIndex = leaderCommit;
@@ -750,12 +750,14 @@ std::vector<std::string> DB::listCollections()
     return collectionNames;
 }
 
-void DB::commit(const Operation& op)
+void DB::commit(const Entry& e)
 {
+    const Operation& op = e.op;
     string cmd = op.cmd;
     vector<string> args = op.args;
     ostream out(0);
     if (queryFunctions.count(cmd)) {
+        this->raft.aow_log(e);
         queryFunctions[cmd](this, out, args);
     } else if (metaFunctions.count(cmd)) {
         metaFunctions[cmd](this, out, args);

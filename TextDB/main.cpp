@@ -1,3 +1,5 @@
+#define BOOST_LOG_DYN_LINK 1
+
 //
 //  main.cpp
 //  TextDB
@@ -20,6 +22,7 @@
 #include <signal.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <boost/log/trivial.hpp>
 
 #include "Poco/Net/HTTPServer.h"
 #include "Poco/Net/HTTPRequestHandler.h"
@@ -136,6 +139,7 @@ int main(int argc, char ** argv) {
         int replicaId = item.second.get<int>("id");
         replicas.push_back(replica);
         replicaIds.push_back(replicaId);
+        BOOST_LOG_TRIVIAL(info) << "Testing boost log" << endl;
         cout << "replica: " << replica << endl;
         cout << "id: " << replicaId << endl;
     }

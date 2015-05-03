@@ -322,16 +322,16 @@
 					"-lboost_thread-mt",
 					"-lsnappy",
 					"-lboost_program_options",
-					"-L/usr/local/Cellar/fcgi/2.4.0/lib",
-					"-lfcgi",
-					"-lfcgi++",
+					"-DUSE_WEBSOCKET",
 					"-lPocoFoundation",
-					"-lPocoUtil",
 					"-lPocoNet",
-					"-lboost_regex-mt",
+					"-lPocoUtil",
 					"-lboost_serialization",
+					"-lboost_log",
 					"-lcurlpp",
 					"-lcurl",
+					"-lboost_log_setup",
+					"-lboost_log-mt",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

@@ -60,23 +60,27 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-a /Users/anubhav/TextDB/data"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-c /Users/anubhav/TextDB/config/1.txt"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-r http://localhost:27000"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-r http://localhost:27002"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-r http://localhost:27004"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-p 27001"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
