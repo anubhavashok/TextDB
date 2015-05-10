@@ -280,4 +280,11 @@ void Raft::read_log()
         log[e.index] = e;
         cout << "[" << e.index << "] " << e.op.cmd << endl;
     }
+    
+    // readCommitIndex
+    ifstream in_term((persistence / "currentTerm.var").string());
+    in_term >> currentTerm;
+    
+    
+    // read 
 }

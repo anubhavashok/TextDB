@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440281101A32CF9B00C1FA11 /* sentiment.cpp */; };
+		440C9FC91AFEE0E300E5A99E /* docgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440C9FC71AFEE0E300E5A99E /* docgraph.cpp */; };
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
 		444652B81AA4F34700B1A102 /* oplog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652B61AA4F34700B1A102 /* oplog.cpp */; };
 		444652BB1AA4F80A00B1A102 /* operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652B91AA4F80A00B1A102 /* operation.cpp */; };
@@ -39,6 +40,8 @@
 /* Begin PBXFileReference section */
 		440281101A32CF9B00C1FA11 /* sentiment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sentiment.cpp; sourceTree = "<group>"; };
 		440281111A32CF9B00C1FA11 /* sentiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sentiment.h; sourceTree = "<group>"; };
+		440C9FC71AFEE0E300E5A99E /* docgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = docgraph.cpp; sourceTree = "<group>"; };
+		440C9FC81AFEE0E300E5A99E /* docgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = docgraph.h; sourceTree = "<group>"; };
 		440DEBBD19B179F5000DCA90 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E802D19AAAC0400CB7442 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -107,6 +110,8 @@
 				44FB69C919ADB29000219F7B /* db.h */,
 				44752F621A5065EE0029C2D8 /* collection.cpp */,
 				44752F631A5065EE0029C2D8 /* collection.h */,
+				440C9FC71AFEE0E300E5A99E /* docgraph.cpp */,
+				440C9FC81AFEE0E300E5A99E /* docgraph.h */,
 				44D627D31A7A132700B67CB5 /* similarity.h */,
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
@@ -208,6 +213,7 @@
 				44752F671A5070650029C2D8 /* encoder.cpp in Sources */,
 				44752F6A1A5081230029C2D8 /* bitwriter.cpp in Sources */,
 				4485F36D1AC0EB420082D573 /* raft.cpp in Sources */,
+				440C9FC91AFEE0E300E5A99E /* docgraph.cpp in Sources */,
 				4485F3701AC0EC680082D573 /* entry.cpp in Sources */,
 				44752F641A5065EE0029C2D8 /* collection.cpp in Sources */,
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,

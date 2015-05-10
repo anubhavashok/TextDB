@@ -1,0 +1,15 @@
+{
+    "id": 1,
+    "port": "27002",
+    "data": "/Users/anubhav/TextDB/data",
+    "replicas": [
+        {
+            "hostname": "http://localhost:27001",
+            "id": 2
+        },
+        {
+            "hostname": "http://localhost:27003",
+            "id": 0
+        }
+    ]
+}
