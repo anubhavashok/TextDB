@@ -35,7 +35,7 @@ class DGraph
     // perhaps include string to widx inside here
 public:
     DGraph();
-    void add(Doc doc);
+    void add(Doc doc); // TODO: create Doc class
     void add(string docName, vector<string> doc);
     vector<string> get(string docName);
 private:

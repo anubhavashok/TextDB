@@ -88,13 +88,9 @@ public:
     widx uint2widx(unsigned long i);
     std::string getSentence(std::string collection, std::string name, size_t start);
 
-    //std::unordered_map<std::string, const std::vector<std::string>& > search(std::string queryString);
-
-    // Text Mining
     double getSentimentScore(std::string collection, std::string name);
     
     void printIndex();
-    
     
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
     std::vector<std::string> listCollections();

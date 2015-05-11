@@ -109,7 +109,6 @@ bool Collection::load(std::string name)
         return false;
     }
     bitReader.read(filePath.string(), true);
-    //size_t size = bitReader.getNextBits(32).to_ulong();
     size_t nbits = bitReader.getNextBits(32).to_ulong();
     std::vector<widx> doc;
     while (!bitReader.eof()) {
@@ -197,7 +196,6 @@ widx Collection::addWord(std::string word)
 {
     if (idx2word.size() >= pow(2, nbits)-1) {
         nbits++;
-        //cout << "increasing index size to " << nbits << endl;
     }
     if (word2idx.count(word)) {
         widx idx = word2idx[word];
@@ -284,11 +282,12 @@ std::vector<std::string> Collection::deserialize(const std::vector<widx>& doc)
     // convert from widx to std::string by looking up in wordIndex
     std::vector<std::string> stringdoc;
     for (widx idx: doc) {
-        if (!idx2word.count(idx)) cout << "BUG in deserialize " << idx.to_ulong() << endl;
-        else {
-        std::string s = idx2word.find(idx)->second;
-        //cout << "Word is: " << s << endl;
-        stringdoc.push_back(s);
+        if (!idx2word.count(idx)) {
+            cout << "BUG in deserialize " << idx.to_ulong() << endl;
+            assert(false);
+        } else {
+            std::string s = idx2word.find(idx)->second;
+            stringdoc.push_back(s);
         }
     }
     return stringdoc;

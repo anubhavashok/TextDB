@@ -53,20 +53,7 @@ public:
         
         ostream& out = resp.send();
         
-        
         std::string request_uri = req.getURI();
-        /*
-        Parameters
-        NameValueCollection::ConstIterator i = req.begin();
-        
-        while(i!=form.end()){
-            
-            name=i->first;
-            value=i->second;
-            cout << name << "=" << value << endl << flush;
-            ++i;
-        }
-         */
         
         std::vector<std::string> in;
         boost::split(in, request_uri, boost::is_any_of("&/"));
@@ -120,13 +107,14 @@ int main(int argc, char ** argv) {
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
 
+    // config
     string config = options.config;
     fstream inconf(config);
     boost::property_tree::ptree pt;
     boost::property_tree::read_json(inconf, pt);
     
-    fs::path datapth = pt.get<string>("data");
-    cout << "datapath: " << datapth << endl;
+    fs::path datapath = pt.get<string>("data");
+    cout << "datapath: " << datapath << endl;
     int candidateId = pt.get<int>("id");
     cout << "candidateId: " << candidateId << endl;
     int port = pt.get<int>("port");
@@ -139,23 +127,17 @@ int main(int argc, char ** argv) {
         int replicaId = item.second.get<int>("id");
         replicas.push_back(replica);
         replicaIds.push_back(replicaId);
-        BOOST_LOG_TRIVIAL(info) << "Testing boost log" << endl;
         cout << "replica: " << replica << endl;
         cout << "id: " << replicaId << endl;
     }
     
-    //fs::path datapath = options.datapath;
-    //cout << "Building DB: " << datapath << endl;;
-    db = new DB(datapth, replicas, port, candidateId, replicaIds);
+    db = new DB(datapath, replicas, port, candidateId, replicaIds);
 
     assert(db != nullptr);
     TextDBServer app;
     std::vector<std::string> args;
     args.push_back(to_string(options.port));
     
-
-
-
     return app.run(args);
 
 }

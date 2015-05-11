@@ -37,11 +37,8 @@ namespace {
             po::variables_map vm;
             po::options_description inputOpts("Input settings");
             inputOpts.add_options()
-            //("id,i", po::value(&candidateId)->required(), "Id of candidate (REQUIRED)")
-            //("datapath,a", po::value(&datapath)->required(), "Path to data files (REQUIRED)")
             ("mlimit,m", po::value(&memory_limit), "Memory limit in bytes")
             ("replicas,r", po::value(&replicas), "Ip addresses of replicas")
-            //("port,p", po::value(&port)->required(), "Port for TextDB IO (REQUIRED)")
             ("verbose,v", "Verbose")
             ("config,c", po::value(&config)->required(), "Configuration file (REQUIRED)")
             ;

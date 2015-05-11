@@ -573,11 +573,6 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         // call appropriate query
         cout << "(DB) Query: " << cmd << endl;
         this->raft.addEntry(op);
-        //bool success = this->oplog.propose(op);
-        //if (!success) {
-        //  cout << "(DB) Failed to reach majority consensus" << endl;
-        //    htmlout << "ERR (M4J0R17Y)" << endl;
-        //}
         queryFunctions[cmd](this, htmlout, args);
     } else if(metaFunctions.count(cmd)) {
         cout << "(DB) Query: " << cmd << endl;
