@@ -57,14 +57,14 @@ vector<string> DGraph::get(string docName)
 }
 
 
-void WNode::addNextEdge(string doc, WNode* _next)
+void WNode::addNextEdge(int i, WNode* _next)
 {
-    next[doc] = _next;
+    next[i] = _next;
 }
 
-void WNode::addPrevEdge(string doc, WNode* _prev)
+void WNode::addPrevEdge(int i, WNode* _prev)
 {
-    prev[doc] = _prev;
+    prev[i] = _prev;
 }
 
 double WNode::nextProb(string w)
@@ -102,6 +102,37 @@ WNode::WNode(string _w)
 
 void DGraph::add(const Doc& doc)
 {
+    name2id[doc.name] = doc.id;
     // Add words to doc graph
     // add id to root
+    if (doc.d.size() == 0) {
+        // throw error
+        cerr << "Document cannot be empty" << endl;
+        return;
+    }
+    
+    // Create all nodes for words
+    for (string w: doc.d) {
+        if (!words.count(w)) {
+            words[w] = new WNode(w);
+        }
+    }
+    
+    // Add document to root
+    root[docName] = words[doc.d.front()];
+    
+    // Create links according to document
+    if (doc.d.size() > 1) {
+        words[doc.d[0]]->addNextEdge(doc.id, words[doc.d[1]]);
+    }
+    for (int i = 1; i < words.size() - 1; i++) {
+        std:string w = doc.d[i];
+        words[w]->addNextEdge(doc.id, words[doc.d[i+1]]);
+        words[w]->addPrevEdge(doc.id, words[doc.d[i-1]]);
+        
+    }
+    if (doc.d.size() > 1) {
+        words[doc.d.back()]->addPrevEdge(doc.id, words[doc.d[doc.d.size() - 1]]);
+    }
+    
 }

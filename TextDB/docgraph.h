@@ -42,6 +42,7 @@ private:
     map<string, WNode*> words;
     map<int, WNode*> root;
     map<string, int> tf;
+    map<string, int> doc2id;
 };
 
 
