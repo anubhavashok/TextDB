@@ -3,6 +3,7 @@
 www.textedb.com
 
 Terms to note
+
 widx - bitvector containing index of corresponding word
 
 
