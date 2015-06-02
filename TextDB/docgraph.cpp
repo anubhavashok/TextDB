@@ -8,7 +8,7 @@
 
 #include "docgraph.h"
 #include <iostream>
-
+/*
 void DGraph::add(string docName, vector<string> doc)
 {
     if (doc.size() == 0) {
@@ -136,3 +136,4 @@ void DGraph::add(const Doc& doc)
     }
     
 }
+*/

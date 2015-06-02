@@ -52,11 +52,7 @@ void BitWriter::write(unsigned long mydata, size_t nbits)
     assert(mydata < pow(2,nbits));
     size_t mask = 1;
     for (size_t i = 0; i < nbits; i ++) {
-        if (mask & mydata) {
-            setNextBit(true);
-        } else {
-            setNextBit(false);
-        }
+        setNextBit(mask & mydata);
         mask <<= 1;
     }
 }

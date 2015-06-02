@@ -83,6 +83,7 @@ public:
     bool add(std::string collection, std::string name, std::string path);
     bool add(std::string collection, std::string name, const std::vector<std::string>& text);
     bool remove(std::string collection, std::string name);
+    bool modify(string collection, string name, const vector<string>& text);
     std::string get(std::string collection, std::string name);
     void drop(std::string collection);
     widx uint2widx(unsigned long i);

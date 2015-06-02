@@ -13,6 +13,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include "Doc.h"
 
 using namespace std;
 

@@ -37,6 +37,7 @@
 #include <curlpp/cURLpp.hpp>
 #include "entry.h"
 #include "raft.h"
+#include "Doc.h"
 
 
 /*
@@ -96,9 +97,44 @@ std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string dire
     return std::make_pair(args[0], args[1]);
 }
 
+Doc d1("test_doc", vector<string>{"hi", "my", "name", "is"});
 
 void DB::init_query_operations()
 {
+    
+    // Test endpoint
+    queryFunctions["doctest"] = [](DB* db, ostream& htmlout, const vector<string>& args){
+        std::string t = args[0];
+        std::string rawtext = curlpp::unescape(t);
+        
+        /* Tokenize words */
+        boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
+        boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+        
+        std::vector<std::string> text;
+        
+        for (std::string t : tokens) {
+            boost::trim(t);
+            if (t != "") {
+                text.push_back(t);
+            }
+        }
+
+        for (string s: text){
+            cout << s << " ";
+            
+        }
+        cout << endl;
+        d1.addVersion(text);
+        d1.diffs.top().printSES();
+        d1.output(htmlout);
+    };
+    queryFunctions["revert"] = [](DB* db, ostream& htmlout, const vector<string>& args){
+        d1.revert(1);
+        d1.output(htmlout);
+        d1.output(cout);
+    };
+    
     /* ---------------------------------------------------------------------------------------- */
     
     
@@ -136,6 +172,30 @@ void DB::init_query_operations()
         for (std::string word: text) {
             htmlout << word << " ";
         }
+    };
+    
+    /* ---------------------------------------------------------------------------------------- */
+    
+    queryFunctions["modify"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        std::string collection = args[0];
+        std::string name = args[1];
+        std::string t = args[2];
+        
+        std::string rawtext = curlpp::unescape(t);
+        
+        /* Tokenize words */
+        boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
+        boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+        
+        std::vector<std::string> text;
+        
+        for (std::string t : tokens) {
+            boost::trim(t);
+            if (t != "") {
+                text.push_back(t);
+            }
+        }
+        db->modify(collection, name, text);
     };
     
     
@@ -764,4 +824,9 @@ void DB::commit(const Entry& e)
     } else {
         cout << "(DB): Unknown query: " << cmd << " , commit failed" << endl;
     }
+}
+
+bool DB::modify(string collection, string name, const vector<string>& doc)
+{
+    collections[collection]->modify(name, doc);
 }

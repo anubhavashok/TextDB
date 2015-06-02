@@ -14,7 +14,7 @@
 #include <boost/algorithm/string.hpp>
 #include <set>
 #include <algorithm>
-
+#include "Doc.h"
 
 using widx = boost::dynamic_bitset<>;
 
@@ -188,6 +188,8 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
         }
         idx2docs[word2idx[word]].push_back(name);
     }
+    // store in doc object/ docgraph here
+    Doc document(name, doc);
     storage[name] = serialize(doc);
     aow(path, storage[name]);
     return true;
@@ -459,4 +461,10 @@ vector<vector<string>> Collection::get_all()
         docs.push_back(get_vector(p));
     }
     return docs;
+}
+
+bool modify(string name, vector<string> doc)
+{
+    Doc d = docs[name];
+    d.update(doc);
 }

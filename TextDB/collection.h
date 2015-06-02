@@ -69,6 +69,9 @@ public:
     bool remove(std::string name);
     void removeWordsFromMapping(std::string name);
     
+    // modify
+    bool modify(string name, vector<string> doc);
+    
     // sentiment
     double getSentimentScore(std::string name);
     

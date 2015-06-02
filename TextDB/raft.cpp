@@ -28,6 +28,11 @@ using namespace std;
 Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db, fs::path _persistence)
 : role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0), replicas(_replicas), replicaId(_replicaIds), persistence(_persistence)
 {
+    if (replicas.size() == 0) {
+        role = Role::Leader;
+        votedFor = candidateId;
+        return;
+    }
     backlog = map<int, vector<Entry>>();
     for (int i = 0; i < _replicaIds.size(); i++) {
         int rid = _replicaIds[i];
