@@ -22,7 +22,9 @@ server::server(const std::string& address, const std::string& port,
     acceptor_(io_service_),
     connection_manager_(),
     socket_(io_service_),
-    request_handler_(doc_root)
+    request_handler_(doc_root),
+    address(address),
+    port(port)
 {
   // Register to handle the signals that indicate when the server should exit.
   // It is safe to register for the same signal multiple times in a program,
@@ -48,6 +50,7 @@ server::server(const std::string& address, const std::string& port,
 
 void server::run()
 {
+    std::cout << "Running server at: " << address << ":" << port << std::endl;
   // The io_service::run() call will block until all asynchronous operations
   // have finished. While the server is running, there is always at least one
   // asynchronous operation outstanding: the asynchronous accept call waiting

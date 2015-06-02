@@ -463,8 +463,11 @@ vector<vector<string>> Collection::get_all()
     return docs;
 }
 
-bool modify(string name, vector<string> doc)
+bool Collection::modify(string name, vector<string> doc)
 {
+    return true;
+    /*
     Doc d = docs[name];
     d.update(doc);
+     */
 }

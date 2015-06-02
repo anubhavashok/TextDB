@@ -16,6 +16,7 @@
 #include "connection.hpp"
 #include "connection_manager.hpp"
 #include "request_handler.hpp"
+#include <string>
 
 namespace http {
 namespace server {
@@ -59,6 +60,11 @@ private:
 
   /// The handler for all incoming requests.
   request_handler request_handler_;
+    
+  // The address the server is runnning at
+  std::string address;
+  // The port the server is running at
+  std::string port;
 };
 
 } // namespace server

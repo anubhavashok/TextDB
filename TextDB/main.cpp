@@ -32,6 +32,8 @@
 #include "Poco/Net/HTTPServerRequest.h"
 #include "Poco/Util/ServerApplication.h"
 
+#include "server.hpp"
+
 using namespace Poco::Net;
 using namespace Poco::Util;
 using namespace std;
@@ -149,13 +151,19 @@ int main(int argc, char ** argv) {
     db = new DB(datapth, replicas, port, candidateId, replicaIds);
 
     assert(db != nullptr);
-    TextDBServer app;
-    std::vector<std::string> args;
-    args.push_back(to_string(options.port));
-    
 
+    try
+    {
+        // Initialise the server.
+        http::server::server s("127.0.0.1", to_string(port), "");
+        
+        // Run the server until stopped.
+        s.run();
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "exception: " << e.what() << "\n";
+    }
 
-
-    return app.run(args);
 
 }

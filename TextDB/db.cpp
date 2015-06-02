@@ -125,7 +125,7 @@ void DB::init_query_operations()
             
         }
         cout << endl;
-        d1.addVersion(text);
+        d1.update(text);
         d1.diffs.top().printSES();
         d1.output(htmlout);
     };
@@ -829,4 +829,5 @@ void DB::commit(const Entry& e)
 bool DB::modify(string collection, string name, const vector<string>& doc)
 {
     collections[collection]->modify(name, doc);
+    return true;
 }
