@@ -29,11 +29,6 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include "acceptor.h"
-#include "proposer.h"
-#include "oplog.h"
-#include "acceptor.cpp"
-#include "proposer.cpp"
 #include <curlpp/cURLpp.hpp>
 #include "entry.h"
 #include "raft.h"
@@ -58,7 +53,7 @@ const std::string DB::allowed_puncs = " .,!:;\"()/";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
-: sentimentAnalysis(data), datapath(data), oplog(replicas, data / "replication" / to_string(port), shared_ptr<DB>(this)), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port))
+: sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port))
 {
     
     // Create {data_path}/collections folder
@@ -379,88 +374,8 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
 
     
-    metaFunctions["replog"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        string operation = args[0];
-        Operation op = db->oplog.insert(operation);
-        // tcp guarantees ordering and consistency
-        assert(op.cmd != "replog");
-        // perform operation
-        db->queryFunctions[op.cmd](db, htmlout, op.args);
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-
-    
-    metaFunctions["paxos"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
-        string stage = args[0];
-        long long n = stoll(args[1]);
-        if (stage == "accept") {
-            stringstream instream(ios_base::in | ios_base::out);
-            instream << curlpp::unescape(args[2]);
-            boost::archive::text_iarchive ar(instream);
-            Operation op;
-            ar >> op;
-            
-            bool ok = db->oplog.acceptor.accept(n, op);
-            if (ok) {
-                out << 1;
-            } else {
-                out << -1;
-            }
-            
-        } else if (stage == "prepare") {
-            bool ok = db->oplog.acceptor.promise(n);
-            if (ok) {
-                long long acceptedProposal = db->oplog.acceptor.acceptedProposal;
-                Operation op = db->oplog.acceptor.acceptedValue;
-                stringstream outstream(ios_base::out);
-                boost::archive::text_oarchive ar(outstream);
-                ar << op;
-                string outstring = outstream.str();
-                string res =  to_string(acceptedProposal) + "|" + curlpp::escape(outstring);
-                out << res;
-            } else {
-                out << -1;
-            }
-        }
-        
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-
-    
-    metaFunctions["propose"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
-        string cmd = args[0];
-        Operation op;
-        op.cmd = cmd;
-        op.args = vector<string>(args.begin()+1, args.end());
-        db->oplog.propose(op);
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-
-    
     metaFunctions["ping"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
         out << "OK" << endl;
-    };
-    
-    
-    /* ---------------------------------------------------------------------------------------- */
-
-    
-    metaFunctions["helpsync"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
-        long long n = stoll(args[0]);
-        vector<Operation> operations = db->oplog.helpSync(n);
-        OperationContainer container;
-        container.operations = operations;
-        stringstream outstream(ios_base::out);
-        boost::archive::text_oarchive ar(outstream);
-        ar << container;
-        string outstring = outstream.str();
-        out << outstring;
     };
     
     

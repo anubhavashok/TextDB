@@ -10,10 +10,7 @@
 		440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440281101A32CF9B00C1FA11 /* sentiment.cpp */; };
 		440C9FC91AFEE0E300E5A99E /* docgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440C9FC71AFEE0E300E5A99E /* docgraph.cpp */; };
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
-		444652B81AA4F34700B1A102 /* oplog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652B61AA4F34700B1A102 /* oplog.cpp */; };
 		444652BB1AA4F80A00B1A102 /* operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652B91AA4F80A00B1A102 /* operation.cpp */; };
-		444652C21AAAC23A00B1A102 /* acceptor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652C01AAAC23A00B1A102 /* acceptor.cpp */; };
-		444652C51AAAC24400B1A102 /* proposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652C31AAAC24400B1A102 /* proposer.cpp */; };
 		4446948B1B1D80400095FCF1 /* server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4446947C1B1D803F0095FCF1 /* server.cpp */; };
 		4446948C1B1D80400095FCF1 /* request_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4446947F1B1D803F0095FCF1 /* request_parser.cpp */; };
 		4446948D1B1D80400095FCF1 /* request_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444694811B1D803F0095FCF1 /* request_handler.cpp */; };
@@ -53,14 +50,8 @@
 		440DEBBD19B179F5000DCA90 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E802D19AAAC0400CB7442 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		444652B61AA4F34700B1A102 /* oplog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oplog.cpp; sourceTree = "<group>"; };
-		444652B71AA4F34700B1A102 /* oplog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oplog.h; sourceTree = "<group>"; };
 		444652B91AA4F80A00B1A102 /* operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = operation.cpp; sourceTree = "<group>"; };
 		444652BA1AA4F80A00B1A102 /* operation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = operation.h; sourceTree = "<group>"; };
-		444652C01AAAC23A00B1A102 /* acceptor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = acceptor.cpp; sourceTree = "<group>"; };
-		444652C11AAAC23A00B1A102 /* acceptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = acceptor.h; sourceTree = "<group>"; };
-		444652C31AAAC24400B1A102 /* proposer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proposer.cpp; sourceTree = "<group>"; };
-		444652C41AAAC24400B1A102 /* proposer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = proposer.h; sourceTree = "<group>"; };
 		4446947B1B1D803F0095FCF1 /* server.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = server.hpp; sourceTree = "<group>"; };
 		4446947C1B1D803F0095FCF1 /* server.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = server.cpp; sourceTree = "<group>"; };
 		4446947D1B1D803F0095FCF1 /* request.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = request.hpp; sourceTree = "<group>"; };
@@ -135,41 +126,25 @@
 				440DEBBD19B179F5000DCA90 /* options.h */,
 				44FB69C819ADB29000219F7B /* db.cpp */,
 				44FB69C919ADB29000219F7B /* db.h */,
+				4448C1761B422CCE000C5978 /* science */,
 				44752F621A5065EE0029C2D8 /* collection.cpp */,
 				44752F631A5065EE0029C2D8 /* collection.h */,
 				44DE93871B07D14C00BB0BA1 /* docgraph */,
-				44D627D31A7A132700B67CB5 /* similarity.h */,
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
 				44752F651A5070650029C2D8 /* encoder.cpp */,
 				444652B91AA4F80A00B1A102 /* operation.cpp */,
 				444652BA1AA4F80A00B1A102 /* operation.h */,
-				444652B71AA4F34700B1A102 /* oplog.h */,
-				444652B61AA4F34700B1A102 /* oplog.cpp */,
 				4485F36A1AC0EAB80082D573 /* raft */,
-				444652BF1AAAC22800B1A102 /* paxos */,
 				44752F6B1A56937C0029C2D8 /* LRU.cpp */,
 				44752F6C1A56937C0029C2D8 /* LRU.h */,
 				44752F661A5070650029C2D8 /* encoder.h */,
 				44FB69CB19ADC6CF00219F7B /* bitreader.cpp */,
 				44FB69CC19ADC6CF00219F7B /* bitreader.h */,
-				440281101A32CF9B00C1FA11 /* sentiment.cpp */,
 				44752F681A5081230029C2D8 /* bitwriter.cpp */,
 				44752F691A5081230029C2D8 /* bitwriter.h */,
-				440281111A32CF9B00C1FA11 /* sentiment.h */,
 			);
 			path = TextDB;
-			sourceTree = "<group>";
-		};
-		444652BF1AAAC22800B1A102 /* paxos */ = {
-			isa = PBXGroup;
-			children = (
-				444652C01AAAC23A00B1A102 /* acceptor.cpp */,
-				444652C11AAAC23A00B1A102 /* acceptor.h */,
-				444652C31AAAC24400B1A102 /* proposer.cpp */,
-				444652C41AAAC24400B1A102 /* proposer.h */,
-			);
-			name = paxos;
 			sourceTree = "<group>";
 		};
 		4446947A1B1D7F6F0095FCF1 /* http */ = {
@@ -193,6 +168,16 @@
 				4446948A1B1D80400095FCF1 /* connection_manager.cpp */,
 			);
 			name = http;
+			sourceTree = "<group>";
+		};
+		4448C1761B422CCE000C5978 /* science */ = {
+			isa = PBXGroup;
+			children = (
+				44D627D31A7A132700B67CB5 /* similarity.h */,
+				440281101A32CF9B00C1FA11 /* sentiment.cpp */,
+				440281111A32CF9B00C1FA11 /* sentiment.h */,
+			);
+			name = science;
 			sourceTree = "<group>";
 		};
 		4485F36A1AC0EAB80082D573 /* raft */ = {
@@ -281,14 +266,11 @@
 				44752F641A5065EE0029C2D8 /* collection.cpp in Sources */,
 				4446948C1B1D80400095FCF1 /* request_parser.cpp in Sources */,
 				442E802E19AAAC0400CB7442 /* main.cpp in Sources */,
-				444652B81AA4F34700B1A102 /* oplog.cpp in Sources */,
-				444652C21AAAC23A00B1A102 /* acceptor.cpp in Sources */,
 				444652BB1AA4F80A00B1A102 /* operation.cpp in Sources */,
 				4446948F1B1D80400095FCF1 /* mime_types.cpp in Sources */,
 				44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */,
 				4446948E1B1D80400095FCF1 /* reply.cpp in Sources */,
 				44FB69CA19ADB29000219F7B /* db.cpp in Sources */,
-				444652C51AAAC24400B1A102 /* proposer.cpp in Sources */,
 				4446948D1B1D80400095FCF1 /* request_handler.cpp in Sources */,
 				440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */,
 				444694901B1D80400095FCF1 /* connection.cpp in Sources */,

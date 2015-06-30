@@ -19,7 +19,6 @@
 #include "collection.h"
 #include "encoder.h"
 #include "LRU.h"
-#include "oplog.h"
 #include "entry.h"
 #include "raft.h"
 
@@ -40,9 +39,7 @@ private:
     */
     size_t memory_limit = 2000000000;
     size_t memory_epsilon = 10000;
-    
-    friend class Oplog;
-    
+        
     /* OBJECTS */
     std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
     std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> metaFunctions;
@@ -69,7 +66,6 @@ private:
 
 public:
     const static std::string allowed_puncs;
-    Oplog oplog;
 
     DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds);
     fs::path datapath;
