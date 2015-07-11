@@ -42,6 +42,7 @@ private:
         
     /* OBJECTS */
     std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
+    std::unordered_map<std::string, std::string> descriptions;
     std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> metaFunctions;
     SentimentAnalysis sentimentAnalysis;
     LRU lru;
