@@ -40,9 +40,10 @@ Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
 void Collection::aow(fs::path path, const std::vector<widx>& doc)
 {
     bitWriter.clear();
-    // create file to store all docs
     
     // output number of words in doc
+    assert(doc.size() < pow(2, 32));
+    cout << "doc size" << doc.size() << endl;
     bitWriter.write(doc.size(), 32);
     
     // output nbits in case nbits changes
@@ -109,13 +110,14 @@ bool Collection::load(std::string name)
         return false;
     }
     bitReader.read(filePath.string(), true);
-    //size_t size = bitReader.getNextBits(32).to_ulong();
-    size_t nbits = bitReader.getNextBits(32).to_ulong();
+    size_t num_words = bitReader.getNextBits(32).to_ulong();
+    cout << "size: " << num_words << endl;
+    size_t num_bits = bitReader.getNextBits(32).to_ulong();
     std::vector<widx> doc;
-    while (!bitReader.eof()) {
-        widx idx = bitReader.getNextBits(nbits);
+    for(int i = 0; i < num_words; i++) {
+        widx idx = bitReader.getNextBits(num_bits);
         doc.push_back(idx);
-        if (bitReader.remainingChars() <= 1) {
+        if (bitReader.remainingChars() < 1) {
             break;
         }
     }
@@ -175,21 +177,22 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
     }
 
     fs::path path = collectionPath / "files" / (name + ".fyle");
-    
     // find new words and add them to word index
     std::vector<std::string> new_words = find_new_words(doc);
     aow_words(new_words);
     for (std::string word: new_words) {
-        if (word != "")
+        // WTF? why are these characters not allowed? FIX THIS
+        if ((word != "")) {
             addWord(word);
-        // add doc to idx->docs mapping
-        if (!idx2docs.count(word2idx[word])) {
-            idx2docs[word2idx[word]] = std::vector<std::string>();
+            // add doc to idx->docs mapping
+            if (!idx2docs.count(word2idx[word])) {
+                idx2docs[word2idx[word]] = std::vector<std::string>();
+            }
+            idx2docs[word2idx[word]].push_back(name);
         }
-        idx2docs[word2idx[word]].push_back(name);
     }
     // store in doc object/ docgraph here
-    Doc document(name, doc);
+    //Doc document(name, doc);
     storage[name] = serialize(doc);
     aow(path, storage[name]);
     return true;
@@ -260,9 +263,14 @@ void Collection::aow_words(const std::vector<std::string>& new_words)
     // [len|chars]
     for (std::string word: new_words) {
         // output len in bytes
-        // NOTE: current length of word is 32
-        bitWriter.write(word.size(), 8);
-        bitWriter.write(word);
+        // NOTE: current length of word is
+        if ((unsigned long)word.size() < 256) {
+            bitWriter.write(word.size(), 8);
+            bitWriter.write(word);
+        } else {
+            bitWriter.write((unsigned long)255, 8);
+            bitWriter.write(word.substr(0, 255));
+        }
     }
     bitWriter.appendToFile(widx_path.string(), false);
     bitWriter.clear();

@@ -19,7 +19,7 @@ class BitWriter
 public:
     BitWriter(Encoder::CharacterEncoding);
     void write(std::string s);
-    void write(unsigned long mydata, size_t nbits);
+    void write(unsigned long mydata, size_t num_bits);
     void write(std::string word, size_t ncharbits);
     void saveToFile(std::string path, bool compress);
     void appendToFile(std::string path, bool compress);

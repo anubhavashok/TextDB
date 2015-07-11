@@ -58,3 +58,28 @@ void Doc::update(vector<string> doc)
 void Doc::loadDocCache()
 {
 }
+
+bool Doc::setID(int _docID)
+{
+    if (docID == -1) {
+        docID = _docID;
+        return true;
+    }
+    return false;
+}
+int Doc::getID() const
+{
+    return docID;
+}
+
+size_t Doc::size() const
+{
+    return docCache.size();
+}
+
+const vector<string>& Doc::getDocCache()
+{
+    return docCache;
+}
+
+

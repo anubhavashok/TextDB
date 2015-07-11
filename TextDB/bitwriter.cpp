@@ -42,16 +42,16 @@ void BitWriter::setNextBit(bool bit)
 
 /*
  * setNextBits
- * A function that sets the next nbits to match mydata
- * @param mydata an unsigned long representing the value to set the next nbits tos
- * @param nbits a size_t representing the number of bits to set
+ * A function that sets the next num_bits to match mydata
+ * @param mydata an unsigned long representing the value to set the next num_bits tos
+ * @param num_bits a size_t representing the number of bits to set
  */
 
-void BitWriter::write(unsigned long mydata, size_t nbits)
+void BitWriter::write(unsigned long mydata, size_t num_bits)
 {
-    assert(mydata < pow(2,nbits));
+    assert(mydata < pow(2,num_bits));
     size_t mask = 1;
-    for (size_t i = 0; i < nbits; i ++) {
+    for (size_t i = 0; i < num_bits; i ++) {
         setNextBit(mask & mydata);
         mask <<= 1;
     }

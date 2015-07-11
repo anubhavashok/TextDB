@@ -15,7 +15,7 @@ void LRU::access(std::string name)
     _lru.push_front(name);
 }
 
-std::string LRU::pop()
+std::string LRU::pop_back()
 {
     if (_lru.size() > 0) {
         std::string name = _lru.back();

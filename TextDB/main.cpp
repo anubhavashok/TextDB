@@ -67,7 +67,6 @@ int main(int argc, char ** argv) {
         int replicaId = item.second.get<int>("id");
         replicas.push_back(replica);
         replicaIds.push_back(replicaId);
-        BOOST_LOG_TRIVIAL(info) << "Testing boost log" << endl;
         cout << "replica: " << replica << endl;
         cout << "id: " << replicaId << endl;
     }

@@ -35,7 +35,7 @@ class Collection
 {
     using widx = boost::dynamic_bitset<>;
     struct Comparer {
-        bool operator() (const boost::dynamic_bitset<> &b1, const boost::dynamic_bitset<> &b2) const {
+        bool operator()(const boost::dynamic_bitset<> &b1, const boost::dynamic_bitset<> &b2) const {
             return b1.to_ulong() < b2.to_ulong();
         }
     };
@@ -100,14 +100,14 @@ private:
     // WORD INDEX
     std::map<widx, std::string, Comparer> idx2word;
     std::unordered_map<std::string, widx> word2idx;
-    std::map<widx, std::vector<std::string>> idx2docs;
+    std::map<widx, std::vector<std::string>, Comparer> idx2docs;
 
     // STORAGE
     std::unordered_map<std::string, std::vector<widx>> storage;
     std::unordered_map<std::string, Cache> cache;
 
     // I/O
-    size_t nbits;
+    size_t nbits = 0;
     BitReader bitReader;
     BitWriter bitWriter;
     fs::path collectionPath;

@@ -30,25 +30,25 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.45.0 COMPONENTS system-mt filesystem-mt program_options-mt thread-mt regex-mt serialization-mt log-mt) 
 
 
-# Find poco
-# PocoFoundation, PocoUtil, PocoNet
-find_package(Poco REQUIRED)
-
 # Find curlpp, curl
+find_package(CURL REQUIRED)
+if (NOT CURL_FOUND)
+    message("Curl not found")
+endif()
+
 find_package(CURLpp REQUIRED)
-if (NOT CURLpp_FOUND)
+if (NOT CURLPP_FOUND)
     message("CurlPP not found")
 endif()
 # Find snappy
 find_package(snappy REQUIRED)
 
 
-if(Boost_FOUND AND Poco_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS} ${Poco_INCLUDE_DIRS} ${CURLpp_INCLUDE_DIRS}) 
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS} ${CURLPP_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS}) 
     add_executable(TextDB ${SOURCES}) 
-    LINK_DIRECTORIES(${Poco_LIBRARY_DIRS})
-    target_link_libraries(TextDB -L/usr/local/lib ${Boost_LIBRARIES} PocoFoundation PocoNet PocoUtil ${CURLPP_LIBRARIES} ${snappy_LIBRARIES})
+    target_link_libraries(TextDB -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES})
 endif()
 
 
-#-L/usr/local/lib -lboost_system-mt -lboost_filesystem-mt -lboost_thread-mt -lsnappy -lboost_program_options  -lPocoFoundation -lPocoUtil -lPocoNet -lboost_regex-mt -lboost_serialization -lcurlpp -lcurl
+#-L/usr/local/lib -lboost_system-mt -lboost_filesystem-mt -lboost_thread-mt -lsnappy -lboost_program_options -lboost_regex-mt -lboost_serialization -lcurlpp -lcurl

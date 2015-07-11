@@ -11,7 +11,8 @@ class TestSequenceFunctions(unittest.TestCase):
     c = None
 
     def setUp(self):
-        self.db = TextDB()
+        self.db = TextDB(sys.argv[0])
+        self.db.create_collection("c", "unicode")
         self.c = self.db.c
 
     def test_create_and_remove(self):
@@ -33,17 +34,8 @@ class TestSequenceFunctions(unittest.TestCase):
         self.c.add("abc", text)
         d = self.c.get("abc")
         # get text
-        self.assertEqual(d.get_text(), text)
-        self.assertEqual(d.get_next_sentence(), text)
-
-    def test_add_and_remove(self):
-        name = "toberemoved"
-        self.c.add(name, "sample text")
-        l = self.c.list()
-        self.assertTrue(name in l)
-        self.c.remove(name)
-        l = self.c.list()
-        self.assertFalse(name in l)
+        self.assertEqual(d.text(), text)
+        self.assertEqual(d.next_sentence(), text)
 
     def test_doc_doesnt_exist(self):
         self.assertEqual(self.c.get('zzzzzzzzzz'), None)
@@ -52,27 +44,29 @@ class TestSequenceFunctions(unittest.TestCase):
         text = "wow this works. this also works"
         self.c.add('doc', text)
         e = self.c.get('doc')
-        self.assertEqual(e.get_next_sentence(), text.split('.')[0].strip() + ".")
-        self.assertEqual(e.get_next_sentence(), text.split('.')[1].strip())
+        self.assertEqual(e.next_sentence(), text.split('.')[0].strip() + ".")
+        self.assertEqual(e.next_sentence(), text.split('.')[1].strip())
 
     def test_compression(self):
         # create compressed collection
-        self.db.create_collection("compr", "compressed")
-        comp = self.db.compr
+        # self.db.create_collection("compr", "compressed")
+        # comp = self.db.compr
         self.db.create_collection("unic", "unicode")
         uni = self.db.unic
         for p in os.listdir('./files'):
             print p
             f = open("./files/" + p)
             name = os.path.basename(p).split('.')[0]
-            comp.add(name, f)
-            uni.add(name, f)
+            if len(name) > 0:
+                #comp.add(name, f)
+                uni.add(name, f)
         # get size in bytes for both
-        c_size = comp.disk_size()
+        #c_size = comp.disk_size()
         u_size = uni.disk_size()
-        self.db.drop("compr")
+        #self.db.drop("compr")
         self.db.drop("unic")
-        ratio = 100 * c_size/float(u_size)
-        print str(ratio) + "%"
+        #ratio = 100 * c_size/float(u_size)
+        #print str(ratio) + "%"
 if __name__ == '__main__':
+    sys.argv[0] = 'http://127.0.0.1:27002'
     unittest.main()

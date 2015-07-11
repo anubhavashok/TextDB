@@ -21,7 +21,6 @@ using namespace dtl;
 
 class Doc
 {
-    string name;
     // acts as a cache and stores meta data about document
     bool loaded = false;
     vector<string> docCache;
@@ -29,6 +28,7 @@ class Doc
     // contains ids of previous versions, monotonically increasing
     stack<int> versions;
     Ses<string> diff(vector<string> d1, vector<string> d2);
+    int docID;
 
 public:
     Doc(string _name, vector<string> doc)
@@ -59,6 +59,12 @@ public:
             out << w << " " << endl;
         }
     }
+    const string name;
+    
+    bool setID(int _docID);
+    int getID() const;
+    size_t size() const;
+    const vector<string>& getDocCache();
 };
 
 

@@ -96,9 +96,9 @@ class Collection:
         #req = urllib2.Request(self.endpoint, text)
         #response = urllib2.urlopen(req)
 
-        safe_text = urllib.quote(text)
+        safe_text = urllib.quote(str(text))
         name = urllib.quote(name)
-        r = requests.post(self.endpoint + "/add/{0}/{1}?text={2}".format(self.collection, name, safe_text))
+        r = requests.post(self.endpoint + "/add/{0}/{1}/{2}".format(self.collection, name, safe_text))
         return r.text
 
     def remove(self, name):
@@ -125,5 +125,6 @@ class Collection:
         return True if (r.text == "1") else False
 
     def disk_size(self):
-        r = requests.get(self.endpoint + "/disk_size/{0}".format(self.collection))
+        r = requests.get(self.endpoint + "/collectionsize/{0}".format(self.collection))
+        print "disk_size: " + r.text
         return int(r.text)

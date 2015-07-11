@@ -18,7 +18,7 @@ class LRU
     std::list<std::string> _lru;
 public:
     void access(std::string name);
-    std::string pop();
+    std::string pop_back();
     bool cached(std::string name);
 };
 

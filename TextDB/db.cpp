@@ -143,12 +143,23 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     
     
+    queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        std::string collection = args[0];
+        std::string doc = args[1];
+        
+        htmlout << db->collections[collection]->size(doc);
+    };
+
+    
+    /* ---------------------------------------------------------------------------------------- */
+
     queryFunctions["add"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         std::string collection = args[0];
         std::string name = args[1];
         std::string t = args[2];
         
         std::string rawtext = curlpp::unescape(t);
+        cout << "Text: " << rawtext << endl;
         
         /* Tokenize words */
         boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
@@ -211,6 +222,10 @@ void DB::init_query_operations()
     
     
     queryFunctions["get"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        if (args.size() < 2) {
+            htmlout << "malformed request" << endl;
+            return;
+        }
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -604,36 +619,60 @@ bool DB::remove(std::string collection, std::string name)
 
 std::string DB::get(std::string collection, std::string name)
 {
+    // Collection does not exist
     if (!collections.count(collection)) {
         cout << "collection not found" << endl;
         return "";
     }
+    
     Collection* c = collections[collection];
+    
+    // Document does not exist
     if (!c->exists(name)) {
         return "";
     }
+    
+    // Document not in LRU
     if (!lru.cached(collection+":"+name)) {
-        int total_size = get_occupied_space();
         size_t required = c->size(name);
-        
-        while ((int)memory_limit - (total_size + required) < (int)memory_epsilon) {
-            // kick till enough space left
-            std::vector<std::string> last;
-            std::string popped = lru.pop();
-            if (popped == "") {
-                // nothing in cache yet, but this probably means that memory_limit is not enough to store the docs
-                break;
-            } else {
-                boost::split(last, popped, boost::is_any_of(":"));
-                Collection* c = collections[last[0]];
-                c->kick(last[1]);
-                total_size = get_occupied_space();
-            }
-        }
+        make_space(required);
     }
 
     lru.access(collection+":"+name);
     return c->get(name);
+}
+
+/*
+ * make_space
+ * A function that makes space for required
+ * @param collection a string representing the name of the collection to be deleted
+ */
+
+bool DB::make_space(size_t required)
+{
+    if (required > memory_limit) {
+        cout << "Memory limit exceeded" << endl;
+        return false;
+    }
+    size_t current_size = get_occupied_space();
+
+    // kick till enough space left
+    while (memory_limit - (current_size + required) < memory_epsilon) {
+        std::vector<std::string> last;
+        std::string popped = lru.pop_back();
+        if (popped == "") {
+            // nothing in cache, this probably means that memory_limit is not enough to store the docs
+            return false;
+        } else {
+            boost::split(last, popped, boost::is_any_of(":"));
+            if (collections.count(last[0])) {
+                Collection* c = collections[last[0]];
+                c->kick(last[1]);
+            }
+            current_size = get_occupied_space();
+        }
+    }
+    return true;
 }
 
 /*
@@ -672,13 +711,13 @@ void DB::drop(std::string collection)
  * A function that gets the total in-memory space that all the collections currently occupy
  */
 
-int DB::get_occupied_space()
+size_t DB::get_occupied_space()
 {
     size_t sum = 0;
     for (auto p: collections) {
         sum += p.second->size();
     }
-    return (int) sum;
+    return sum;
 }
 
 double DB::getSentimentScore(std::string collection, std::string name)

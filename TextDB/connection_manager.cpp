@@ -24,7 +24,7 @@ connection_manager::connection_manager()
         
         cout << boost::this_thread::get_id() << endl;
         c->start();
-        cout << "Exiting thread: " << boost::this_thread::get_id() << endl;
+        //cout << "Exiting thread: " << boost::this_thread::get_id() << endl;
     }
 void connection_manager::start(connection_ptr c)
 {

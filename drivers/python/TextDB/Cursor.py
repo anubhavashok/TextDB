@@ -41,7 +41,7 @@ class Cursor():
             "This is the second sentence of a."
 
         """
-        if self.sentencePtr >= self.get_size():
+        if self.sentencePtr >= self.size():
             return None
         r = requests.get(self.endpoint + "/sentence/{0}/{1}/{2}".format(self.collection, self.name, self.sentencePtr))
         text = urllib.unquote(r.text)
@@ -89,7 +89,7 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/get/{0}/{1}".format(self.collection, self.name))
-        return urllib.unquote(r.text)
+        return str(urllib.unquote(r.text))
 
     def sentiment(self):
         """Get the sentiment score of the document.

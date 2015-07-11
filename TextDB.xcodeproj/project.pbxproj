@@ -132,17 +132,12 @@
 				44DE93871B07D14C00BB0BA1 /* docgraph */,
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
-				44752F651A5070650029C2D8 /* encoder.cpp */,
 				444652B91AA4F80A00B1A102 /* operation.cpp */,
 				444652BA1AA4F80A00B1A102 /* operation.h */,
 				4485F36A1AC0EAB80082D573 /* raft */,
 				44752F6B1A56937C0029C2D8 /* LRU.cpp */,
 				44752F6C1A56937C0029C2D8 /* LRU.h */,
-				44752F661A5070650029C2D8 /* encoder.h */,
-				44FB69CB19ADC6CF00219F7B /* bitreader.cpp */,
-				44FB69CC19ADC6CF00219F7B /* bitreader.h */,
-				44752F681A5081230029C2D8 /* bitwriter.cpp */,
-				44752F691A5081230029C2D8 /* bitwriter.h */,
+				44EE1E211B473EC200B1CE35 /* IO */,
 			);
 			path = TextDB;
 			sourceTree = "<group>";
@@ -200,6 +195,19 @@
 				44DE93891B07D16100BB0BA1 /* Doc.h */,
 			);
 			name = docgraph;
+			sourceTree = "<group>";
+		};
+		44EE1E211B473EC200B1CE35 /* IO */ = {
+			isa = PBXGroup;
+			children = (
+				44752F651A5070650029C2D8 /* encoder.cpp */,
+				44752F661A5070650029C2D8 /* encoder.h */,
+				44FB69CB19ADC6CF00219F7B /* bitreader.cpp */,
+				44FB69CC19ADC6CF00219F7B /* bitreader.h */,
+				44752F681A5081230029C2D8 /* bitwriter.cpp */,
+				44752F691A5081230029C2D8 /* bitwriter.h */,
+			);
+			name = IO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,15 +387,12 @@
 					"-lsnappy",
 					"-lboost_program_options",
 					"-DUSE_WEBSOCKET",
-					"-lPocoFoundation",
-					"-lPocoNet",
-					"-lPocoUtil",
 					"-lboost_serialization",
 					"-lboost_log",
-					"-lcurlpp",
 					"-lcurl",
 					"-lboost_log_setup",
 					"-lboost_log-mt",
+					"-lcurlpp",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

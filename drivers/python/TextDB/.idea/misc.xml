@@ -20,10 +20,5 @@
     </entry>
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.5.6 (/System/Library/Frameworks/Python.framework/Versions/2.5/bin/python2.5)" project-jdk-type="Python SDK" />
-  <component name="PyConsoleOptionsProvider">
-    <option name="myPythonConsoleState">
-      <console-settings />
-    </option>
-  </component>
 </project>
 

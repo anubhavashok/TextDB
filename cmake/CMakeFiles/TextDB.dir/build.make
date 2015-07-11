@@ -49,32 +49,9 @@ include CMakeFiles/TextDB.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/TextDB.dir/flags.make
 
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o: CMakeFiles/TextDB.dir/flags.make
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o: /Users/anubhav/TextDB/TextDB/acceptor.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o -c /Users/anubhav/TextDB/TextDB/acceptor.cpp
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/acceptor.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.i
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/acceptor.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.s
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.requires:
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.requires
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.provides.build
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.provides
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o
-
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o: /Users/anubhav/TextDB/TextDB/bitreader.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o -c /Users/anubhav/TextDB/TextDB/bitreader.cpp
 
@@ -97,7 +74,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o.provides.build
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o: /Users/anubhav/TextDB/TextDB/bitwriter.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_3)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o -c /Users/anubhav/TextDB/TextDB/bitwriter.cpp
 
@@ -120,7 +97,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o.provides.build
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o: /Users/anubhav/TextDB/TextDB/cache.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_4)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o -c /Users/anubhav/TextDB/TextDB/cache.cpp
 
@@ -143,7 +120,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o.provides.build: CM
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o: /Users/anubhav/TextDB/TextDB/collection.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_5)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_4)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o -c /Users/anubhav/TextDB/TextDB/collection.cpp
 
@@ -164,9 +141,55 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o.provides: CMa
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o
 
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o: /Users/anubhav/TextDB/TextDB/connection.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_5)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o -c /Users/anubhav/TextDB/TextDB/connection.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/connection.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/connection.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o: /Users/anubhav/TextDB/TextDB/connection_manager.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_6)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o -c /Users/anubhav/TextDB/TextDB/connection_manager.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/connection_manager.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/connection_manager.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o
+
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o: /Users/anubhav/TextDB/TextDB/db.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_6)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_7)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o -c /Users/anubhav/TextDB/TextDB/db.cpp
 
@@ -187,9 +210,55 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o.provides: CMakeFiles/
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o
 
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o: /Users/anubhav/TextDB/TextDB/Doc.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_8)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o -c /Users/anubhav/TextDB/TextDB/Doc.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/Doc.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/Doc.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o: /Users/anubhav/TextDB/TextDB/docgraph.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_9)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o -c /Users/anubhav/TextDB/TextDB/docgraph.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/docgraph.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/docgraph.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o
+
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o: /Users/anubhav/TextDB/TextDB/encoder.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_7)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_10)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o -c /Users/anubhav/TextDB/TextDB/encoder.cpp
 
@@ -212,7 +281,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o.provides.build: 
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o: /Users/anubhav/TextDB/TextDB/entry.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_8)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_11)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o -c /Users/anubhav/TextDB/TextDB/entry.cpp
 
@@ -235,7 +304,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o.provides.build: CM
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o: /Users/anubhav/TextDB/TextDB/LRU.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_9)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_12)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o -c /Users/anubhav/TextDB/TextDB/LRU.cpp
 
@@ -258,7 +327,7 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o.provides.build: CMak
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o: /Users/anubhav/TextDB/TextDB/main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_10)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_13)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o -c /Users/anubhav/TextDB/TextDB/main.cpp
 
@@ -279,9 +348,32 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o.provides: CMakeFile
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o
 
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o: /Users/anubhav/TextDB/TextDB/mime_types.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_14)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o -c /Users/anubhav/TextDB/TextDB/mime_types.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/mime_types.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/mime_types.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o
+
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o: /Users/anubhav/TextDB/TextDB/operation.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_11)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_15)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o -c /Users/anubhav/TextDB/TextDB/operation.cpp
 
@@ -302,55 +394,9 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o.provides: CMak
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o
 
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o: CMakeFiles/TextDB.dir/flags.make
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o: /Users/anubhav/TextDB/TextDB/oplog.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_12)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o -c /Users/anubhav/TextDB/TextDB/oplog.cpp
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/oplog.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.i
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/oplog.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.s
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.requires:
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.requires
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.provides.build
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.provides
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o: CMakeFiles/TextDB.dir/flags.make
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o: /Users/anubhav/TextDB/TextDB/proposer.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_13)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o -c /Users/anubhav/TextDB/TextDB/proposer.cpp
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/proposer.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.i
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/proposer.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.s
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.requires:
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.requires
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.requires
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.provides.build
-.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.provides
-
-CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o
-
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o: /Users/anubhav/TextDB/TextDB/raft.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_14)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_16)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o -c /Users/anubhav/TextDB/TextDB/raft.cpp
 
@@ -371,9 +417,78 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o.provides: CMakeFile
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o
 
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o: /Users/anubhav/TextDB/TextDB/reply.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_17)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o -c /Users/anubhav/TextDB/TextDB/reply.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/reply.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/reply.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o: /Users/anubhav/TextDB/TextDB/request_handler.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_18)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o -c /Users/anubhav/TextDB/TextDB/request_handler.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/request_handler.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/request_handler.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o: /Users/anubhav/TextDB/TextDB/request_parser.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_19)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o -c /Users/anubhav/TextDB/TextDB/request_parser.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/request_parser.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/request_parser.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o
+
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o: CMakeFiles/TextDB.dir/flags.make
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o: /Users/anubhav/TextDB/TextDB/sentiment.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_15)
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_20)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o"
 	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o -c /Users/anubhav/TextDB/TextDB/sentiment.cpp
 
@@ -394,42 +509,77 @@ CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o.provides: CMak
 
 CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o
 
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o: CMakeFiles/TextDB.dir/flags.make
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o: /Users/anubhav/TextDB/TextDB/server.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/anubhav/TextDB/cmake/CMakeFiles $(CMAKE_PROGRESS_21)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o -c /Users/anubhav/TextDB/TextDB/server.cpp
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/anubhav/TextDB/TextDB/server.cpp > CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.i
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/anubhav/TextDB/TextDB/server.cpp -o CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.s
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.requires:
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.requires
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.provides: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.requires
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.provides.build
+.PHONY : CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.provides
+
+CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.provides.build: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o
+
 # Object files for target TextDB
 TextDB_OBJECTS = \
-"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o" \
-"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o" \
-"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o" \
 "CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o" \
-"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o"
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o" \
+"CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o"
 
 # External object files for target TextDB
 TextDB_EXTERNAL_OBJECTS =
 
-TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o
-TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o
-TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o
 TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o
+TextDB: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o
 TextDB: CMakeFiles/TextDB.dir/build.make
 TextDB: /usr/local/lib/libboost_system-mt.dylib
 TextDB: /usr/local/lib/libboost_filesystem-mt.dylib
@@ -438,9 +588,9 @@ TextDB: /usr/local/lib/libboost_thread-mt.dylib
 TextDB: /usr/local/lib/libboost_regex-mt.dylib
 TextDB: /usr/local/lib/libboost_serialization-mt.dylib
 TextDB: /usr/local/lib/libboost_log-mt.dylib
-TextDB: /usr/lib/libcurl.dylib
 TextDB: /usr/local/lib/libcurlpp.a
 TextDB: /usr/local/lib/libsnappy.dylib
+TextDB: /usr/lib/libcurl.dylib
 TextDB: CMakeFiles/TextDB.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable TextDB"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/TextDB.dir/link.txt --verbose=$(VERBOSE)
@@ -449,21 +599,27 @@ TextDB: CMakeFiles/TextDB.dir/link.txt
 CMakeFiles/TextDB.dir/build: TextDB
 .PHONY : CMakeFiles/TextDB.dir/build
 
-CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitreader.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/bitwriter.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/cache.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/encoder.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/entry.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.o.requires
-CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o.requires
-CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o.requires
 CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.o.requires
+CMakeFiles/TextDB.dir/requires: CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o.requires
 .PHONY : CMakeFiles/TextDB.dir/requires
 
 CMakeFiles/TextDB.dir/clean:

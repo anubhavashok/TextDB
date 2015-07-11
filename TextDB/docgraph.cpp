@@ -8,14 +8,22 @@
 
 #include "docgraph.h"
 #include <iostream>
-/*
-void DGraph::add(string docName, vector<string> doc)
+
+bool DGraph::add(string docName, vector<string> doc)
 {
     if (doc.size() == 0) {
         // throw error
         cerr << "Document cannot be empty" << endl;
-        return;
+        return false;
     }
+    
+    if (doc2id.count(docName)) {
+        cerr << "Document already exists" << endl;
+        return false;
+    }
+    long docID = doc2id.size();
+    doc2id[docName] = docID;
+    id2doc[docID] = docName;
     
     // Create all nodes for words
     for (string w: doc) {
@@ -25,44 +33,50 @@ void DGraph::add(string docName, vector<string> doc)
     }
     
     // Add document to root
-    root[docName] = words[doc.front()];
+    // root takes in an id
+    root[docID] = words[doc.front()];
     
     // Create links according to document
     if (doc.size() > 1) {
-        words[doc[0]]->addNextEdge(docName, words[doc[1]]);
+        words[doc[0]]->addNextEdge(docID, words[doc[1]]);
     }
     for (int i = 1; i < words.size() - 1; i++) {
         std:string w = doc[i];
-        words[w]->addNextEdge(docName, words[doc[i+1]]);
-        words[w]->addPrevEdge(docName, words[doc[i-1]]);
+        words[w]->addNextEdge(docID, words[doc[i+1]]);
+        words[w]->addPrevEdge(docID, words[doc[i-1]]);
 
     }
     if (doc.size() > 1) {
-        words[doc.back()]->addPrevEdge(docName, words[doc[doc.size() - 1]]);
+        words[doc.back()]->addPrevEdge(docID, words[doc[doc.size() - 1]]);
     }
+    return true;
 }
 
 vector<string> DGraph::get(string docName)
 {
-    if (!root.count(docName)) {
+    if (!doc2id.count(docName)) {
+        return vector<string>();
+    }
+    size_t docID = doc2id[docName];
+    if (!root.count(docID)) {
         cerr << "Document: " << docName << " not found" << endl;
     }
-    WNode* node = root[docName];
+    WNode* node = root[docID];
     vector<string> doc;
-    while (node->next.count(docName)) {
+    while (node->next.count(docID)) {
         doc.push_back(node->w);
-        node = node->next[docName];
+        node = node->next[docID];
     }
     return doc;
 }
 
 
-void WNode::addNextEdge(int i, WNode* _next)
+void WNode::addNextEdge(size_t i, WNode* _next)
 {
     next[i] = _next;
 }
 
-void WNode::addPrevEdge(int i, WNode* _prev)
+void WNode::addPrevEdge(size_t i, WNode* _prev)
 {
     prev[i] = _prev;
 }
@@ -100,40 +114,41 @@ WNode::WNode(string _w)
 {
 }
 
-void DGraph::add(const Doc& doc)
+bool DGraph::add(Doc& doc)
 {
-    name2id[doc.name] = doc.id;
+    int docID = doc.getID();
+    doc2id[doc.name] = docID;
     // Add words to doc graph
     // add id to root
-    if (doc.d.size() == 0) {
+    if (doc.size() <= 0) {
         // throw error
         cerr << "Document cannot be empty" << endl;
-        return;
+        return false;
     }
     
     // Create all nodes for words
-    for (string w: doc.d) {
+    const vector<string>& docCache = doc.getDocCache();
+    for (string w: docCache) {
         if (!words.count(w)) {
             words[w] = new WNode(w);
         }
     }
     
     // Add document to root
-    root[docName] = words[doc.d.front()];
+    root[docID] = words[docCache.front()];
     
     // Create links according to document
-    if (doc.d.size() > 1) {
-        words[doc.d[0]]->addNextEdge(doc.id, words[doc.d[1]]);
+    if (docCache.size() > 1) {
+        words[docCache[0]]->addNextEdge(docID, words[docCache[1]]);
     }
     for (int i = 1; i < words.size() - 1; i++) {
-        std:string w = doc.d[i];
-        words[w]->addNextEdge(doc.id, words[doc.d[i+1]]);
-        words[w]->addPrevEdge(doc.id, words[doc.d[i-1]]);
+        std:string w = docCache[i];
+        words[w]->addNextEdge(docID, words[docCache[i+1]]);
+        words[w]->addPrevEdge(docID, words[docCache[i-1]]);
         
     }
-    if (doc.d.size() > 1) {
-        words[doc.d.back()]->addPrevEdge(doc.id, words[doc.d[doc.d.size() - 1]]);
+    if (docCache.size() > 1) {
+        words[docCache.back()]->addPrevEdge(docID, words[docCache[docCache.size() - 1]]);
     }
-    
+    return true;
 }
-*/

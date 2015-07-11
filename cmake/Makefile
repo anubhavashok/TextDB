@@ -115,6 +115,30 @@ TextDB/fast:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/build
 .PHONY : TextDB/fast
 
+Users/anubhav/TextDB/TextDB/Doc.o: Users/anubhav/TextDB/TextDB/Doc.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/Doc.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.cpp.o
+
+Users/anubhav/TextDB/TextDB/Doc.i: Users/anubhav/TextDB/TextDB/Doc.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/Doc.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.cpp.i
+
+Users/anubhav/TextDB/TextDB/Doc.s: Users/anubhav/TextDB/TextDB/Doc.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/Doc.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/Doc.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/Doc.cpp.s
+
 Users/anubhav/TextDB/TextDB/LRU.o: Users/anubhav/TextDB/TextDB/LRU.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/LRU.o
 
@@ -138,30 +162,6 @@ Users/anubhav/TextDB/TextDB/LRU.s: Users/anubhav/TextDB/TextDB/LRU.cpp.s
 Users/anubhav/TextDB/TextDB/LRU.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/LRU.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/LRU.cpp.s
-
-Users/anubhav/TextDB/TextDB/acceptor.o: Users/anubhav/TextDB/TextDB/acceptor.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.o
-
-# target to build an object file
-Users/anubhav/TextDB/TextDB/acceptor.cpp.o:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.cpp.o
-
-Users/anubhav/TextDB/TextDB/acceptor.i: Users/anubhav/TextDB/TextDB/acceptor.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.i
-
-# target to preprocess a source file
-Users/anubhav/TextDB/TextDB/acceptor.cpp.i:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.cpp.i
-
-Users/anubhav/TextDB/TextDB/acceptor.s: Users/anubhav/TextDB/TextDB/acceptor.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.s
-
-# target to generate assembly for a file
-Users/anubhav/TextDB/TextDB/acceptor.cpp.s:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/acceptor.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/acceptor.cpp.s
 
 Users/anubhav/TextDB/TextDB/bitreader.o: Users/anubhav/TextDB/TextDB/bitreader.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/bitreader.o
@@ -259,6 +259,54 @@ Users/anubhav/TextDB/TextDB/collection.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/collection.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/collection.cpp.s
 
+Users/anubhav/TextDB/TextDB/connection.o: Users/anubhav/TextDB/TextDB/connection.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/connection.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/connection.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/connection.cpp.o
+
+Users/anubhav/TextDB/TextDB/connection.i: Users/anubhav/TextDB/TextDB/connection.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/connection.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/connection.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/connection.cpp.i
+
+Users/anubhav/TextDB/TextDB/connection.s: Users/anubhav/TextDB/TextDB/connection.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/connection.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/connection.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/connection.cpp.s
+
+Users/anubhav/TextDB/TextDB/connection_manager.o: Users/anubhav/TextDB/TextDB/connection_manager.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/connection_manager.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.cpp.o
+
+Users/anubhav/TextDB/TextDB/connection_manager.i: Users/anubhav/TextDB/TextDB/connection_manager.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/connection_manager.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.cpp.i
+
+Users/anubhav/TextDB/TextDB/connection_manager.s: Users/anubhav/TextDB/TextDB/connection_manager.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/connection_manager.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/connection_manager.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/connection_manager.cpp.s
+
 Users/anubhav/TextDB/TextDB/db.o: Users/anubhav/TextDB/TextDB/db.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/db.o
 
@@ -282,6 +330,30 @@ Users/anubhav/TextDB/TextDB/db.s: Users/anubhav/TextDB/TextDB/db.cpp.s
 Users/anubhav/TextDB/TextDB/db.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/db.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/db.cpp.s
+
+Users/anubhav/TextDB/TextDB/docgraph.o: Users/anubhav/TextDB/TextDB/docgraph.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/docgraph.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.cpp.o
+
+Users/anubhav/TextDB/TextDB/docgraph.i: Users/anubhav/TextDB/TextDB/docgraph.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/docgraph.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.cpp.i
+
+Users/anubhav/TextDB/TextDB/docgraph.s: Users/anubhav/TextDB/TextDB/docgraph.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/docgraph.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/docgraph.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/docgraph.cpp.s
 
 Users/anubhav/TextDB/TextDB/encoder.o: Users/anubhav/TextDB/TextDB/encoder.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/encoder.o
@@ -355,6 +427,30 @@ Users/anubhav/TextDB/TextDB/main.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/main.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/main.cpp.s
 
+Users/anubhav/TextDB/TextDB/mime_types.o: Users/anubhav/TextDB/TextDB/mime_types.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/mime_types.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.cpp.o
+
+Users/anubhav/TextDB/TextDB/mime_types.i: Users/anubhav/TextDB/TextDB/mime_types.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/mime_types.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.cpp.i
+
+Users/anubhav/TextDB/TextDB/mime_types.s: Users/anubhav/TextDB/TextDB/mime_types.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/mime_types.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/mime_types.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/mime_types.cpp.s
+
 Users/anubhav/TextDB/TextDB/operation.o: Users/anubhav/TextDB/TextDB/operation.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/operation.o
 
@@ -378,54 +474,6 @@ Users/anubhav/TextDB/TextDB/operation.s: Users/anubhav/TextDB/TextDB/operation.c
 Users/anubhav/TextDB/TextDB/operation.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/operation.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/operation.cpp.s
-
-Users/anubhav/TextDB/TextDB/oplog.o: Users/anubhav/TextDB/TextDB/oplog.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.o
-
-# target to build an object file
-Users/anubhav/TextDB/TextDB/oplog.cpp.o:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.cpp.o
-
-Users/anubhav/TextDB/TextDB/oplog.i: Users/anubhav/TextDB/TextDB/oplog.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.i
-
-# target to preprocess a source file
-Users/anubhav/TextDB/TextDB/oplog.cpp.i:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.cpp.i
-
-Users/anubhav/TextDB/TextDB/oplog.s: Users/anubhav/TextDB/TextDB/oplog.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.s
-
-# target to generate assembly for a file
-Users/anubhav/TextDB/TextDB/oplog.cpp.s:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/oplog.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/oplog.cpp.s
-
-Users/anubhav/TextDB/TextDB/proposer.o: Users/anubhav/TextDB/TextDB/proposer.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.o
-
-# target to build an object file
-Users/anubhav/TextDB/TextDB/proposer.cpp.o:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.o
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.cpp.o
-
-Users/anubhav/TextDB/TextDB/proposer.i: Users/anubhav/TextDB/TextDB/proposer.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.i
-
-# target to preprocess a source file
-Users/anubhav/TextDB/TextDB/proposer.cpp.i:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.i
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.cpp.i
-
-Users/anubhav/TextDB/TextDB/proposer.s: Users/anubhav/TextDB/TextDB/proposer.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.s
-
-# target to generate assembly for a file
-Users/anubhav/TextDB/TextDB/proposer.cpp.s:
-	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/proposer.cpp.s
-.PHONY : Users/anubhav/TextDB/TextDB/proposer.cpp.s
 
 Users/anubhav/TextDB/TextDB/raft.o: Users/anubhav/TextDB/TextDB/raft.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/raft.o
@@ -451,6 +499,78 @@ Users/anubhav/TextDB/TextDB/raft.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/raft.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/raft.cpp.s
 
+Users/anubhav/TextDB/TextDB/reply.o: Users/anubhav/TextDB/TextDB/reply.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/reply.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/reply.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/reply.cpp.o
+
+Users/anubhav/TextDB/TextDB/reply.i: Users/anubhav/TextDB/TextDB/reply.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/reply.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/reply.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/reply.cpp.i
+
+Users/anubhav/TextDB/TextDB/reply.s: Users/anubhav/TextDB/TextDB/reply.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/reply.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/reply.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/reply.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/reply.cpp.s
+
+Users/anubhav/TextDB/TextDB/request_handler.o: Users/anubhav/TextDB/TextDB/request_handler.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/request_handler.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.cpp.o
+
+Users/anubhav/TextDB/TextDB/request_handler.i: Users/anubhav/TextDB/TextDB/request_handler.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/request_handler.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.cpp.i
+
+Users/anubhav/TextDB/TextDB/request_handler.s: Users/anubhav/TextDB/TextDB/request_handler.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/request_handler.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_handler.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/request_handler.cpp.s
+
+Users/anubhav/TextDB/TextDB/request_parser.o: Users/anubhav/TextDB/TextDB/request_parser.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/request_parser.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.cpp.o
+
+Users/anubhav/TextDB/TextDB/request_parser.i: Users/anubhav/TextDB/TextDB/request_parser.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/request_parser.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.cpp.i
+
+Users/anubhav/TextDB/TextDB/request_parser.s: Users/anubhav/TextDB/TextDB/request_parser.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/request_parser.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/request_parser.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/request_parser.cpp.s
+
 Users/anubhav/TextDB/TextDB/sentiment.o: Users/anubhav/TextDB/TextDB/sentiment.cpp.o
 .PHONY : Users/anubhav/TextDB/TextDB/sentiment.o
 
@@ -475,6 +595,30 @@ Users/anubhav/TextDB/TextDB/sentiment.cpp.s:
 	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/sentiment.cpp.s
 .PHONY : Users/anubhav/TextDB/TextDB/sentiment.cpp.s
 
+Users/anubhav/TextDB/TextDB/server.o: Users/anubhav/TextDB/TextDB/server.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/server.o
+
+# target to build an object file
+Users/anubhav/TextDB/TextDB/server.cpp.o:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.o
+.PHONY : Users/anubhav/TextDB/TextDB/server.cpp.o
+
+Users/anubhav/TextDB/TextDB/server.i: Users/anubhav/TextDB/TextDB/server.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/server.i
+
+# target to preprocess a source file
+Users/anubhav/TextDB/TextDB/server.cpp.i:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.i
+.PHONY : Users/anubhav/TextDB/TextDB/server.cpp.i
+
+Users/anubhav/TextDB/TextDB/server.s: Users/anubhav/TextDB/TextDB/server.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/server.s
+
+# target to generate assembly for a file
+Users/anubhav/TextDB/TextDB/server.cpp.s:
+	$(MAKE) -f CMakeFiles/TextDB.dir/build.make CMakeFiles/TextDB.dir/Users/anubhav/TextDB/TextDB/server.cpp.s
+.PHONY : Users/anubhav/TextDB/TextDB/server.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -484,12 +628,12 @@ help:
 	@echo "... TextDB"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... Users/anubhav/TextDB/TextDB/Doc.o"
+	@echo "... Users/anubhav/TextDB/TextDB/Doc.i"
+	@echo "... Users/anubhav/TextDB/TextDB/Doc.s"
 	@echo "... Users/anubhav/TextDB/TextDB/LRU.o"
 	@echo "... Users/anubhav/TextDB/TextDB/LRU.i"
 	@echo "... Users/anubhav/TextDB/TextDB/LRU.s"
-	@echo "... Users/anubhav/TextDB/TextDB/acceptor.o"
-	@echo "... Users/anubhav/TextDB/TextDB/acceptor.i"
-	@echo "... Users/anubhav/TextDB/TextDB/acceptor.s"
 	@echo "... Users/anubhav/TextDB/TextDB/bitreader.o"
 	@echo "... Users/anubhav/TextDB/TextDB/bitreader.i"
 	@echo "... Users/anubhav/TextDB/TextDB/bitreader.s"
@@ -502,9 +646,18 @@ help:
 	@echo "... Users/anubhav/TextDB/TextDB/collection.o"
 	@echo "... Users/anubhav/TextDB/TextDB/collection.i"
 	@echo "... Users/anubhav/TextDB/TextDB/collection.s"
+	@echo "... Users/anubhav/TextDB/TextDB/connection.o"
+	@echo "... Users/anubhav/TextDB/TextDB/connection.i"
+	@echo "... Users/anubhav/TextDB/TextDB/connection.s"
+	@echo "... Users/anubhav/TextDB/TextDB/connection_manager.o"
+	@echo "... Users/anubhav/TextDB/TextDB/connection_manager.i"
+	@echo "... Users/anubhav/TextDB/TextDB/connection_manager.s"
 	@echo "... Users/anubhav/TextDB/TextDB/db.o"
 	@echo "... Users/anubhav/TextDB/TextDB/db.i"
 	@echo "... Users/anubhav/TextDB/TextDB/db.s"
+	@echo "... Users/anubhav/TextDB/TextDB/docgraph.o"
+	@echo "... Users/anubhav/TextDB/TextDB/docgraph.i"
+	@echo "... Users/anubhav/TextDB/TextDB/docgraph.s"
 	@echo "... Users/anubhav/TextDB/TextDB/encoder.o"
 	@echo "... Users/anubhav/TextDB/TextDB/encoder.i"
 	@echo "... Users/anubhav/TextDB/TextDB/encoder.s"
@@ -514,21 +667,30 @@ help:
 	@echo "... Users/anubhav/TextDB/TextDB/main.o"
 	@echo "... Users/anubhav/TextDB/TextDB/main.i"
 	@echo "... Users/anubhav/TextDB/TextDB/main.s"
+	@echo "... Users/anubhav/TextDB/TextDB/mime_types.o"
+	@echo "... Users/anubhav/TextDB/TextDB/mime_types.i"
+	@echo "... Users/anubhav/TextDB/TextDB/mime_types.s"
 	@echo "... Users/anubhav/TextDB/TextDB/operation.o"
 	@echo "... Users/anubhav/TextDB/TextDB/operation.i"
 	@echo "... Users/anubhav/TextDB/TextDB/operation.s"
-	@echo "... Users/anubhav/TextDB/TextDB/oplog.o"
-	@echo "... Users/anubhav/TextDB/TextDB/oplog.i"
-	@echo "... Users/anubhav/TextDB/TextDB/oplog.s"
-	@echo "... Users/anubhav/TextDB/TextDB/proposer.o"
-	@echo "... Users/anubhav/TextDB/TextDB/proposer.i"
-	@echo "... Users/anubhav/TextDB/TextDB/proposer.s"
 	@echo "... Users/anubhav/TextDB/TextDB/raft.o"
 	@echo "... Users/anubhav/TextDB/TextDB/raft.i"
 	@echo "... Users/anubhav/TextDB/TextDB/raft.s"
+	@echo "... Users/anubhav/TextDB/TextDB/reply.o"
+	@echo "... Users/anubhav/TextDB/TextDB/reply.i"
+	@echo "... Users/anubhav/TextDB/TextDB/reply.s"
+	@echo "... Users/anubhav/TextDB/TextDB/request_handler.o"
+	@echo "... Users/anubhav/TextDB/TextDB/request_handler.i"
+	@echo "... Users/anubhav/TextDB/TextDB/request_handler.s"
+	@echo "... Users/anubhav/TextDB/TextDB/request_parser.o"
+	@echo "... Users/anubhav/TextDB/TextDB/request_parser.i"
+	@echo "... Users/anubhav/TextDB/TextDB/request_parser.s"
 	@echo "... Users/anubhav/TextDB/TextDB/sentiment.o"
 	@echo "... Users/anubhav/TextDB/TextDB/sentiment.i"
 	@echo "... Users/anubhav/TextDB/TextDB/sentiment.s"
+	@echo "... Users/anubhav/TextDB/TextDB/server.o"
+	@echo "... Users/anubhav/TextDB/TextDB/server.i"
+	@echo "... Users/anubhav/TextDB/TextDB/server.s"
 .PHONY : help
 
 

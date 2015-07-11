@@ -59,12 +59,13 @@ private:
     
     void init_query_operations();
     
+    bool make_space(size_t required);
     std::pair<std::string, std::string> parseCollectionsDirName(std::string);
-    int get_occupied_space();
+    size_t get_occupied_space();
     std::string reassembleText(const std::vector<std::string>& words);
-    static bool ready;
 
 public:
+    static bool ready;
     const static std::string allowed_puncs;
 
     DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds);

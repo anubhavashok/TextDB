@@ -112,19 +112,19 @@ bool BitReader::getNextBit()
 
 /*
  * getNextBits
- * Access function to read next nbits
- * @param nbits a size_t that represents the number of bits to return
- * @return a dynamic_bitset of size nbits that contains the next nbits
+ * Access function to read next num_bits
+ * @param num_bits a size_t that represents the number of bits to return
+ * @return a dynamic_bitset of size num_bits that contains the next num_bits
  */
 
-boost::dynamic_bitset<> BitReader::getNextBits(size_t nbits)
+boost::dynamic_bitset<> BitReader::getNextBits(size_t num_bits)
 {
     if (eof()) {
         // reached end of file prematurely
         cout << "Unexpected error when decoding file" << endl;
     }
-    boost::dynamic_bitset<> mydata(nbits);
-    for (size_t i = 0; i < nbits; i ++) {
+    boost::dynamic_bitset<> mydata(num_bits);
+    for (size_t i = 0; i < num_bits; i ++) {
         if (getNextBit()) {
             mydata.set(i);
         }

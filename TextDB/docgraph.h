@@ -22,13 +22,13 @@ class WNode
 {
 public:
     WNode(string _w);
-    void addNextEdge(int i, WNode* next);
-    void addPrevEdge(int i, WNode* prev);
+    void addNextEdge(size_t i, WNode* next);
+    void addPrevEdge(size_t i, WNode* prev);
     double nextProb(string w);
     double prevProb(string w);
     string w;
-    map<int, WNode*> next;
-    map<int, WNode*> prev;
+    map<size_t, WNode*> next;
+    map<size_t, WNode*> prev;
 };
 
 class DGraph
@@ -36,14 +36,15 @@ class DGraph
     // perhaps include string to widx inside here
 public:
     DGraph();
-    void add(Doc doc);
-    void add(string docName, vector<string> doc);
+    bool add(Doc& doc);
+    bool add(string docName, vector<string> doc);
     vector<string> get(string docName);
 private:
     map<string, WNode*> words;
-    map<int, WNode*> root;
+    map<size_t, WNode*> root;
     map<string, int> tf;
-    map<string, int> doc2id;
+    map<string, size_t> doc2id;
+    map<size_t, string> id2doc;
 };
 
 

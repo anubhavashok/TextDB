@@ -41,7 +41,7 @@ char UnicodeEncoder::decode(unsigned long n)
 
 size_t UnicodeEncoder::charSize()
 {
-    return 8;
+    return 16;
 }
 
 string UnicodeEncoder::preformat(string s)

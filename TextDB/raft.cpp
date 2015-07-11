@@ -28,9 +28,11 @@ using namespace std;
 Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db, fs::path _persistence)
 : role(Role::Follower), lastHeartbeat(boost::none), candidateId(candidateId), db(db), nextIndex(0), replicas(_replicas), replicaId(_replicaIds), persistence(_persistence)
 {
+    cout << "Replicas: " << replicas.size() << endl;
     if (replicas.size() == 0) {
         role = Role::Leader;
         votedFor = candidateId;
+        DB::ready = true;
         return;
     }
     backlog = map<int, vector<Entry>>();
@@ -51,6 +53,8 @@ Raft::Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, s
     // read log
     read_log();
     cout << "RAFT started" << endl;
+    // get up to date before this
+    DB::ready = true;
 }
 
 
