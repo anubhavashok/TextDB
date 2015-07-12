@@ -148,6 +148,11 @@ void DB::init_query_operations()
     descriptions["collectionsize"] = "Returns how many bytes a specified collection occupies on disk\nUsage:\\collectionsize\\{collectionName}";
     
     queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 1;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
         std::string collection = args[0];
         
         htmlout << db->collections[collection]->disk_size();
@@ -160,6 +165,12 @@ void DB::init_query_operations()
     descriptions["size"] = "Returns how many bytes a specified document occupies on disk\nUsage:\\size\\{collectionName}\\{docName}";
 
     queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string doc = args[1];
         
@@ -173,6 +184,12 @@ void DB::init_query_operations()
     descriptions["add"] = "Adds a document to a collection\nUsage:\\add\\{collectionName}\\{docName}\\{text}";
 
     queryFunctions["add"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 3;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+        
         std::string collection = args[0];
         std::string name = args[1];
         std::string t = args[2];
@@ -193,7 +210,10 @@ void DB::init_query_operations()
             }
         }
         
-        db->add(collection, name, text);
+        if(!db->add(collection, name, text)) {
+            htmlout << "Add unsuccessful" << endl;
+            return;
+        }
         for (std::string word: text) {
             htmlout << word << " ";
         }
@@ -205,6 +225,12 @@ void DB::init_query_operations()
     descriptions["modify"] = "Modifies a document that already exists, storing history of previous versions. \nUsage:\\modify\\{collectionName}\\{docName}\\{text}";
 
     queryFunctions["modify"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 3;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string name = args[1];
         std::string t = args[2];
@@ -233,6 +259,12 @@ void DB::init_query_operations()
     descriptions["remove"] = "Removes a particular document\nUsage:\\remove\\{collectionName}\\{docName}";
 
     queryFunctions["remove"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -248,8 +280,9 @@ void DB::init_query_operations()
     descriptions["get"] = "Gets text of a particular document\nUsage:\\get\\{collectionName}\\{docName}";
 
     queryFunctions["get"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
-        if (args.size() < 2) {
-            htmlout << "malformed request" << endl;
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
             return;
         }
         std::string collection = args[0];
@@ -267,6 +300,12 @@ void DB::init_query_operations()
     descriptions["listdocs"] = "Lists all documents in a particular collection\nUsage:\\listdocs\\{collectionName}";
 
     queryFunctions["listdocs"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 1;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         
         // get all doc names
@@ -290,6 +329,12 @@ void DB::init_query_operations()
     descriptions["sentiment"] = "Calculates sentiment score of a document\nUsage:\\sentiment\\{collectionName}\\{docName}";
 
     queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string name = args[1];
         
@@ -306,6 +351,12 @@ void DB::init_query_operations()
     descriptions["sentence"] = "Returns nth sentence in a specified document\nUsage:\\sentence\\{collectionName}\\{docName}\\{n}";
 
     queryFunctions["sentence"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 3;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string name = args[1];
         std::string s = args[2];
@@ -325,6 +376,12 @@ void DB::init_query_operations()
     descriptions["drop"] = "Drops a particular collection and all the documents in it\nUsage:\\drop\\{collectionName}";
 
     queryFunctions["drop"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 1;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         
         if (db->collections.count(collection)) {
@@ -339,6 +396,12 @@ void DB::init_query_operations()
     descriptions["create"] = "Creates a new collection with specified encoding\nUsage:\\create\\{collectionName}\\{encoding}";
 
     queryFunctions["create"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string encoding = args[1];
         
@@ -373,6 +436,12 @@ void DB::init_query_operations()
     descriptions["termfrequency"] = "Returns term frequency table of a document in json format\nUsage:\\size\\{collectionName}\\{docName}";
 
     queryFunctions["termfrequency"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         std::string collection = args[0];
         std::string name = args[1];
         if (db->collections.count(collection)) {
@@ -388,6 +457,12 @@ void DB::init_query_operations()
     descriptions["tfidf"] = "Returns tfidf score of document with regards to other documents in the same colletion\nUsage:\\tfidf\\{collectionName}\\{docName}";
 
     queryFunctions["tfidf"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         using namespace IDF;
         using namespace TF;
         using namespace TFIDF;
@@ -412,6 +487,12 @@ void DB::init_query_operations()
     descriptions["similarity"] = "Calculates cosine similarity of 2 specified documents in a collection\nUsage:\\similarity\\{collectionName}\\{doc1}\\{doc2}";
 
     queryFunctions["similarity"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 3;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+
         string collection = args[0];
         string doc1 = args[1];
         string doc2 = args[2];
