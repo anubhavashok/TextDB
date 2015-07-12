@@ -15,14 +15,12 @@
 #include <bitset>
 #include <boost/algorithm/string.hpp>
 #include "db.h"
-#include "fcgio.h"
 #include <ctime>
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <signal.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/log/trivial.hpp>
 
 #include "server.hpp"
 using namespace std;
@@ -80,7 +78,7 @@ int main(int argc, char ** argv) {
     try
     {
         // Initialise the server.
-        http::server::server s("127.0.0.1", to_string(port), "");
+        http::server::server s("0.0.0.0", to_string(port), "");
         
         // Run the server until stopped.
         s.run();

@@ -15,6 +15,7 @@
 #include <unordered_map>
 #include <stdio.h>
 #include <boost/filesystem.hpp>
+#include <chrono>
 
 namespace fs = boost::filesystem;
 
@@ -63,7 +64,7 @@ private:
     unordered_map<int, int> replicaIdReverseMap;
     
     // heartbeat
-    boost::optional<chrono::time_point<chrono::system_clock>> lastHeartbeat;
+    boost::optional<std::chrono::time_point<std::chrono::system_clock>> lastHeartbeat;
     
     // leaders
     unordered_set<int> leaders;

@@ -518,7 +518,7 @@ void DB::init_query_operations()
             return;
         }
         // ensure sorted
-        sort(entries.entries.begin(), entries.entries.end(), [](Entry& e1, Entry& e2){ return e1.index - e2.index;});
+        sort(entries.entries.begin(), entries.entries.end(), [](const Entry e1, const Entry e2){ return e1.index - e2.index;});
         cout << "entries.entries.size(): " << entries.entries.size() << endl;
         for (Entry& e: entries.entries) {
             if ((db->raft.log.count(e.index)) && (db->raft.log[e.index].term != e.term)) {
