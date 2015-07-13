@@ -337,7 +337,7 @@ std::string Collection::getSentence(std::string name, size_t start)
     for (size_t i = start; i < doc.size(); i++) {
         std::string word = idx2word[doc[i]];
         subset.push_back(word);
-        if (word[0] == '.') {
+        if (word.back() == '.') {
             break;
         }
     }
