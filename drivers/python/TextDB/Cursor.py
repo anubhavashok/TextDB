@@ -2,6 +2,7 @@ __author__ = 'anubhav'
 import requests
 import urllib
 import json
+import re
 class Cursor():
     endpoint = None
     collection = None
@@ -23,7 +24,7 @@ class Cursor():
 
     @staticmethod
     def num_words(s):
-        return len(s.split(' '))
+        return len(re.split('( |.|,|!|:|;|\|"|(|)|/|\n|\t)', s))
 
     def next_sentence(self, strip=True):
         """Get the next sentence of the document.

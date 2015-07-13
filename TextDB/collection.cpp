@@ -443,6 +443,7 @@ string Collection::get_frequency_table(string name)
     unordered_map<string, int> frequency_table;
     vector<string> words = get_vector(name);
     for (string w: words) {
+        transform(w.begin(), w.end(), w.begin(), ::tolower);
         if (!frequency_table.count(w)) {
             frequency_table[w] = 0;
         }
