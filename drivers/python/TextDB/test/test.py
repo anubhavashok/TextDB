@@ -64,7 +64,7 @@ class TestSequenceFunctions(unittest.TestCase):
         #c_size = comp.disk_size()
         u_size = uni.disk_size()
         #self.db.drop("compr")
-        self.db.drop("unic")
+        #self.db.drop("unic")
         #ratio = 100 * c_size/float(u_size)
         #print str(ratio) + "%"
 if __name__ == '__main__':

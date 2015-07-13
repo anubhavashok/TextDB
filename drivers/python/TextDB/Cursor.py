@@ -41,8 +41,6 @@ class Cursor():
             "This is the second sentence of a."
 
         """
-        if self.sentencePtr >= self.size():
-            return None
         r = requests.get(self.endpoint + "/sentence/{0}/{1}/{2}".format(self.collection, self.name, self.sentencePtr))
         text = urllib.unquote(r.text)
         # NOTE: the plus 1 is a hack to ignore getting the '.' in the next sentence since textdb considers puntuation
