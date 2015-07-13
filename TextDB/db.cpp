@@ -204,7 +204,7 @@ void DB::init_query_operations()
         std::vector<std::string> text;
 
         for (std::string t : tokens) {
-            boost::trim(t);
+            // boost::trim(t);
             if (t != "") {
                 text.push_back(t);
             }

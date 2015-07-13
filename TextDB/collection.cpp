@@ -181,7 +181,6 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
     std::vector<std::string> new_words = find_new_words(doc);
     aow_words(new_words);
     for (std::string word: new_words) {
-        // WTF? why are these characters not allowed? FIX THIS
         if ((word != "")) {
             addWord(word);
             // add doc to idx->docs mapping
