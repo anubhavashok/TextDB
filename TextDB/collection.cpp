@@ -404,7 +404,7 @@ std::string Collection::reassembleText(const std::vector<std::string>& words)
     std::string text = "";
     int i = 0;
     for (std::string word: words) {
-        text += /*((!i || ispunct(word[0])) ? "" : " ")*/ + word;
+        text += /*((!i || ispunct(word[0])) ? "" : " ")*/ word;
         i++;
     }
     return text;
