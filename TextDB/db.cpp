@@ -49,7 +49,7 @@ bool DB::ready = false;
 // index of word
 // max value is ~250,000 since there are only that many english words
 using widx = boost::dynamic_bitset<>;
-const std::string DB::allowed_puncs = " .,!?[]:;\"()/\n\t";
+const std::string DB::allowed_puncs = " _.,-+*:;!?@$&[]()/|`\\\"\n\t\r";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
