@@ -449,9 +449,14 @@ string Collection::get_frequency_table(string name)
         }
         frequency_table[w]++;
     }
+    // sort frequency table by frequency
+    vector<pair<string, int>> frequency_table_v(frequency_table.begin(), frequency_table.end());
+    sort(frequency_table_v.begin(), frequency_table_v.end(), [](const pair<string, int>& p1, const pair<string, int>& p2){
+        return p2.second > p1.second;
+    });
     // convert frequency_table into json
     string res = "{ \"tf\": {";
-    for (auto p: frequency_table) {
+    for (auto p: frequency_table_v) {
         res += "\"" + p.first + "\": " + to_string(p.second) + ", ";
     }
     // remove last ,

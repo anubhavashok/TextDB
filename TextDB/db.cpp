@@ -475,6 +475,10 @@ void DB::init_query_operations()
         unordered_map<string, double> idf = inverse_document_frequency(db->collections[collection]->get_vector(name), docs);
         auto tf = term_frequency(doc);
         auto tfidf_m = tfidf(tf, idf);
+        vector<pair<string, int>> tfidf_v(tfidf_m.begin(), tfidf_m.end());
+        sort(tfidf_v.begin(), tfidf_v.end(), [](const pair<string, int>& p1, const pair<string, int> p2){
+            return (p2.second > p1.second);
+        });
         for (auto p: tfidf_m) {
             htmlout << p.first << " " << p.second << endl;
         }
