@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
+#include <cstdlib>
 
 #include "server.hpp"
 using namespace std;
@@ -36,12 +37,31 @@ void gracefulShutdown(int sig)
     // stop accepting requests and handle last accepted request
     // persist un-persisted data
     //
+    cout << "Shutting down now..." << endl;
+    sleep(3);
+    exit(sig);
 }
 
 
 int main(int argc, char ** argv) {
-    signal(SIGTERM, &gracefulShutdown);
     
+    struct sigaction sigIntHandler = {0};
+    
+    sigIntHandler.sa_handler = gracefulShutdown;
+    
+    sigaction(SIGINT, &sigIntHandler, NULL);
+    sigaction(SIGKILL, &sigIntHandler, NULL);
+    sigaction(SIGTERM, &sigIntHandler, NULL);
+
+    //raise(SIGINT);
+    
+//    signal(SIGTERM, gracefulShutdown);
+//    signal(SIGKILL, gracefulShutdown);
+//    signal(SIGINT, gracefulShutdown);
+//    signal(SIGQUIT, gracefulShutdown);
+//    signal(SIGABRT, gracefulShutdown);
+    siginterrupt(SIGINT, 0);
+
     po::options_description desc("Welcome to TexteDB");
     Options options;
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
