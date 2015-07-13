@@ -198,8 +198,8 @@ void DB::init_query_operations()
         cout << "Text: " << rawtext << endl;
         
         /* Tokenize words */
-        boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
-        boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+        boost::char_delimiters_separator<char> sep(DB::allowed_puncs.c_str()); // specify only the kept separators
+        boost::tokenizer<boost::char_delimiters_separator<char>> tokens(rawtext, sep);
         
         std::vector<std::string> text;
 

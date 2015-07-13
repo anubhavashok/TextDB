@@ -1,6 +1,6 @@
 {
     "id": 1,
     "port": "27002",
-    "data": "/home/ec2-user/TextDB/data",
+    "data": "/Users/anubhav/TextDB/data",
     "replicas": []
 }

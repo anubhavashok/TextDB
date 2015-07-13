@@ -133,5 +133,4 @@ class Cursor():
             print "Document {0} has to be from same collection as document {1}".format(cursor.name, self.name)
             return
         r = requests.get(self.endpoint + "similarity/{0}/{1}/{2}".format(self.collection, self.name, cursor.name))
-        print r.text
         return float(r.text)
