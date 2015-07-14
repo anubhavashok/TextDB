@@ -13,6 +13,7 @@
 #include "encoder.h"
 #include <iostream>
 #include <vector>
+#include <limits.h>
 
 class BitWriter
 {
