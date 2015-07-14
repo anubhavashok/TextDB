@@ -32,35 +32,8 @@ DB* db = nullptr;
 static std::string dbpath;
 const char* toolName = "tdb";
 
-void gracefulShutdown(int sig)
-{
-    // stop accepting requests and handle last accepted request
-    // persist un-persisted data
-    //
-    cout << "Shutting down now..." << endl;
-    sleep(3);
-    exit(sig);
-}
-
 
 int main(int argc, char ** argv) {
-    
-    struct sigaction sigIntHandler = {0};
-    
-    sigIntHandler.sa_handler = gracefulShutdown;
-    
-    sigaction(SIGINT, &sigIntHandler, NULL);
-    sigaction(SIGKILL, &sigIntHandler, NULL);
-    sigaction(SIGTERM, &sigIntHandler, NULL);
-
-    //raise(SIGINT);
-    
-//    signal(SIGTERM, gracefulShutdown);
-//    signal(SIGKILL, gracefulShutdown);
-//    signal(SIGINT, gracefulShutdown);
-//    signal(SIGQUIT, gracefulShutdown);
-//    signal(SIGABRT, gracefulShutdown);
-    siginterrupt(SIGINT, 0);
 
     po::options_description desc("Welcome to TexteDB");
     Options options;
@@ -107,6 +80,4 @@ int main(int argc, char ** argv) {
     {
         std::cerr << "exception: " << e.what() << "\n";
     }
-
-
 }

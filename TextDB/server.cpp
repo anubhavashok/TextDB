@@ -9,6 +9,7 @@
 //
 
 #include "server.hpp"
+#include "db.h"
 #include <signal.h>
 #include <utility>
 
@@ -47,6 +48,16 @@ server::server(const std::string& address, const std::string& port,
 
   do_accept();
 }
+    void handler(
+                 const boost::system::error_code& error,
+                 int signal_number)
+    {
+        if (!error)
+        {
+            DB::gracefulShutdown(signal_number);
+        }
+    }
+
 
 void server::run()
 {
@@ -55,6 +66,11 @@ void server::run()
   // have finished. While the server is running, there is always at least one
   // asynchronous operation outstanding: the asynchronous accept call waiting
   // for new incoming connections.
+    boost::asio::signal_set signals(io_service_, SIGINT, SIGTERM);
+    
+    // Start an asynchronous wait for one of the signals to occur.
+    signals.async_wait(handler);
+
   io_service_.run();
 }
 

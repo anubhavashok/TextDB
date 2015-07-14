@@ -68,5 +68,5 @@ class TestSequenceFunctions(unittest.TestCase):
         #ratio = 100 * c_size/float(u_size)
         #print str(ratio) + "%"
 if __name__ == '__main__':
-    sys.argv[0] = 'http://52.2.176.107'
+    sys.argv[0] = 'http://0.0.0.0:27002'
     unittest.main()

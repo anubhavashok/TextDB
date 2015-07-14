@@ -66,6 +66,15 @@ private:
     std::string reassembleText(const std::vector<std::string>& words);
 
 public:
+    static void gracefulShutdown(int sig)
+    {
+        // stop accepting requests and handle last accepted request
+        // persist un-persisted data
+        //
+        cout << "Shutting down now..." << endl;
+        sleep(2);
+        exit(sig);
+    }
     static bool ready;
     const static std::string allowed_puncs;
 
