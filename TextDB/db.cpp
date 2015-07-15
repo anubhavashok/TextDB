@@ -215,7 +215,7 @@ void DB::init_query_operations()
             return;
         }
         for (std::string word: text) {
-            htmlout << word << " ";
+            htmlout << word;
         }
     };
     

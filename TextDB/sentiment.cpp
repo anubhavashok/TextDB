@@ -40,7 +40,8 @@ void SentimentAnalysis::fileToWordMap(fs::path f, unordered_map<string, double>&
     ifstream in(f.string());
     string w;
     while (in >> w) {
-        std::transform(w.begin(), w.end(), w.begin(), ::tolower);
+        boost::trim(w);
+        boost::to_lower(w);
         v[w] = score;
     }
 }
@@ -59,6 +60,9 @@ double SentimentAnalysis::analyse(const std::string& textstring)
             count++;
             score += sentimentMap[w];
         }
+    }
+    if (count == 0) {
+        return 0;
     }
     return (double)score/count;
 }
