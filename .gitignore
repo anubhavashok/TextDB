@@ -1,0 +1,15 @@
+data/collections
+data/collections2
+data/replication
+config/test.txt
+cmake/TextDB
+cmake/collections
+cmake/replication
+cmake/modules
+cmake/Makefile
+cmake/CMakeCache.txt
+cmake/CMakeFiles
+cmake/cmake_install.cmake
+build
+collections
+replication
