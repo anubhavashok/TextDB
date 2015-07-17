@@ -12,6 +12,7 @@
 #include <iostream>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
+#include <limits.h>
 #include "encoder.h"
 
 class BitReader
