@@ -337,7 +337,9 @@ void DB::init_query_operations()
 
         std::string collection = args[0];
         std::string name = args[1];
-        
+        if (!db->collections.count(collection)) {
+            return;
+        }
         double score = db->getSentimentScore(collection, name);
         //htmlout << "{\"name\":"<<name<<", \"sentimentScore\": "<<score<<"}";
         htmlout << score;
