@@ -28,8 +28,9 @@ Encoder* Encoder::createEncoder(Encoder::CharacterEncoding _encoding)
 
 unsigned long UnicodeEncoder::encode(char c)
 {
+    cout << c << " val: " << (int)c << endl;
     unsigned long i = (unsigned long) c;
-    // if ((i > 256) || (i < 0)) throw InvalidCharacterException;
+    if ((i > 256) || (i < 0)) return (unsigned long)'?';
     return i;
 }
 
