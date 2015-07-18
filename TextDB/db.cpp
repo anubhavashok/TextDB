@@ -857,7 +857,6 @@ void DB::drop(std::string collection)
             boost::split(args, p.stem().string(), boost::is_any_of("-"));
             if (args[0] == collection) {
                 // delete pointer contents
-                delete collections[args[0]];
                 collections.erase(args[0]);
                 fs::remove_all(p);
             }

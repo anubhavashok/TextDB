@@ -95,6 +95,7 @@ void BitReader::clear()
 
 bool BitReader::getNextBit()
 {
+    size_t charsize = 8;
     size_t idx = pos / charsize;
     size_t offset = pos % charsize;
     
@@ -183,6 +184,7 @@ bool BitReader::eof()
 
 size_t BitReader::remainingChars()
 {
+    size_t charsize = 8;
     return data.size() - pos/charsize;
 }
 

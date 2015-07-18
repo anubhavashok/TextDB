@@ -24,9 +24,9 @@ BitWriter::BitWriter(Encoder::CharacterEncoding _encoder)
  * A function that sets the next bit to true or false
  * @param bit a bool that the next bit is set to
  */
-
 void BitWriter::setNextBit(bool bit)
 {
+    size_t charsize = 8;
     size_t idx = pos / charsize;
     size_t offset = pos % charsize;
     
@@ -34,7 +34,7 @@ void BitWriter::setNextBit(bool bit)
         char newchar = 0;
         data.push_back(newchar);
     }
-    int mask = bit;
+    char mask = bit;
     mask <<= offset;
     data[idx] = data[idx] | mask;
     pos++;
@@ -109,7 +109,7 @@ void BitWriter::saveToFile(std::string path, bool compress)
             fout.put(c);
         }
     }
-
+    fout.flush();
     fout.close();
 }
 
@@ -135,6 +135,7 @@ void BitWriter::appendToFile(std::string path, bool compress)
             fout.put(c);
     }
 
+    fout.flush();
     fout.close();
 }
 

@@ -32,8 +32,6 @@ public:
     Encoder* encoder;
 
 private:
-    // number of bits in one character
-    const size_t charsize = CHAR_BIT;
     size_t pos;
     std::vector<char> data;
     bool end;
