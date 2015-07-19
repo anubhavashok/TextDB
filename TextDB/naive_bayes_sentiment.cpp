@@ -42,7 +42,7 @@ void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
     for (auto p: trainDocs) {
         string rawtext = p.first;
         string c = p.second;
-        
+        boost::to_lower(c);
         vector<string> text = normalize_text(rawtext);
 
         if (!classes.count(c)) {

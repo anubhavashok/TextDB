@@ -28,6 +28,7 @@ Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
         fs::create_directories(path / "files");
     }
     loadWordIndex();
+    naiveBayesSentiment = NaiveBayesSentiment();
 }
 
 
