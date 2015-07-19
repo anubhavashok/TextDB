@@ -40,15 +40,16 @@ NaiveBayesSentiment::NaiveBayesSentiment()
 
 void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 {
+    cout << "Training marked docs" << endl;
     for (auto p: trainDocs) {
         string rawtext = p.first;
         string c = p.second;
-        boost::to_lower(c);
         vector<string> text = normalize_text(rawtext);
-
+        cout << "trainClass: " << c << endl;
         if (!classes.count(c)) {
             continue;
         }
+        cout << "found " << c << endl;
         classes[c].n += 1;
         n += 1;
         for (string w: text) {
