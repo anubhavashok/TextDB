@@ -15,6 +15,7 @@
 #include <map>
 #include <stack>
 #include <dtl/dtl.hpp>
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
 using namespace dtl;
@@ -65,6 +66,12 @@ public:
     int getID() const;
     size_t size() const;
     const vector<string>& getDocCache();
+    
+    string sentimentClassType = "";
+    string getSentimentClassType() {
+        boost::to_lower(sentimentClassType);
+        return sentimentClassType;
+    }
 };
 
 

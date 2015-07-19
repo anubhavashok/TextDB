@@ -21,6 +21,7 @@
 #include <fstream>
 #include "cache.h"
 #include <boost/any.hpp>
+#include "naive_bayes_sentiment.h"
 
 // Each collection has its own encoding type
 // Each collection has its own storage and word table
@@ -73,7 +74,12 @@ public:
     bool modify(string name, vector<string> doc);
     
     // sentiment
+    NaiveBayesSentiment naiveBayesSentiment;
     double getSentimentScore(std::string name);
+    void mark(string name, string sentimentClass);
+    void train();
+    pair<string, double> test(string t);
+    unordered_map<string, string> markedDocs;
     
     // all words
     std::vector<std::string> getWords();

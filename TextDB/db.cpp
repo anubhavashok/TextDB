@@ -350,6 +350,79 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     
     
+    descriptions["marksentiment"] = "Mark a document's sentiment for training\nUsage:/trainsentiment/{collectionName}/{docName}";
+    
+    queryFunctions["marksentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        // TODO: persist marksentiment
+        int argc = 3;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+        std::string collection = args[0];
+        std::string name = args[1];
+        std::string sentimentClass = args[2];
+        boost::to_lower(sentimentClass);
+        if (!db->collections.count(collection)) {
+            htmlout << "collection does not exist";
+            return;
+        }
+        if (!db->collections[collection]->exists(name)) {
+            htmlout << "document does not exist";
+            return;
+        }
+        db->markNaiveBayes(collection, name, sentimentClass);
+        htmlout << "true" << endl;;
+        return;
+    };
+
+    /* ---------------------------------------------------------------------------------------- */
+    descriptions["trainsentiment"] = "Trains naive bayes model on all the marked documents\nUsage:/trainsentiment/{collectionName}/{docName}";
+    
+    queryFunctions["trainsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 1;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+        std::string collection = args[0];
+        if (!db->collections.count(collection)) {
+            htmlout << "collection does not exist";
+            return;
+        }
+        db->trainNaiveBayes(collection);
+        htmlout << "true" << endl;;
+        return;
+    };
+    
+    /* ---------------------------------------------------------------------------------------- */
+    descriptions["testsentiment"] = "Test document based on trained naive bayes model\nUsage:/trainsentiment/{collectionName}/{docName}";
+    
+    queryFunctions["testsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+        int argc = 2;
+        if (args.size() < argc) {
+            htmlout << "Required number of arguments: " << argc;
+            return;
+        }
+        std::string collection = args[0];
+        std::string name = args[1];
+        if (!db->collections.count(collection)) {
+            htmlout << "collection does not exist";
+            return;
+        }
+        if (!db->collections[collection]->exists(name)) {
+            htmlout << "document does not exist";
+            return;
+        }
+        auto p = db->testNaiveBayes(collection, name);
+        htmlout << "[" << p.first << ", " << p.second << "]"<< endl;
+        return;
+    };
+    
+
+    /* ---------------------------------------------------------------------------------------- */
+
+    
     descriptions["sentence"] = "Returns nth sentence in a specified document\nUsage:/sentence/{collectionName}/{docName}/{n}";
 
     queryFunctions["sentence"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
@@ -893,6 +966,30 @@ double DB::getSentimentScore(std::string collection, std::string name)
     double sentiment = sentimentAnalysis.analyse(text);
     collections[collection]->add_to_cache(name, "sentiment", boost::any(sentiment));
     return sentiment;
+}
+
+void DB::trainNaiveBayes(string collection)
+{
+    if (!collections.count(collection)) {
+        return ;
+    }
+    collections[collection]->train();
+}
+
+void DB::markNaiveBayes(string collection, string name, string sentimentClass)
+{
+    if (!collections.count(collection)) {
+        return;
+    }
+    collections[collection]->mark(name, sentimentClass);
+}
+
+pair<string, double> DB::testNaiveBayes(string collection, string name)
+{
+    if (!collections.count(collection)) {
+        return make_pair("", -2);
+    }
+    return collections[collection]->test(name);
 }
 
 std::string DB::getSentence(std::string collection, std::string name, size_t start)

@@ -100,6 +100,10 @@ public:
 
     // Text Mining
     double getSentimentScore(std::string collection, std::string name);
+    void trainNaiveBayes(string collection);
+    void markNaiveBayes(string collection, string name, string sentimentClass);
+    pair<string, double> testNaiveBayes(string collection, string name);
+
     
     void printIndex();
     

@@ -15,6 +15,7 @@
 #include <set>
 #include <algorithm>
 #include "Doc.h"
+#include "naive_bayes_sentiment.h"
 
 using widx = boost::dynamic_bitset<>;
 
@@ -483,4 +484,27 @@ bool Collection::modify(string name, vector<string> doc)
     Doc d = docs[name];
     d.update(doc);
      */
+}
+
+
+void Collection::mark(string name, string sentimentClass)
+{
+    markedDocs[name] = sentimentClass;
+}
+
+void Collection::train()
+{
+    vector<pair<string, string>> trainDocs;
+    for (auto p: markedDocs) {
+        trainDocs.push_back(make_pair(p.second, get(p.first)));
+    }
+    naiveBayesSentiment.train(trainDocs);
+}
+
+pair<string, double> Collection::test(string name)
+{
+    if (!exists(name)) {
+        return make_pair("", -2);
+    }
+    return naiveBayesSentiment.test(get(name));
 }
