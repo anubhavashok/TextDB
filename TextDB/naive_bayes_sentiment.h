@@ -26,12 +26,24 @@ class NaiveBayesSentiment
             POS,
             NEG
         };
+        SentimentClass()
+        {}
+        SentimentClass(Type t) {
+            type = t;
+        }
+        SentimentClass(const SentimentClass& s)
+        {
+            type = s.type;
+        }
         unordered_map<string, int> freq;
         int n = 0;
+        Type type;
     };
 
 private:
 public:
+    NaiveBayesSentiment();
+
     unordered_map<string, int> freq;
     unordered_map<string, SentimentClass> classes;
     int n = 0;

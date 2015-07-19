@@ -30,6 +30,12 @@ vector<string> normalize_text(string rawtext)
     return text;
 }
 
+NaiveBayesSentiment::NaiveBayesSentiment()
+{
+    classes["pos"] = SentimentClass(SentimentClass::Type::POS);
+    classes["neg"] = SentimentClass(SentimentClass::Type::NEG);
+
+}
 
 void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 {
