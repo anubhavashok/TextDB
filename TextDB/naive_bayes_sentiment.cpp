@@ -11,6 +11,7 @@
 #include <cmath>
 #include <boost/algorithm/string.hpp>
 #include <boost/regex.hpp>
+#include <iostream>
 
 using namespace std;
 
@@ -63,11 +64,14 @@ void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 pair<string, double> NaiveBayesSentiment::test(string rawtext)
 {
     vector<string> text = normalize_text(rawtext);
-    
+    cout << "text: " << rawtext << endl;
     string chosen;
     double max_score = -1;
+    cout << "classes size: " << classes.size() << endl;
     for (auto p: classes) {
         SentimentClass c = p.second;
+        cout << "p.first: " << p.first << endl;
+        cout << "c.n: " << c.n << endl;
         if (c.n <= 0) {
             continue;
         }
