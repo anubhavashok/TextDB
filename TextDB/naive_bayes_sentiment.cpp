@@ -14,7 +14,7 @@
 
 using namespace std;
 
-boost::regex trainRegex = boost::regex("[\w']+|[.,!?;]");
+boost::regex trainRegex = boost::regex("[\\w']+|[.,!?;]");
 
 vector<string> normalize_text(string rawtext)
 {
