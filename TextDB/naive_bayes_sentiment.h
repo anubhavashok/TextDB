@@ -31,10 +31,6 @@ class NaiveBayesSentiment
         SentimentClass(Type t) {
             type = t;
         }
-        SentimentClass(const SentimentClass& s)
-        {
-            type = s.type;
-        }
         unordered_map<string, int> freq;
         int n = 0;
         Type type;
