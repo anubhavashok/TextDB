@@ -46,12 +46,14 @@ void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
         string c = p.first;
         vector<string> text = normalize_text(rawtext);
         cout << "trainClass: " << c << endl;
-        if (!classes.count(c)) {
+        if (!this->classes.count(c)) {
             continue;
         }
         cout << "found " << c << endl;
-        classes[c].n += 1;
+        this->classes[c].n += 1;
+        cout << "c.n " << this->classes[c].n << endl;
         n += 1;
+        cout << "total: " << n << endl;
         for (string w: text) {
             boost::to_lower(w);
             // remove all extraneous punctuation with this regex [\w']+|[.,!?;]
@@ -64,12 +66,13 @@ void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 
 pair<string, double> NaiveBayesSentiment::test(string rawtext)
 {
+    cout << "total: " << n << endl;
     vector<string> text = normalize_text(rawtext);
     cout << "text: " << rawtext << endl;
     string chosen;
     double max_score = -1;
     cout << "classes size: " << classes.size() << endl;
-    for (auto p: classes) {
+    for (auto p: this->classes) {
         cout << "in loop: " << endl;
         SentimentClass c = p.second;
         cout << "p.first: " << p.first << endl;
