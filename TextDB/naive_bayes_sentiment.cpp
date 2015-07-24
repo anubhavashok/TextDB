@@ -17,7 +17,7 @@ using namespace std;
 
 boost::regex trainRegex = boost::regex("[\\w']+|[.,!?;]");
 
-vector<string> normalize_text(string rawtext)
+static vector<string> normalize_text(string rawtext)
 {
     vector<string> text;
     boost::sregex_token_iterator iter(rawtext.begin(), rawtext.end(), trainRegex, 0);
@@ -70,6 +70,7 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
     double max_score = -1;
     cout << "classes size: " << classes.size() << endl;
     for (auto p: classes) {
+        cout << "in loop: " << endl;
         SentimentClass c = p.second;
         cout << "p.first: " << p.first << endl;
         cout << "c.n: " << c.n << endl;
@@ -77,6 +78,7 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
             continue;
         }
         double pc = log(c.n/(1.0*n));
+        cout << "pc: " << pc << endl;
         double score = pc;
         for (string w: text) {
             boost::to_lower(w);
@@ -84,11 +86,12 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
             double pt = log((1.0+c.freq[w])/(1.0*freq[w] + freq.size()));
             score += pt;
         }
-        max_score = (max_score == -1)? score: max_score;
+        cout << "score: " << score << endl;
         if (score > max_score) {
             max_score = score;
             chosen = p.first;
         }
     }
+    cout << "chosen: " << chosen << endl;
     return make_pair(chosen, max_score);
 }
