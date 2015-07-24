@@ -87,7 +87,7 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
             boost::to_lower(w);
             // remove all extraneous punctuation with this regex [\w']+|[.,!?;]
             double pt = (1.0+c.freq[w])/(1.0*freq[w] + freq.size());
-            score += pt;
+            score *= pt;
         }
         cout << "score: " << score << endl;
         if (score > max_score) {
