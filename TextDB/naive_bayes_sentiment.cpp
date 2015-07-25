@@ -70,7 +70,7 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
     vector<string> text = normalize_text(rawtext);
     cout << "text: " << rawtext << endl;
     string chosen;
-    double max_score = numeric_limits<int>::min();
+    double max_score = numeric_limits<double>::lowest();
     cout << "classes size: " << classes.size() << endl;
     for (auto p: this->classes) {
         cout << "in loop: " << endl;
@@ -80,14 +80,14 @@ pair<string, double> NaiveBayesSentiment::test(string rawtext)
         if (c.n <= 0) {
             continue;
         }
-        double pc = c.n/(1.0*n);
+        double pc = log(c.n/(1.0*n));
         cout << "pc: " << pc << endl;
         double score = pc;
         for (string w: text) {
             boost::to_lower(w);
             // remove all extraneous punctuation with this regex [\w']+|[.,!?;]
-            double pt = (1.0+c.freq[w])/(1.0*freq[w] + freq.size());
-            score *= pt;
+            double pt = log((1.0+c.freq[w])/(1.0*freq[w] + freq.size()));
+            score += pt;
         }
         cout << "score: " << score << endl;
         if (score > max_score) {
