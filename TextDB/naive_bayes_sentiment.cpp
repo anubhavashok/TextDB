@@ -41,6 +41,12 @@ NaiveBayesSentiment::NaiveBayesSentiment()
 void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 {
     cout << "Training marked docs" << endl;
+    freq.clear();
+    n = 0;
+    for (auto p: classes) {
+        classes[p.first].freq.clear();
+        classes[p.first].n = 0;
+    }
     for (auto p: trainDocs) {
         string rawtext = p.second;
         string c = p.first;
