@@ -490,16 +490,12 @@ bool Collection::modify(string name, vector<string> doc)
 
 void Collection::mark(string name, string sentimentClass)
 {
-    markedDocs[name] = sentimentClass;
+    naiveBayesSentiment.mark(name, sentimentClass);
 }
 
 void Collection::train()
 {
-    vector<pair<string, string>> trainDocs;
-    for (auto p: markedDocs) {
-        trainDocs.push_back(make_pair(p.second, get(p.first)));
-    }
-    naiveBayesSentiment.train(trainDocs);
+    naiveBayesSentiment.train();
 }
 
 pair<string, double> Collection::test(string name)

@@ -38,8 +38,18 @@ NaiveBayesSentiment::NaiveBayesSentiment()
 
 }
 
-void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
+void NaiveBayesSentiment::mark(string docName, string sentiment)
 {
+    dirty = true;
+    trainDocs[docName] = sentiment;
+}
+
+void NaiveBayesSentiment::train()
+{
+    if(!dirty) {
+        return;
+    }
+    dirty = false;
     cout << "Training marked docs" << endl;
     freq.clear();
     n = 0;
@@ -72,6 +82,7 @@ void NaiveBayesSentiment::train(vector<pair<string, string>> trainDocs)
 
 pair<string, double> NaiveBayesSentiment::test(string rawtext)
 {
+    train();
     cout << "total: " << n << endl;
     vector<string> text = normalize_text(rawtext);
     cout << "text: " << rawtext << endl;

@@ -37,6 +37,8 @@ class NaiveBayesSentiment
     };
 
 private:
+    bool dirty = true;
+    unordered_map<string, string> trainDocs;
 public:
     NaiveBayesSentiment();
 
@@ -44,8 +46,10 @@ public:
     unordered_map<string, SentimentClass> classes;
     int n = 0;
 
-    void train(vector<pair<string, string>> trainDocs);
+    void train();
     pair<string, double> test(string rawtext);
+    void mark(string docName, string sentiment);
+
 };
 
 

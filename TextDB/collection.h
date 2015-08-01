@@ -79,7 +79,6 @@ public:
     void mark(string name, string sentimentClass);
     void train();
     pair<string, double> test(string t);
-    unordered_map<string, string> markedDocs;
     
     // all words
     std::vector<std::string> getWords();
