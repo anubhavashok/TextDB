@@ -26,7 +26,7 @@ query::query(string queryName, string description, string route, QueryFunction _
 static query valueOf(string req)
 {
     // try to parse, if not ok, throw error
-    ArgumentValueError e("");
+    ArgumentValueError e("arg", "expected_type", "provided_type");
     throw e;
 }
 

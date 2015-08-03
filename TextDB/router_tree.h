@@ -30,7 +30,7 @@ class UnknownQuery: public error
 {
 public:
     UnknownQuery(string queryName)
-    : error("Unkown query: " + queryName, 938)
+    : error("Unknown query: " + queryName, 938)
     {}
 };
 

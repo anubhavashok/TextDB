@@ -30,8 +30,8 @@ public:
 class ArgumentValueError: public error
 {
 public:
-    ArgumentValueError(string msg)
-    : error(msg, 4348)
+    ArgumentValueError(string arg, string expected, string provided)
+    : error("Format of arg: " + arg + " is supposed to be " + expected + " but is " + provided, 4348)
     {}
 };
 
