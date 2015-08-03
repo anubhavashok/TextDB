@@ -35,35 +35,35 @@ public:
     {}
 };
 
+class node
+{
+private:
+    string name;
+    unordered_map<string, node> children;
+    bool value = false;
+    int qid = -1;
+    
+    bool is_value_label(string name);
+public:
+    // UNUSED - only exists for map index access
+    node()
+    {}
+    node(string name);
+    node(string name, int qid);
+    
+    void add_recursive(deque<string> routes, int _qid);
+    // Check only when adding
+    bool exists_recursive(deque<string> routes);
+    
+    int get_recursive(deque<string> routes);
+    
+    string get_preexisting_name_recursive(deque<string> routes);
+    
+};
 
 class router_tree
 {
 private:
-    class node
-    {
-    private:
-        string name;
-        unordered_map<string, node> children;
-        bool value = false;
-        int qid = -1;
-        
-        bool is_value_label(string name);
-    public:
-        // UNUSED - only exists for map index access
-        node()
-        {}
-        node(string name);
-        node(string name, int qid);
-
-        void add_recursive(deque<string> routes, int _qid);
-        // Check only when adding
-        bool exists_recursive(deque<string> routes);
-        
-        int get_recursive(deque<string> routes);
-        
-        string get_preexisting_name_recursive(deque<string> routes);
-
-    };
 public:
     node root;
     router_tree();

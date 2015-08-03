@@ -17,12 +17,12 @@
 
 using namespace std;
 
-bool router_tree::node::is_value_label(string name)
+bool node::is_value_label(string name)
 {
     return ((name.front() == '{') && (name.back() == '}'));
 }
 
-router_tree::node::node(string name)
+node::node(string name)
 : name(name)
 {
     if ((name.front() == '{') && (name.back() == '}')) {
@@ -30,7 +30,7 @@ router_tree::node::node(string name)
     }
 }
 
-router_tree::node::node(string name, int qid)
+node::node(string name, int qid)
 : name(name), qid(qid)
 {
     if ((name.front() == '{') && (name.back() == '}')) {
@@ -39,7 +39,7 @@ router_tree::node::node(string name, int qid)
     
 }
         
-void router_tree::node::add_recursive(deque<string> routes, int _qid)
+void node::add_recursive(deque<string> routes, int _qid)
 {
     if (routes.size() == 0) {
         qid = _qid;
@@ -56,8 +56,9 @@ void router_tree::node::add_recursive(deque<string> routes, int _qid)
     }
     children[r].add_recursive(routes, _qid);
 }
-        // Check only when adding
-bool router_tree::node::exists_recursive(deque<string> routes)
+
+// Check only when adding
+bool node::exists_recursive(deque<string> routes)
 {
     if (routes.size() == 0) {
         return qid != -1;
@@ -79,7 +80,7 @@ bool router_tree::node::exists_recursive(deque<string> routes)
     return false;
 }
 
-int router_tree::node::get_recursive(deque<string> routes)
+int node::get_recursive(deque<string> routes)
 {
     if (routes.size() == 0) {
         return qid;
@@ -102,7 +103,7 @@ int router_tree::node::get_recursive(deque<string> routes)
     return -1;
 }
 
-string router_tree::node::get_preexisting_name_recursive(deque<string> routes)
+string node::get_preexisting_name_recursive(deque<string> routes)
 {
     if (routes.size() == 0) {
         return (qid == -1) ? "": name;
