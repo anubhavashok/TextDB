@@ -58,12 +58,14 @@ void request_handler::handle_request(const request& req, reply& rep)
   char buf[512];
   while (out.read(buf, sizeof(buf)).gcount() > 0)
     rep.content.append(buf, out.gcount());
-  rep.headers.resize(2);
+  rep.headers.resize(3);
   rep.headers[0].name = "Content-Length";
   rep.headers[0].value = std::to_string(rep.content.size());
   rep.headers[1].name = "Content-Type";
   // return as plain text
   rep.headers[1].value = mime_types::extension_to_type("");
+  rep.headers[2].name = "Access-Control-Allow-Origin";
+  rep.headers[2].value = "*";
 }
 
 bool request_handler::url_decode(const std::string& in, std::string& out)

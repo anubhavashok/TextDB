@@ -12,7 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-#include <unordered_map>
+#include <map>
 #include <deque>
 #include "query.h"
 #include "error.h"
@@ -39,15 +39,14 @@ class node
 {
 private:
     string name;
-    unordered_map<string, node> children;
+    map<string, node> children;
     bool value = false;
     int qid = -1;
     
     bool is_value_label(string name);
 public:
     // UNUSED - only exists for map index access
-    node()
-    {}
+    node() {};
     node(string name);
     node(string name, int qid);
     
