@@ -13,6 +13,7 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <unordered_map>
+#include <deque>
 #include "query.h"
 #include "error.h"
 

@@ -11,12 +11,11 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <unordered_map>
+#include <deque>
 #include "query.h"
 #include "error.h"
 
 using namespace std;
-
-
 
 bool router_tree::node::is_value_label(string name)
 {
