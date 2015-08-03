@@ -18,19 +18,19 @@
 
 using namespace std;
 
-class PreexistingRoute: error
+class PreexistingRoute: public error
 {
 public:
-    PreexistingRoute(string msg)
-    : error(msg, 937)
+    PreexistingRoute(string route)
+    : error("Route: " + route + " already exists", 937)
     {}
 };
 
-class UnknownQuery: error
+class UnknownQuery: public error
 {
 public:
-    UnknownQuery(string msg)
-    : error(msg, 938)
+    UnknownQuery(string queryName)
+    : error("Unkown query: " + queryName, 938)
     {}
 };
 
@@ -45,132 +45,29 @@ private:
         unordered_map<string, node> children;
         bool value = false;
         int qid = -1;
+        
+        bool is_value_label(string name);
     public:
         // UNUSED - only exists for map index access
         node()
         {}
-        node(string name)
-        : name(name)
-        {
-            if ((name.front() == '{') && (name.back() == '}')) {
-                value = true;
-            }
-        }
-        node(string name, int qid)
-        : name(name), qid(qid)
-        {
-            if ((name.front() == '{') && (name.back() == '}')) {
-                value = true;
-            }
-            
-        }
+        node(string name);
+        node(string name, int qid);
 
-        void add_recursive(deque<string> routes, int qid)
-        {
-            if (routes.size() == 0) {
-                return;
-            }
-            string r = routes.front();
-            routes.pop_front();
-            if (!children.count(r)) {
-                if (routes.empty()) {
-                    children[r] =  node(r, qid);
-                } else {
-                    children[r] =  node(r);
-                }
-            }
-            children[r].add_recursive(routes, qid);
-        }
+        void add_recursive(deque<string> routes, int _qid);
+        // Check only when adding
+        bool exists_recursive(deque<string> routes);
         
-        bool exists_recursive(deque<string> routes)
-        {
-            if (routes.size() == 0) {
-                return true;
-            }
-            string r = routes.front();
-            routes.pop_front();
-            if (value) {
-                // check all
-                bool exists = false;
-                for (auto p: children) {
-                    exists |= p.second.exists_recursive(routes);
-                }
-                return exists;
-            } else if (children.count(r)) {
-                return children[r].exists_recursive(routes);
-            }
-            return false;
-        }
+        int get_recursive(deque<string> routes);
         
-        int get_recursive(deque<string> routes)
-        {
-            if (routes.size() == 0) {
-                return qid;
-            }
-            string r = routes.front();
-            routes.pop_front();
-            if (value) {
-                // check all
-                int exists = -1;
-                for (auto p: children) {
-                    int v = p.second.exists_recursive(routes);
-                    exists = v != -1? v: exists;
-                }
-                return exists;
-            } else if (children.count(r)) {
-                return children[r].exists_recursive(routes);
-            }
-            return -1;
-        }
-        
-        string get_preexisting_name_recursive(deque<string> routes)
-        {
-            if (routes.size() == 0) {
-                return name;
-            }
-            string r = routes.front();
-            routes.pop_front();
-            if (value) {
-                // check all
-                string exists = "";
-                for (auto p: children) {
-                    string v = p.second.get_preexisting_name_recursive(routes);
-                    exists = v.empty() ? exists: v;
-                }
-                return exists;
-            } else if (children.count(r)) {
-                return name + "/" + children[r].get_preexisting_name_recursive(routes);
-            }
-            return "";
-        }
+        string get_preexisting_name_recursive(deque<string> routes);
 
     };
 public:
     node root;
-    router_tree()
-    : root("root")
-    {
-    }
-    void add(string route, int qid)
-    {
-        deque<string> routes;
-        boost::split(routes, route, boost::is_any_of("/"));
-        if (root.exists_recursive(routes)) {
-            string route_name = root.get_preexisting_name_recursive(routes);
-            throw PreexistingRoute("Route: " + route_name + " already exists in router tree. Requested route has to contain a different route.");
-        }
-        root.add_recursive(routes, qid);
-    }
-    int get(string route)
-    {
-        deque<string> routes;
-        boost::split(routes, route, boost::is_any_of("/"));
-        int qid = root.get_recursive(routes);
-        if (qid == -1) {
-            throw UnknownQuery("Query: " + route + " does not exist");
-        }
-        return qid;
-    }
+    router_tree();
+    void add(string route, int qid);
+    int get(string route);
     
 };
 

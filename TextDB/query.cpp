@@ -11,16 +11,15 @@
 
 
 query::query(string queryName, string description, string route, QueryFunction _queryfunction, bool visible)
-: queryName(queryName), description(description), route(route), visible(visible)
+: queryName(queryName), description(description), route(route), visible(visible), queryFunction(_queryfunction)
 {
-    queryFunction = _queryfunction;
     // trim extraneous /
     boost:trim_if(route, boost::is_any_of(" /"));
     split(names, route, boost::is_any_of("/"));
 }
 
-query::query(string queryName, string description, string route, QueryFunction queryfunction)
-: query(queryName, description, route, queryFunction, true)
+query::query(string queryName, string description, string route, QueryFunction _queryFunction)
+: query(queryName, description, route, _queryFunction, true)
 {
 }
 
@@ -50,7 +49,7 @@ map<string, string> query::validate(string req)
     }
     return args;
 }
-void query::run(DB* db, ostream& out, map<string, string> args)
+void query::run(DB* db, ostream& out, map<string, string>& args)
 {
     queryFunction(db, out, args);
 }

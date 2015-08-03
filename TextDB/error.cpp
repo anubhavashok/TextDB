@@ -24,6 +24,6 @@ string error::to_json()
     json.add("msg", msg);
     json.add("err_code", code);
     stringstream ss;
-    boost::property_tree::json_parser::write_json(ss, json);
+    boost::property_tree::write_json(ss, json);
     return ss.str();
 }

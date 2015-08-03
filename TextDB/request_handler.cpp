@@ -18,6 +18,7 @@
 #include <boost/algorithm/string.hpp>
 #include <iostream>
 #include "db.h"
+#include "api.h"
 using namespace std;
 
 extern DB* db;
@@ -25,10 +26,13 @@ extern DB* db;
 namespace http {
 namespace server {
 
+API api;
+
 request_handler::request_handler(const std::string& doc_root)
   : doc_root_(doc_root)
 {
 }
+
 
 void request_handler::handle_request(const request& req, reply& rep)
 {
@@ -47,7 +51,7 @@ void request_handler::handle_request(const request& req, reply& rep)
     << "(TextDB): " << req.method << " " << req.uri << endl;
     stringstream out;
     db->handleQuery(in, out);
-
+    api.accept(req.uri, out, db);
 
   // Fill out the reply to be sent to the client.
   rep.status = reply::ok;
