@@ -34,7 +34,7 @@ map<string, string> query::validate(string req)
 {
     map<string, string> args;
     vector<string> reqs;
-    boost:split(reqs, route, boost::is_any_of("/"));
+    boost:split(reqs, req, boost::is_any_of("/"));
     assert(reqs.size() == names.size());
     for (int i = 0; i < names.size(); i++) {
         if ((names[i].front() == '{') && (names[i].back() == '}')) {
