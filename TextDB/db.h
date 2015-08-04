@@ -107,13 +107,16 @@ public:
     
     void printIndex();
     
-    
+    void createCollection(string collectionName, string encoding);
     void createCollection(std::string _name, Encoder::CharacterEncoding _encoding);
+    void createCollection(string collectionName);
     std::vector<std::string> listCollections();
     
     
     // Log
     Raft raft;
+    
+    boost::uintmax_t size();
 };
 
 

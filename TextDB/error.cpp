@@ -22,7 +22,7 @@ string error::to_json()
 {
     boost::property_tree::ptree json;
     json.add("msg", msg);
-    json.add("err_code", code);
+    json.add("code", code);
     stringstream ss;
     boost::property_tree::write_json(ss, json);
     return ss.str();

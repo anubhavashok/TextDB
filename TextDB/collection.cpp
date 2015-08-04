@@ -141,9 +141,9 @@ void Collection::kick(std::string name)
     }
 }
 
-size_t Collection::size()
+boost::uintmax_t Collection::size()
 {
-    size_t sum = 0;
+    boost::uintmax_t sum = 0;
     for (auto p: storage) {
         sum += sizeof(p.first);
         sum += sizeof(p.second);
@@ -152,9 +152,9 @@ size_t Collection::size()
 }
 
 
-size_t Collection::disk_size()
+boost::uintmax_t Collection::disk_size()
 {
-    size_t size=0;
+    boost::uintmax_t size=0;
     for(fs::recursive_directory_iterator it(collectionPath);
         it!=fs::recursive_directory_iterator();
         ++it)
@@ -165,7 +165,7 @@ size_t Collection::disk_size()
     return size;
 }
 
-size_t Collection::size(std::string name)
+boost::uintmax_t Collection::size(std::string name)
 {
     fs::path path = collectionPath / "files" / (name + ".fyle");
     return fs::file_size(path);

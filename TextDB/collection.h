@@ -51,8 +51,8 @@ public:
     
     void loadWordIndex();
     bool load(std::string name);
-    size_t size();
-    size_t size(std::string name);
+    boost::uintmax_t size();
+    boost::uintmax_t size(std::string name);
     void kick();
     void kick(std::string name);
     
@@ -94,7 +94,7 @@ public:
     void add_to_cache(std::string name, std::string attr, boost::any val);
     string get_frequency_table(string name);
     vector<vector<string>> get_all();
-    size_t disk_size();
+    boost::uintmax_t disk_size();
     vector<string> get_vector(std::string name);
 
     

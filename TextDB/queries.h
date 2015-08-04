@@ -12,6 +12,7 @@
 #include "db.h"
 #include "error.h"
 
+#include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <vector>
@@ -96,7 +97,43 @@ static void ensureDocumentDoesntExist(DB* db, string collectionName, string docu
     }
 }
 
+static void successfulReply(ostream& out, std::initializer_list<pair<string, string>> args)
+{
+    boost::property_tree::ptree json;
+    json.put("code", 200);
+    json.put("msg", "ok");
+    for (auto arg: args) {
+        json.put(arg.first, arg.second);
+    }
+    
+    stringstream ss;
+    boost::property_tree::write_json(ss, json);
+    out << ss.str();
+}
 
+static void successfulReply(ostream& out, std::initializer_list<pair<string, string>> args, std::initializer_list<pair<string, vector<string>>> vargs)
+{
+    boost::property_tree::ptree json;
+    json.put("code", 200);
+    json.put("msg", "ok");
+    for (auto arg: args) {
+        json.put(arg.first, arg.second);
+    }
+    
+    for (auto varg: vargs) {
+        boost::property_tree::ptree arr;
+        for (string arg: varg.second) {
+            boost::property_tree::ptree elem;
+            elem.put("", arg);
+            arr.push_back(make_pair("", elem));
+        }
+        json.add_child(varg.first, arr);
+    }
+    
+    stringstream ss;
+    boost::property_tree::write_json(ss, json);
+    out << ss.str();
+}
 
 
 vector<query> queries {
@@ -106,7 +143,9 @@ vector<query> queries {
           [](DB* db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               ensureCollectionDoesntExist(db, collectionName);
-              
+             
+              db->createCollection(collectionName);
+              successfulReply(out, {{"op", "addCollection"}, {"collectionName", collectionName}});
           }),
     
     query("addCollectionWithEncoding", "Creates a new empty collection with a specified encoding", "v1/add/{collectionName}/{encoding}",
@@ -115,6 +154,9 @@ vector<query> queries {
               string encoding = args["encoding"];
               ensureCollectionDoesntExist(db, collectionName);
               
+              db->createCollection(collectionName, encoding);
+              
+              successfulReply(out, {{"op", "addCollectionWithEncoding"}, {"collectionName", collectionName}, {"encoding", encoding}});
           }),
     
     query("dropCollection", "Removes an existing collection", "v1/drop/{collectionName}",
@@ -122,14 +164,19 @@ vector<query> queries {
               string collectionName = args["collectionName"];
               ensureCollectionExists(db, collectionName);
               
+              // db->drop(collectionName);
+              
+              successfulReply(out, {{"op", "dropCollection"}, {"collectionName", collectionName}});
           }),
 
     query("collectionSize", "Returns how many bytes a specified collection occupies on disk", "v1/size/{collectionName}",
           [](DB* db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               ensureCollectionExists(db, collectionName);
-
               
+              boost::uintmax_t size = db->collections[collectionName]->size();
+              
+              successfulReply(out, {{"op", "collectionSize"}, {"collectionName", collectionName}, {"size", to_string(size)}});
           }),
     
     query("listDocs", "Lists all documents in a particular collection", "v1/list/{collectionName}",
@@ -137,6 +184,9 @@ vector<query> queries {
               string collectionName = args["collectionName"];
               ensureCollectionExists(db, collectionName);
               
+              vector<string> documentNames = db->collections[collectionName]->listFiles();
+              
+              successfulReply(out, {{"op", "listDocs"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
           }),
 
 
@@ -147,6 +197,8 @@ vector<query> queries {
               string documentName = args["documentName"];
               string text = args["text"];
               ensureDocumentDoesntExist(db, collectionName, documentName);
+              
+              successfulReply(out, {{"op", "addDocument"}, {"collectionName", collectionName}, {"documentName", documentName}});
           }),
     
     query("removeDocument", "Removes a specified document", "v1/remove/{collectionName}/{documentName}",
@@ -154,7 +206,10 @@ vector<query> queries {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
-
+              
+              db->remove(collectionName, documentName);
+              
+              successfulReply(out, {{"op", "removeDocument"}, {"collectionName", collectionName}, {"documentName", documentName}});
           }),
     
     query("getDocument", "Gets text of a specified document", "v1/get/{collectionName}/{documentName}",
@@ -163,14 +218,24 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
+              string text = db->get(collectionName, documentName);
+              successfulReply(out, {{"op", "getDocument"}, {"collectionName", collectionName}, {"documentName", documentName}, {"text", text}});
           }),
     
     query("getSentence", "Returns nth sentence in a specified document", "v1/get/{collectionName}/{documentName}/sentence/{n}",
           [](DB* db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
-              string n = args["n"];
+              string n_str = args["n"];
               ensureDocumentExists(db, collectionName, documentName);
+              try {
+                  boost::uintmax_t n = boost::lexical_cast<boost::uintmax_t>(n_str);
+                  string sentence = db->getSentence(collectionName, documentName, n);
+                  
+                  successfulReply(out, {{"op", "getSentence"}, {"collectionName", collectionName}, {"documentName", documentName}, {"n", to_string(n)}, {"sentence", sentence}});
+              } catch (boost::bad_lexical_cast const& ) {
+                  throw ArgumentValueError("n", "integer", "string");
+              }
 
           }),
     
@@ -180,6 +245,9 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
+              boost::uintmax_t size = db->collections[collectionName]->size(documentName);
+
+              successfulReply(out, {{"op", "documentSize"}, {"collectionName", collectionName}, {"documentName", documentName}, {"documentSize", to_string(size)}});
           }),
 
     // Science
@@ -189,6 +257,9 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
+              double sentiment = db->getSentimentScore(collectionName, documentName);
+              
+              successfulReply(out, {{"op", "getSentence"}, {"collectionName", collectionName}, {"documentName", documentName}, {"sentiment", to_string(sentiment)}});
           }),
     
     query("markSentiment", "Mark a document's sentiment for training", "v1/add/{collectionName}/{documentName}/naive-bayes-sentiment/{sentiment}",
@@ -197,7 +268,10 @@ vector<query> queries {
               string documentName = args["documentName"];
               string sentiment = args["sentiment"];
               ensureDocumentExists(db, collectionName, documentName);
+              
+              db->markNaiveBayes(collectionName, documentName, sentiment);
 
+              successfulReply(out, {{"op", "markSentiment"}, {"collectionName", collectionName}, {"documentName", documentName}, {"sentiment", sentiment}});
           }),
 
     query("getNaiveBayesSentiment", "Get sentiment of a document based on a trained naive bayes model", "v1/get/{collectionName}/{documentName}/naive-bayes-sentiment",
@@ -231,30 +305,22 @@ vector<query> queries {
               string documentName2 = args["documentName2"];
               ensureDocumentExists(db, collectionName, documentName1);
               ensureDocumentExists(db, collectionName, documentName2);
-
-              
           }),
 
     // DB
     query("dbSize", "Returns how many bytes the database occupies on disk", "v1/size",
           [](DB* db, ostream& out, map<string, string>& args) {
+              // TODO: add db name
+              boost::uintmax_t size = db->size();
               
+              successfulReply(out, {{"op", "dbSize"}, {"dbSize", to_string(size)}});
           }),
     
     query("listCollections", "Lists all collections in the database", "v1/list",
           [](DB* db, ostream& out, map<string, string>& args) {
               vector<string> collectionNames = db->listCollections();
-              boost::property_tree::ptree arr;
-              for (string collectionName: collectionNames) {
-                  boost::property_tree::ptree val;
-                  val.put("", collectionName);
-                  arr.push_back(make_pair("", val));
-              }
-              boost::property_tree::ptree json;
-              json.add_child("collections", arr);
-              stringstream ss;
-              boost::property_tree::write_json(ss, json);
-              out << ss.str();
+              
+              successfulReply(out, {{"op", "listCollections"}}, {{"collectionNames", collectionNames}});
           }),
     
 

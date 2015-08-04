@@ -10,8 +10,18 @@
 #include <iostream>
 #include <cassert>
 #include <string>
+#include "error.h"
+#include <boost/algorithm/string.hpp>
 
 using namespace std;
+
+class UnknownEncoding: public error
+{
+public:
+    UnknownEncoding(string encoding)
+    : error("Unknown encoding: " + encoding, 647)
+    {}
+};
 
 Encoder* Encoder::createEncoder(Encoder::CharacterEncoding _encoding)
 {
@@ -30,7 +40,7 @@ unsigned long UnicodeEncoder::encode(char c)
 {
     cout << c << " val: " << (int)c << endl;
     unsigned long i = (unsigned long) c;
-    if ((i > 256) || (i < 0)) return (unsigned long)'?';
+    if (i > 256) return (unsigned long)'?';
     return i;
 }
 
@@ -98,12 +108,15 @@ string CompressedEncoder::preformat(string s)
     return s;
 }
 
-Encoder::CharacterEncoding Encoder::str2encoding(std::string type)
+Encoder::CharacterEncoding Encoder::str2encoding(std::string encoding)
 {
-    if (type == "compressed") {
+    boost::to_lower(encoding);
+    if (encoding == "compressed") {
         return Encoder::CharacterEncoding::Compressed;
-    } else {
+    } else if (encoding == "unicode") {
         return Encoder::CharacterEncoding::Unicode;
+    } else {
+        throw UnknownEncoding(encoding);
     }
 }
 

@@ -1000,15 +1000,26 @@ std::string DB::getSentence(std::string collection, std::string name, size_t sta
     return collections[collection]->getSentence(name, start);
 }
 
-
-void DB::createCollection(std::string _name, Encoder::CharacterEncoding _encoding)
+void DB::createCollection(string collectionName)
 {
-    fs::path collectionPath = datapath / "collections" / (_name+"-"+Encoder::encoding2str(_encoding));
+    createCollection(collectionName, Encoder::Unicode);
+}
+
+void DB::createCollection(string collectionName, string encoding)
+{
+    // might throw UnknownEncoding error
+    createCollection(collectionName, Encoder::str2encoding(encoding));
+}
+
+
+void DB::createCollection(std::string collectionName, Encoder::CharacterEncoding _encoding)
+{
+    fs::path collectionPath = datapath / "collections" / (collectionName+"-"+Encoder::encoding2str(_encoding));
     if (!fs::exists(collectionPath)) {
         fs::create_directories(collectionPath);
     }
     Collection* c = new Collection(collectionPath, _encoding);
-    collections[_name] = c;
+    collections[collectionName] = c;
 }
 
 std::vector<std::string> DB::listCollections()
@@ -1040,4 +1051,22 @@ bool DB::modify(string collection, string name, const vector<string>& doc)
 {
     collections[collection]->modify(name, doc);
     return true;
+}
+
+boost::uintmax_t disk_size(fs::path filePath)
+{
+    boost::uintmax_t size=0;
+    for(fs::recursive_directory_iterator it(filePath);
+        it!=fs::recursive_directory_iterator();
+        ++it)
+    {
+        if(!fs::is_directory(*it))
+            size+=fs::file_size(*it);
+    }
+    return size;
+}
+
+boost::uintmax_t DB::size()
+{
+    return disk_size(datapath);
 }
