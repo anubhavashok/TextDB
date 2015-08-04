@@ -38,7 +38,7 @@ map<string, string> query::validate(string req)
     assert(reqs.size() == names.size());
     for (int i = 0; i < names.size(); i++) {
         if ((names[i].front() == '{') && (names[i].back() == '}')) {
-            string arg_name = names[i].substr(1, names[i].size() - 1);
+            string arg_name = names[i].substr(1, names[i].size() - 2);
             args[arg_name] = reqs[i];
             
             // TODO: validate type
