@@ -46,7 +46,7 @@ private:
     bool is_value_label(string name);
 public:
     // UNUSED - only exists for map index access
-    node() {};
+    node() {}
     node(string name);
     node(string name, int qid);
     
