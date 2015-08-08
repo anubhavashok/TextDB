@@ -12,7 +12,9 @@
 #define HTTP_REQUEST_HANDLER_HPP
 
 #include <string>
+#include <fstream>
 
+using namespace std;
 namespace http {
 namespace server {
 
@@ -39,6 +41,8 @@ private:
   /// Perform URL-decoding on a string. Returns false if the encoding was
   /// invalid.
   static bool url_decode(const std::string& in, std::string& out);
+
+    fstream log;
 };
 
 } // namespace server

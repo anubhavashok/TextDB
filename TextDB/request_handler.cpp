@@ -29,7 +29,7 @@ namespace server {
 API api;
 
 request_handler::request_handler(const std::string& doc_root)
-  : doc_root_(doc_root)
+    : doc_root_(doc_root), log(doc_root_ + "/log.txt", ios_base::app)
 {
 }
 
@@ -49,6 +49,14 @@ void request_handler::handle_request(const request& req, reply& rep)
     
     cout << endl
     << "(TextDB): " << req.method << " " << req.uri << endl;
+    
+    // TODO: clean this up
+    // Can't use log because of multithreading
+    fstream flog(doc_root_ + "/log.txt", ios_base::app);
+    // TODO replace with log root
+    flog << "(TextDB): " << req.method << " " << req.uri << endl;
+    flog.close();
+    
     stringstream out;
     db->handleQuery(in, out);
     api.accept(req.uri, out, db);
