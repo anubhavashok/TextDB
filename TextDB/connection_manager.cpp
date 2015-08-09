@@ -19,13 +19,15 @@ namespace server {
 connection_manager::connection_manager()
 {
 }
-    static void start_connection(connection_ptr& c)
-    {
-        
-        cout << boost::this_thread::get_id() << endl;
-        c->start();
-        //cout << "Exiting thread: " << boost::this_thread::get_id() << endl;
-    }
+
+static void start_connection(connection_ptr& c)
+{
+    
+    cout << boost::this_thread::get_id() << endl;
+    c->start();
+    //cout << "Exiting thread: " << boost::this_thread::get_id() << endl;
+}
+
 void connection_manager::start(connection_ptr c)
 {
   connections_.insert(c);
