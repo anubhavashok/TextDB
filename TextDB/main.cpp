@@ -45,7 +45,7 @@ int main(int argc, char ** argv) {
     boost::property_tree::read_json(inconf, pt);
     
     fs::path datapth = pt.get<string>("data");
-    cout << "datapath: " << datapth << endl;
+    cout << "datapath: " << datapth.string() << endl;
     int candidateId = pt.get<int>("id");
     cout << "candidateId: " << candidateId << endl;
     int port = pt.get<int>("port");
@@ -71,7 +71,7 @@ int main(int argc, char ** argv) {
     try
     {
         // Initialise the server.
-        http::server::server s("0.0.0.0", to_string(port), "");
+        http::server::server s("0.0.0.0", to_string(port), datapth.string());
         
         // Run the server until stopped.
         s.run();
