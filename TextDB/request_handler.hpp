@@ -42,7 +42,7 @@ private:
   /// invalid.
   static bool url_decode(const std::string& in, std::string& out);
 
-    fstream log;
+    ofstream log;
 };
 
 } // namespace server
