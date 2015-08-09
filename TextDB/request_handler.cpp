@@ -29,8 +29,8 @@ namespace server {
 API api;
 
 request_handler::request_handler(const std::string& _doc_root)
+: log(_doc_root + "/log.txt", ios_base::app), doc_root_(_doc_root)
 {
-    doc_root_ = _doc_root;
 }
 
 
@@ -53,11 +53,7 @@ void request_handler::handle_request(const request& req, reply& rep)
     // TODO: clean this up
     // May not work if doc_root_ is not initialized due to multithreading
     // Can't use log because of multithreading
-    cout << doc_root_ << endl;
-    static ofstream flog(doc_root_ + "/log.txt", ios_base::app);
-    // TODO replace with log root
-    flog << "(TextDB): " << req.method << " " << req.uri << endl;
-    flog.close();
+    log << "(TextDB): " << req.method << " " << req.uri << endl;
     
     stringstream out;
     db->handleQuery(in, out);
