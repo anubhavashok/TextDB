@@ -53,9 +53,7 @@ void request_handler::handle_request(const request& req, reply& rep)
     // TODO: clean this up
     // May not work if doc_root_ is not initialized due to multithreading
     // Can't use log because of multithreading
-    // TODO replace with log root
     log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << endl;
-    
     stringstream out;
     db->handleQuery(in, out);
     api.accept(req.uri, out, db);
