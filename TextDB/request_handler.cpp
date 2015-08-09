@@ -28,9 +28,9 @@ namespace server {
 
 API api;
 
-request_handler::request_handler(const std::string& doc_root)
+request_handler::request_handler(const std::string& _doc_root)
 {
-    doc_root_ = doc_root;
+    doc_root_ = _doc_root;
 }
 
 
