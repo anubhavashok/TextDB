@@ -8,7 +8,7 @@
 
 #include "query.h"
 #include <boost/algorithm/string.hpp>
-
+#include "request.hpp"
 
 query::query(string queryName, string description, string route, QueryFunction _queryfunction, bool visible)
 : queryName(queryName), description(description), route(route), visible(visible), queryFunction(_queryfunction)
@@ -49,7 +49,8 @@ map<string, string> query::validate(string req)
     }
     return args;
 }
-void query::run(DB* db, ostream& out, map<string, string>& args)
+void query::run(DB* db, ostream& out, map<string, string>& args, const http::server::request& req)
 {
+    db->log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << endl;
     queryFunction(db, out, args);
 }

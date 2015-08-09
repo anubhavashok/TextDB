@@ -44,12 +44,12 @@ int main(int argc, char ** argv) {
     boost::property_tree::ptree pt;
     boost::property_tree::read_json(inconf, pt);
     
-    fs::path datapth = pt.get<string>("data");
+    int port = pt.get<int>("port");
+    cout << "port: " << port << endl;
+    fs::path datapth = pt.get<string>("data") + "/" + to_string(port);
     cout << "datapath: " << datapth.string() << endl;
     int candidateId = pt.get<int>("id");
     cout << "candidateId: " << candidateId << endl;
-    int port = pt.get<int>("port");
-    cout << "port: " << port << endl;
     
     vector<string> replicas;
     vector<int> replicaIds;

@@ -10,6 +10,7 @@
 #define __TextDB__db__
 
 #include <iostream>
+#include <fstream>
 #include <unordered_map>
 #include <vector>
 #include <boost/dynamic_bitset.hpp>
@@ -112,6 +113,7 @@ public:
     void createCollection(string collectionName);
     std::vector<std::string> listCollections();
     
+    ofstream log;
     
     // Log
     Raft raft;

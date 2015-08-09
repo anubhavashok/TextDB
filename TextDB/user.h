@@ -10,5 +10,20 @@
 #define __TextDB__user__
 
 #include <stdio.h>
+#include <iostream>
+#include <map>
+#include <vector>
+
+using namespace std;
+
+class User
+{
+    string name;
+    vector<string> labels;
+    
+public:
+    User(string name);
+    void addLabel();
+};
 
 #endif /* defined(__TextDB__user__) */

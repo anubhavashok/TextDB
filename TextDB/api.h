@@ -18,6 +18,7 @@
 #include "collection.h"
 #include "error.h"
 #include "router_tree.h"
+#include "request.hpp"
 
 using namespace std;
 
@@ -28,7 +29,7 @@ private:
     router_tree routes;
 public:
     API();
-    void accept(string req, ostream& out, DB* db);
+    void accept(const http::server::request& req, ostream& out, DB* db);
     const error access_denied();
 };
 

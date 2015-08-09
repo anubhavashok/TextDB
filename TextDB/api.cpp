@@ -53,19 +53,20 @@ API::API()
     cout << "Added routes" << endl;
 }
 
-void API::accept(string req, ostream& out, DB* db)
+void API::accept(const http::server::request& req, ostream& out, DB* db)
 {
-    cout << "req: " << req << endl;
+    string uri = req.uri;
+    cout << "req: " << uri << endl;
     // trim extraneous / from req
-    boost::trim_if(req, boost::is_any_of(" /"));
+    boost::trim_if(uri, boost::is_any_of(" /"));
     try {
         // check if request exists
-        int qid = routes.get(req);
+        int qid = routes.get(uri);
         query q = queries[qid];
         // try to parse request, if not output
-        map<string, string> args = q.validate(req);
+        map<string, string> args = q.validate(uri);
         // run query in request handler
-        q.run(db, out, args);
+        q.run(db, out, args, req);
     } catch (error& e) {
         // TODO: all replies should be objects
         // TODO: make e a property tree

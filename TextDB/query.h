@@ -14,6 +14,7 @@
 #include <iostream>
 #include "db.h"
 #include "error.h"
+#include "request.hpp"
 
 
 using namespace std;
@@ -52,7 +53,7 @@ public:
     query(string queryName, string description, string route, QueryFunction queryfunction);
     static query valueOf(string req);
     map<string, string> validate(string req);
-    void run(DB* db, ostream& out, map<string, string>& args);
+    void run(DB* db, ostream& out, map<string, string>& args, const http::server::request& req);
 };
 
 

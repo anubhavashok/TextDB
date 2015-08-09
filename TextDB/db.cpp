@@ -53,7 +53,7 @@ const std::string DB::allowed_puncs = " _.,-+*:;!?@$&[]()/|`\\\"\n\t\r";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
-: sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port))
+: sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port)), log((data / "log.txt").string(), ios_base::app)
 {
     
     // Create {data_path}/collections folder

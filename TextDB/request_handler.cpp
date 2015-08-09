@@ -29,7 +29,7 @@ namespace server {
 API api;
 
 request_handler::request_handler(const std::string& _doc_root)
-: doc_root_(_doc_root), log(_doc_root + "/log.txt", ios_base::app)
+: doc_root_(_doc_root)
 {
 }
 
@@ -53,10 +53,9 @@ void request_handler::handle_request(const request& req, reply& rep)
     // TODO: clean this up
     // May not work if doc_root_ is not initialized due to multithreading
     // Can't use log because of multithreading
-    log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << endl;
     stringstream out;
     db->handleQuery(in, out);
-    api.accept(req.uri, out, db);
+    api.accept(req, out, db);
 
   // Fill out the reply to be sent to the client.
   rep.status = reply::ok;
