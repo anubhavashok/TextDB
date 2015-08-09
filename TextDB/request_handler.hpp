@@ -36,7 +36,7 @@ public:
 
 private:
   /// The directory containing the files to be served.
-  static std::string doc_root_;
+ std::string doc_root_;
 
   /// Perform URL-decoding on a string. Returns false if the encoding was
   /// invalid.
