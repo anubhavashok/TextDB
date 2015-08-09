@@ -51,6 +51,7 @@ void request_handler::handle_request(const request& req, reply& rep)
     << "(TextDB): " << req.method << " " << req.uri << endl;
     
     // TODO: clean this up
+    // May not work if doc_root_ is not initialized due to multithreading
     // Can't use log because of multithreading
     fstream flog(doc_root_ + "/log.txt", ios_base::app);
     // TODO replace with log root
