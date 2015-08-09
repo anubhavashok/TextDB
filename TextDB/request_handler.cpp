@@ -29,8 +29,8 @@ namespace server {
 API api;
 
 request_handler::request_handler(const std::string& doc_root)
-    : doc_root_(doc_root), log(doc_root_ + "/log.txt", ios_base::app)
 {
+    doc_root_ = doc_root;
 }
 
 
