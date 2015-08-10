@@ -9,6 +9,7 @@
 #include "query.h"
 #include <boost/algorithm/string.hpp>
 #include "request.hpp"
+#include <ctime>
 
 query::query(string queryName, string description, string route, QueryFunction _queryfunction, bool visible)
 : queryName(queryName), description(description), route(route), visible(visible), queryFunction(_queryfunction)
@@ -49,8 +50,22 @@ map<string, string> query::validate(string req)
     }
     return args;
 }
+
+const std::string currentDateTime() {
+    time_t     now = time(0);
+    struct tm  tstruct;
+    char       buf[80];
+    tstruct = *localtime(&now);
+    // Visit http://en.cppreference.com/w/cpp/chrono/c/strftime
+    // for more information about date/time format
+    strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
+    
+    return buf;
+}
+
+
 void query::run(DB* db, ostream& out, map<string, string>& args, const http::server::request& req)
 {
-    db->log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << endl;
+    db->log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << " @ " << currentDateTime() << endl;
     queryFunction(db, out, args);
 }
