@@ -28,7 +28,7 @@ using namespace std;
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
-DB* db = nullptr;
+volatile DB* db = nullptr;
 static std::string dbpath;
 const char* toolName = "tdb";
 
