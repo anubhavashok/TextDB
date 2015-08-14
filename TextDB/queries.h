@@ -136,6 +136,31 @@ static void successfulReply(ostream& out, std::initializer_list<pair<string, str
 }
 
 
+static void successfulReply(ostream& out, std::initializer_list<pair<string, string>> args, std::initializer_list<pair<string, unordered_map<string, boost::uintmax_t>>> vargs)
+{
+    boost::property_tree::ptree json;
+    json.put("code", 200);
+    json.put("msg", "ok");
+    for (auto arg: args) {
+        json.put(arg.first, arg.second);
+    }
+    
+    for (auto varg: vargs) {
+        boost::property_tree::ptree arr;
+        unordered_map<string, boost::uintmax_t> arg = varg.second;
+        boost::property_tree::ptree elem;
+        for (auto p: arg) {
+            elem.put(p.first, p.second);
+        }
+        arr.push_back(make_pair("", elem));
+        json.add_child(varg.first, arr);
+    }
+    
+    stringstream ss;
+    boost::property_tree::write_json(ss, json);
+    out << ss.str();
+}
+
 vector<query> queries {
     
     // Collection
@@ -296,6 +321,9 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
+              unordered_map<string, boost::uintmax_t> tf = db->getTermFrequency(collectionName, documentName);
+              
+              successfulReply(out, {{"op", "getTermFrequency"}, {"collectionName", collectionName}, {"documentName", documentName}}, {{"tf", tf}});
           }),
 
     query("getSimilarity", "Get cosine similarity of 2 specified documents in a collection", "v1/compare/{collectionName}/{documentName1}/{documentName2}",

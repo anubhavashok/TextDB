@@ -1070,3 +1070,12 @@ boost::uintmax_t DB::size()
 {
     return disk_size(datapath);
 }
+
+unordered_map<string, uintmax_t> DB::getTermFrequency(string collectionName, string documentName)
+{
+    string doc = collections[collectionName]->get(documentName);
+    vector<string> docVector;
+    
+    boost::split(docVector, doc, boost::is_any_of(allowed_puncs));
+    return TF::term_frequency(docVector);
+}

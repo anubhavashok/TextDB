@@ -48,7 +48,7 @@ namespace TF {
      */
     
     auto term_frequency = [](const std::vector<std::string>& document) {
-        std::unordered_map<std::string, int> tf;
+        std::unordered_map<std::string, boost::uintmax_t> tf;
         for (std::string w: document) {
             if (!tf.count(w)) tf[w] = 0;
             tf[w]++;
@@ -67,11 +67,11 @@ namespace TFIDF {
      
      */
     
-    static auto tfidf = [](const std::unordered_map<std::string, int>& tf, const std::unordered_map<std::string, double>& idf) {
+    static auto tfidf = [](const std::unordered_map<std::string, boost::uintmax_t>& tf, const std::unordered_map<std::string, double>& idf) {
         std::unordered_map<std::string, double> tf_idf;
         for (auto p: tf) {
             std::string w = p.first;
-            int tf_w = p.second;
+            boost::uintmax_t tf_w = p.second;
             double idf_w = idf.at(w);
             double tf_idf_w = tf_w * idf_w;
             tf_idf[w] = tf_idf_w;
@@ -87,11 +87,11 @@ namespace CosineSimilarity {
          ----------------------
          
          */
-        int cardinality = (int) v1.size();
+        boost::uintmax_t cardinality = v1.size();
         
         /* Step 1: Calculate dot-product of vectors */
         double dot_product = 0;
-        for (int i = 0; i < cardinality; i++) {
+        for (boost::uintmax_t i = 0; i < cardinality; i++) {
             dot_product += v1[i] * v2[i];
         }
         
@@ -148,7 +148,7 @@ namespace IDF {
         /* Step 1: Find number of documents with term t */
         for (string t: document) {
             if (!idf.count(t)) {
-                int dft = 0;
+                boost::uintmax_t dft = 0;
                 for (const vector<string>& d: docs) {
                     auto e = d.end();
                     if(find(begin(d), end(d), t) != e) {
@@ -186,8 +186,8 @@ namespace Similarity {
         document2 = Stopwords::remove_stopwords(document2);
         
         /* Step 2: Calculate Term-Frequency */
-        std::unordered_map<std::string, int> tf1 = TF::term_frequency(document1);
-        std::unordered_map<std::string, int> tf2 = TF::term_frequency(document2);
+        std::unordered_map<std::string, boost::uintmax_t> tf1 = TF::term_frequency(document1);
+        std::unordered_map<std::string, boost::uintmax_t> tf2 = TF::term_frequency(document2);
         
         /* Step 3: Calculate Inverse Document Frequency */
         std::unordered_map<std::string, double> idf1 = IDF::inverse_document_frequency(document1, docs);

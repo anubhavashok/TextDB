@@ -119,6 +119,8 @@ public:
     Raft raft;
     
     boost::uintmax_t size();
+    
+    unordered_map<string, uintmax_t> getTermFrequency(string collectionName, string documentName);
 };
 
 
