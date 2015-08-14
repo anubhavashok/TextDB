@@ -149,6 +149,7 @@ namespace IDF {
         size_t N = docs.size();
         /* Step 1: Find number of documents with term t */
         for (string t: document) {
+            boost::to_lower(t);
             if (!idf.count(t)) {
                 boost::uintmax_t dft = 0;
                 for (const vector<string>& d: docs) {
