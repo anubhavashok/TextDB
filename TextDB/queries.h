@@ -150,7 +150,9 @@ static void successfulReply(ostream& out, std::initializer_list<pair<string, str
         unordered_map<string, boost::uintmax_t> arg = varg.second;
         boost::property_tree::ptree elem;
         for (auto p: arg) {
-            elem.put(p.first, to_string(p.second));
+            if (!p.first.empty()) {
+                elem.put(p.first, to_string(p.second));
+            }
         }
         json.add_child(varg.first, elem);
     }
