@@ -1079,3 +1079,23 @@ unordered_map<string, uintmax_t> DB::getTermFrequency(string collectionName, str
     boost::split(docVector, doc, boost::is_any_of(allowed_puncs));
     return TF::term_frequency(docVector);
 }
+
+std::unordered_map<std::string, double> DB::getTermFrequencyInverseDocumentFrequency(string collectionName, string documentName)
+{
+    string doc = collections[collectionName]->get(documentName);
+    // TODO remember to split words at puncs;
+    vector<string> restString = collections[collectionName]->get_all_string();
+    vector<vector<string>> rest;
+    
+    for (string r: restString) {
+        vector<string> v;
+        boost::split(v, r, boost::is_any_of(allowed_puncs));
+        rest.push_back(v);
+    }
+    
+    vector<string> docVector;
+    boost::split(docVector, doc, boost::is_any_of(allowed_puncs));
+    auto tf = TF::term_frequency(docVector);
+    auto idf = IDF::inverse_document_frequency(docVector, rest);
+    return TFIDF::tfidf(tf, idf);
+}

@@ -478,6 +478,15 @@ vector<vector<string>> Collection::get_all()
     return docs;
 }
 
+vector<string> Collection::get_all_string()
+{
+    vector<string> docs;
+    for(string p: listFiles()) {
+        docs.push_back(get(p));
+    }
+    return docs;
+}
+
 bool Collection::modify(string name, vector<string> doc)
 {
     return true;

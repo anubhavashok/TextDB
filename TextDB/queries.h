@@ -162,6 +162,32 @@ static void successfulReply(ostream& out, std::initializer_list<pair<string, str
     out << ss.str();
 }
 
+static void successfulReply(ostream& out, std::initializer_list<pair<string, string>> args, std::initializer_list<pair<string, unordered_map<string, double>>> vargs)
+{
+    boost::property_tree::ptree json;
+    json.put("code", 200);
+    json.put("msg", "ok");
+    for (auto arg: args) {
+        json.put(arg.first, arg.second);
+    }
+    
+    for (auto varg: vargs) {
+        boost::property_tree::ptree arr;
+        unordered_map<string, double> arg = varg.second;
+        boost::property_tree::ptree elem;
+        for (auto p: arg) {
+            if (!p.first.empty()) {
+                elem.put(p.first, to_string(p.second));
+            }
+        }
+        json.add_child(varg.first, elem);
+    }
+    
+    stringstream ss;
+    boost::property_tree::write_json(ss, json);
+    out << ss.str();
+}
+
 vector<query> queries {
     
     // Collection
@@ -326,6 +352,9 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
+              unordered_map<string, double> tfidf = db->getTermFrequencyInverseDocumentFrequency(collectionName, documentName);
+              
+              successfulReply(out, {{"op", "getTermFrequency-InverseDocumentFrequency"}, {"collectionName", collectionName}, {"documentName", documentName}}, {{"tfidf", tfidf}});
           }),
 
     query("getSimilarity", "Get cosine similarity of 2 specified documents in a collection", "v1/compare/{collectionName}/{documentName1}/{documentName2}",

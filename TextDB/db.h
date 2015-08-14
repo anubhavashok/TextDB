@@ -121,6 +121,7 @@ public:
     boost::uintmax_t size();
     
     unordered_map<string, uintmax_t> getTermFrequency(string collectionName, string documentName);
+    std::unordered_map<std::string, double> getTermFrequencyInverseDocumentFrequency(string collectionName, string documentName);
 };
 
 

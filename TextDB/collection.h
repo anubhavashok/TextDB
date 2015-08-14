@@ -94,6 +94,7 @@ public:
     void add_to_cache(std::string name, std::string attr, boost::any val);
     string get_frequency_table(string name);
     vector<vector<string>> get_all();
+    vector<string> get_all_string();
     boost::uintmax_t disk_size();
     vector<string> get_vector(std::string name);
 
