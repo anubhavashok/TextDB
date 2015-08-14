@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include <set>
 #include <cmath>
+#include <boost/algorithm/string.hpp>
 
 namespace TF {
     /*
@@ -50,6 +51,7 @@ namespace TF {
     auto term_frequency = [](const std::vector<std::string>& document) {
         std::unordered_map<std::string, boost::uintmax_t> tf;
         for (std::string w: document) {
+            boost::to_lower(w);
             if (!tf.count(w)) tf[w] = 0;
             tf[w]++;
         }
