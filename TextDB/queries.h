@@ -150,10 +150,9 @@ static void successfulReply(ostream& out, std::initializer_list<pair<string, str
         unordered_map<string, boost::uintmax_t> arg = varg.second;
         boost::property_tree::ptree elem;
         for (auto p: arg) {
-            elem.put(p.first, p.second);
+            elem.put(p.first, to_string(p.second));
         }
-        arr.push_back(make_pair("", elem));
-        json.add_child(varg.first, arr);
+        json.add_child(varg.first, elem);
     }
     
     stringstream ss;
@@ -312,6 +311,10 @@ vector<query> queries {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
+              
+              unordered_map<string, boost::uintmax_t> tf = db->getTermFrequency(collectionName, documentName);
+              
+              successfulReply(out, {{"op", "getTermFrequency"}, {"collectionName", collectionName}, {"documentName", documentName}}, {{"tf", tf}});
 
           }),
     
@@ -321,9 +324,6 @@ vector<query> queries {
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
 
-              unordered_map<string, boost::uintmax_t> tf = db->getTermFrequency(collectionName, documentName);
-              
-              successfulReply(out, {{"op", "getTermFrequency"}, {"collectionName", collectionName}, {"documentName", documentName}}, {{"tf", tf}});
           }),
 
     query("getSimilarity", "Get cosine similarity of 2 specified documents in a collection", "v1/compare/{collectionName}/{documentName1}/{documentName2}",
