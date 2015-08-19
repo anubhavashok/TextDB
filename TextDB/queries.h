@@ -12,7 +12,7 @@
 #include "db.h"
 #include "error.h"
 
-#include <cURLpp.hpp>
+#include <curlpp/cURLpp.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ptree.hpp>
