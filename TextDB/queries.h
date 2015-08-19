@@ -12,11 +12,14 @@
 #include "db.h"
 #include "error.h"
 
+#include <cURLpp.hpp>
+#include <boost/tokenizer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <vector>
 #include <sstream>
+
 using namespace std;
 
 // Validation helpers, move to utils
@@ -249,6 +252,24 @@ vector<query> queries {
               string documentName = args["documentName"];
               string text = args["text"];
               ensureDocumentDoesntExist(db, collectionName, documentName);
+              
+              std::string rawtext = curlpp::unescape(text);
+              cout << "Text: " << rawtext << endl;
+              
+              /* Tokenize words */
+              boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
+              boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+              
+              std::vector<std::string> t;
+              
+              for (std::string _t : tokens) {
+                  // boost::trim(t);
+                  if (_t != "") {
+                      t.push_back(_t);
+                  }
+              }
+              
+              db->add(collectionName, documentName, t);
               
               successfulReply(out, {{"op", "addDocument"}, {"collectionName", collectionName}, {"documentName", documentName}});
           }),
