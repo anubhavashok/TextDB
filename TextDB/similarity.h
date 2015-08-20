@@ -73,6 +73,7 @@ namespace TFIDF {
         std::unordered_map<std::string, double> tf_idf;
         for (auto p: tf) {
             std::string w = p.first;
+            boost::to_lower(w);
             boost::uintmax_t tf_w = p.second;
             double idf_w = idf.at(w);
             double tf_idf_w = tf_w * idf_w;
@@ -152,10 +153,13 @@ namespace IDF {
             boost::to_lower(t);
             if (!idf.count(t)) {
                 boost::uintmax_t dft = 0;
-                for (const vector<string>& d: docs) {
-                    auto e = d.end();
-                    if(find(begin(d), end(d), t) != e) {
-                        dft++;
+                for (const vector<string>& d: docs) {                    
+                    for (string w: d) {
+                        boost::to_lower(w);
+                        if (w == t) {
+                            dft++;
+                            break;
+                        }
                     }
                 }
                 /* Step 2: Calculate idf for given term */
