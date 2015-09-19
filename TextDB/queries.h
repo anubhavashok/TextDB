@@ -243,6 +243,28 @@ vector<query> queries {
               
               successfulReply(out, {{"op", "listDocs"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
           }),
+    
+    query("getInterestingDocuments", "Gets top n interesting documents", "v1/interesting/{collectionName}/{n}",
+          [](DB* db, ostream& out, map<string, string>& args) {
+              string collectionName = args["collectionName"];
+              int n = stoi(args["n"]);
+              ensureCollectionExists(db, collectionName);
+              
+              vector<string> documentNames = db->getInterestingDocuments(collectionName, n);
+              successfulReply(out, {{"op", "addCollection"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
+          }),
+    
+    query("getRelatedDocuments", "Gets top n related documents", "v1/related/{collectionName}/{documentName}/{n}",
+          [](DB* db, ostream& out, map<string, string>& args) {
+              string collectionName = args["collectionName"];
+              string documentName = args["documentName"];
+              int n = stoi(args["n"]);
+              ensureCollectionExists(db, collectionName);
+              ensureDocumentExists(db, collectionName, documentName);
+
+              vector<string> documentNames = db->getInterestingDocuments(collectionName, n);
+              successfulReply(out, {{"op", "addCollection"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
+          }),
 
 
     // Document

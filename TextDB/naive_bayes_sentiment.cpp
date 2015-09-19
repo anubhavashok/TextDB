@@ -35,7 +35,8 @@ NaiveBayesSentiment::NaiveBayesSentiment()
 {
     classes["pos"] = SentimentClass(SentimentClass::Type::POS);
     classes["neg"] = SentimentClass(SentimentClass::Type::NEG);
-
+    // create folder for sentiment models
+    
 }
 
 void NaiveBayesSentiment::mark(string docName, string sentiment)

@@ -8,6 +8,7 @@
 
 #include "collection.h"
 #include "encoder.h"
+#include <stdio.h>
 #include <cmath>
 #include <ctime>
 #include <boost/foreach.hpp>
@@ -513,4 +514,34 @@ pair<string, double> Collection::test(string name)
         return make_pair("", -2);
     }
     return naiveBayesSentiment.test(get(name));
+}
+
+vector<string> Collection::getInterestingDocuments(int n)
+{
+    // TODO: actually implement useful functionality
+    // E.g. top freq words (removed stopwords), find n documents for top n, score top n^2 docs, according to relevance, return top n
+    if (n <= 0) {
+        return vector<string>();
+    }
+    vector<string> documentNames = listFiles();
+    while (documentNames.size() > n) {
+        int i = rand() % documentNames.size();
+        documentNames.erase(documentNames.begin() + i);
+    }
+    return documentNames;
+}
+
+vector<string> Collection::getRelatedDocuments(string documentName, int n)
+{
+    // TODO: actually implement useful functionality
+    // Should be fairly straightforward
+    if (n <= 0) {
+        return vector<string>();
+    }
+    vector<string> documentNames = listFiles();
+    while (documentNames.size() > n) {
+        int i = rand() % documentNames.size();
+        documentNames.erase(documentNames.begin() + i);
+    }
+    return documentNames;
 }

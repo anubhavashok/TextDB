@@ -11,7 +11,7 @@ class TextDB():
     key = None
     exp = None
 
-    def __init__(self, _endpoint="http://localhost:9090", username=None, password=None):
+    def __init__(self, _endpoint="http://localhost:9090/v1", username=None, password=None):
         try:
             r = requests.get(_endpoint)
         except Exception:
@@ -45,8 +45,11 @@ class TextDB():
 
     def list(self):
 
-        r = requests.get("{0}/{1}".format(self.endpoint, "listcollections"))
-        return r.json()
+        r = requests.get("{0}/{1}".format(self.endpoint, "list"))
+        contents = r.json()
+        if "collectionNames" not in contents:
+            raise KeyError('collectionNames parameter not returned')
+        return contents['collectionNames']
 
     def drop(self, collection):
         """Drops a particular collection from TextDB.
@@ -66,7 +69,7 @@ class TextDB():
         r = requests.post("{0}/{1}/{2}".format(self.endpoint, "drop", collection))
         return r.text
 
-    def create_collection(self, collection, encoding):
+    def create_collection(self, collection, encoding='unicode'):
         """Creates a new collection in TextDB.
 
         Makes a POST request to TextDB server.
@@ -87,5 +90,5 @@ class TextDB():
         elif (encoding != "compressed") and (encoding != "unicode"):
             print "Invalid type '%s'. Allowed types are 'compressed' or 'unicode'" % encoding
         else:
-            r = requests.post("{0}/{1}/{2}/{3}".format(self.endpoint, "create", collection, encoding))
+            r = requests.post("{0}/{1}/{2}/{3}".format(self.endpoint, "add", collection, encoding))
             return r.text

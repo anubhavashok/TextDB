@@ -122,6 +122,9 @@ public:
     
     unordered_map<string, uintmax_t> getTermFrequency(string collectionName, string documentName);
     std::unordered_map<std::string, double> getTermFrequencyInverseDocumentFrequency(string collectionName, string documentName);
+    
+    vector<string> getInterestingDocuments(string collectionName, int n);
+    vector<string> getRelatedDocuments(string collectionName, string documentName, int n);
 };
 
 

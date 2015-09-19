@@ -377,7 +377,7 @@ void DB::init_query_operations()
     };
 
     /* ---------------------------------------------------------------------------------------- */
-    descriptions["trainsentiment"] = "Trains naive bayes model on all the marked documents\nUsage:/trainsentiment/{collectionName}/{docName}";
+    descriptions["trainsentiment"] = "Trains naive bayes model on all the marked documents\nUsage:/trainsentiment/{collectionName}";
     
     queryFunctions["trainsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 1;
@@ -396,7 +396,7 @@ void DB::init_query_operations()
     };
     
     /* ---------------------------------------------------------------------------------------- */
-    descriptions["testsentiment"] = "Test document based on trained naive bayes model\nUsage:/trainsentiment/{collectionName}/{docName}";
+    descriptions["testsentiment"] = "Test document based on trained naive bayes model\nUsage:/marksentiment/{collectionName}/{docName}";
     
     queryFunctions["testsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
@@ -1099,3 +1099,14 @@ std::unordered_map<std::string, double> DB::getTermFrequencyInverseDocumentFrequ
     auto idf = IDF::inverse_document_frequency(docVector, rest);
     return TFIDF::tfidf(tf, idf);
 }
+
+vector<string> DB::getInterestingDocuments(string collectionName, int n)
+{
+    return collections[collectionName]->getInterestingDocuments(n);
+}
+
+vector<string> DB::getRelatedDocuments(string collectionName, string documentName, int n)
+{
+    return collections[collectionName]->getRelatedDocuments(documentName, n);
+}
+

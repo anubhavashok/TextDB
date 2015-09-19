@@ -57,7 +57,7 @@ class Collection:
             ['a', 'b', 'c']
 
         """
-        r = requests.get(self.endpoint + "/listdocs/{0}".format(self.collection))
+        r = requests.get(self.endpoint + "/list/{0}".format(self.collection))
         return r.json()
 
     def add(self, name, d):
@@ -125,6 +125,13 @@ class Collection:
         return True if (r.text == "1") else False
 
     def disk_size(self):
-        r = requests.get(self.endpoint + "/collectionsize/{0}".format(self.collection))
+        r = requests.get(self.endpoint + "/size/{0}".format(self.collection))
         print "disk_size: " + r.text
         return int(r.text)
+
+    def mark_sentiment(self, name, tag):
+        r = requests.get(self.endpoint + "/marksentiment/{0}/{1}/{2}".format(self.collection, name, tag))
+        return True
+
+    def train_sentiment(self):
+        r = requests.get(self.endpoint + "/trainsentiment/{0}".format(self.collection))

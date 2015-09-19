@@ -35,13 +35,27 @@ class NaiveBayesSentiment
         int n = 0;
         Type type;
     };
+    
+    class SentimentModel
+    {
+        unordered_map<string, string> trainDocs;
+        unordered_map<string, int> freq;
+        unordered_map<string, SentimentClass> classes;
+        int n = 0;
+        void mark(string docName, string sentiment);
+        void train();
+        pair<string, double> test(string rawtext);
+    };
+    
 
 private:
     bool dirty = true;
     unordered_map<string, string> trainDocs;
 public:
+    
     NaiveBayesSentiment();
 
+    // model
     unordered_map<string, int> freq;
     unordered_map<string, SentimentClass> classes;
     int n = 0;

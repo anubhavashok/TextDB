@@ -24,7 +24,7 @@ class Cursor():
 
     @staticmethod
     def num_words(s):
-        return len(re.split('( |.|,|!|:|;|\|"|(|)|/|\n|\t)', s))
+        return len(re.split('( |.|,|!|:|;|\|"|\(|\)|/|\n|\t)', s))
 
     def next_sentence(self, strip=True):
         """Get the next sentence of the document.
@@ -42,9 +42,12 @@ class Cursor():
             "This is the second sentence of a."
 
         """
-        r = requests.get(self.endpoint + "/sentence/{0}/{1}/{2}".format(self.collection, self.name, self.sentencePtr))
-        text = urllib.unquote(r.text)
-        # NOTE: the plus 1 is a hack to ignore getting the '.' in the next sentence since textdb considers puntuation
+        r = requests.get(self.endpoint + "/get/{0}/{1}/sentence/{2}".format(self.collection, self.name, self.sentencePtr))
+        contents = r.json()
+        if 'sentence' not in contents:
+            raise KeyError('sentence parameter not returned')
+        text = contents['sentence']
+        # NOTE: the plus 1 is a hack to ignore getting the '.' in the next sentence since textedb considers punctuation
         # as words as well
         self.sentencePtr += self.num_words(text) + 1
         if strip:
@@ -66,8 +69,11 @@ class Cursor():
             {'word1': 10, 'word2': 11}
 
         """
-        r = requests.get(self.endpoint + "/termfrequency/{0}/{1}".format(self.collection, self.name))
-        return json.loads(urllib.unquote(r.text))
+        r = requests.get(self.endpoint + "/get/{0}/{1}/tf".format(self.collection, self.name))
+        contents = r.json()
+        if 'tf' not in contents:
+            raise KeyError('tf parameter not returned')
+        return contents['tf']
 
     def text(self, start=0, limit=0):
         """Get the text in the document.
@@ -88,7 +94,10 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/get/{0}/{1}".format(self.collection, self.name))
-        return str(urllib.unquote(r.text))
+        contents = r.json()
+        if 'text' not in contents:
+            raise KeyError('text parameter not returned')
+        return contents['text']
 
     def sentiment(self):
         """Get the sentiment score of the document.
@@ -104,8 +113,11 @@ class Cursor():
             0.2156
 
         """
-        r = requests.get(self.endpoint + "/sentiment/{0}/{1}".format(self.collection, self.name))
-        return float(urllib.unquote(r.text))
+        r = requests.get(self.endpoint + "/get/{0}/{1}/sentiment".format(self.collection, self.name))
+        contents = r.json()
+        if 'sentiment' not in contents:
+            raise KeyError('sentiment parameter not returned')
+        return contents['sentiment']
 
     def size(self):
         """Get size of the document.
@@ -122,7 +134,10 @@ class Cursor():
 
         """
         r = requests.get(self.endpoint + "/size/{0}/{1}".format(self.collection, self.name))
-        return int(urllib.unquote(r.text))
+        contents = r.json()
+        if "documentSize" not in contents:
+            raise KeyError('documentSize parameter not returned')
+        return contents["documentSize"]
 
     def similarity(self, cursor):
         if type(cursor) is not Cursor:

@@ -97,6 +97,8 @@ public:
     vector<string> get_all_string();
     boost::uintmax_t disk_size();
     vector<string> get_vector(std::string name);
+    vector<string> getInterestingDocuments(int n);
+    vector<string> getRelatedDocuments(string documentName, int n);
 
     
 private:
@@ -133,7 +135,6 @@ private:
     std::string reassembleText(const std::vector<std::string>& words);
     
     std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
-
 };
 
 #endif /* defined(__TextDB__collection__) */
