@@ -70,6 +70,15 @@ public:
     }
 };
 
+class BadAuthorization : public error
+{
+public:
+    BadAuthorization(string authorization)
+    : error("Authorization: " + authorization + " is invalid", 467705)
+    {
+    }
+};
+
 static void ensureCollectionExists(DB* db, string collectionName)
 {
     if (!collectionExists(db, collectionName)) {
@@ -97,6 +106,13 @@ static void ensureDocumentDoesntExist(DB* db, string collectionName, string docu
     ensureCollectionExists(db, collectionName);
     if (documentExists(db, collectionName, documentName)) {
         throw PreexistingDocument(collectionName, documentName);
+    }
+}
+
+static void validateAuthorization(string auth, string truth)
+{
+    if (auth != truth) {
+        throw BadAuthorization(auth);
     }
 }
 
@@ -214,12 +230,14 @@ vector<query> queries {
               successfulReply(out, {{"op", "addCollectionWithEncoding"}, {"collectionName", collectionName}, {"encoding", encoding}});
           }),
     
-    query("dropCollection", "Removes an existing collection", "v1/drop/{collectionName}",
+    query("dropCollection", "Removes an existing collection", "v1/drop/{collectionName}/{auth}",
           [](DB* db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
+              string auth = args["auth"];
               ensureCollectionExists(db, collectionName);
+              validateAuthorization(auth, "scu2447k");
               
-              // db->drop(collectionName);
+              db->drop(collectionName);
               
               successfulReply(out, {{"op", "dropCollection"}, {"collectionName", collectionName}});
           }),
@@ -262,7 +280,7 @@ vector<query> queries {
               ensureCollectionExists(db, collectionName);
               ensureDocumentExists(db, collectionName, documentName);
 
-              vector<string> documentNames = db->getInterestingDocuments(collectionName, n);
+              vector<string> documentNames = db->getRelatedDocuments(collectionName, documentName, n);
               successfulReply(out, {{"op", "addCollection"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
           }),
 

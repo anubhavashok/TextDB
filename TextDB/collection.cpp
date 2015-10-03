@@ -539,6 +539,7 @@ vector<string> Collection::getRelatedDocuments(string documentName, int n)
         return vector<string>();
     }
     vector<string> documentNames = listFiles();
+    documentNames.erase(find(documentNames.begin(), documentNames.end(), documentName));
     while (documentNames.size() > n) {
         int i = rand() % documentNames.size();
         documentNames.erase(documentNames.begin() + i);
