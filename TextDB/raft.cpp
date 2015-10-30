@@ -297,3 +297,4 @@ void Raft::read_log()
     
     // read 
 }
+

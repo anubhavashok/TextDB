@@ -29,9 +29,25 @@ Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
         fs::create_directories(path / "files");
     }
     loadWordIndex();
+    initializeLocalitySensitiveHashing();
     naiveBayesSentiment = NaiveBayesSentiment();
 }
 
+void Collection::initializeLocalitySensitiveHashing()
+{
+    vector<string> files = listFiles();
+    int i = 0;
+    for (string name: files) {
+        localitySensitiveHashing.add(get(name), name);
+        i++;
+    }
+}
+
+unordered_map<string, double> Collection::getAllDuplicates(string name)
+{
+    string s = get(name);
+    return localitySensitiveHashing.test(s, name);
+}
 
 /*
  * aow
@@ -174,11 +190,13 @@ boost::uintmax_t Collection::size(std::string name)
 
 bool Collection::add(std::string name, std::vector<std::string> doc)
 {
-    // TODO: decide where to put this
     if (idx2word.size() >= pow(2, nbits)) {
         nbits++;
     }
 
+    // TODO: change to take a doc
+    localitySensitiveHashing.add(reassembleText(doc), name);
+    
     fs::path path = collectionPath / "files" / (name + ".fyle");
     // find new words and add them to word index
     std::vector<std::string> new_words = find_new_words(doc);

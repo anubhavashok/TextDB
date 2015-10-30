@@ -65,7 +65,6 @@ int main(int argc, char ** argv) {
     //fs::path datapath = options.datapath;
     //cout << "Building DB: " << datapath << endl;;
     db = new DB(datapth, replicas, port, candidateId, replicaIds);
-
     assert(db != nullptr);
 
     try

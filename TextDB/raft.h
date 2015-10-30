@@ -26,6 +26,11 @@ class Raft
 public:
     friend class DB;
 
+    // Default constructor for serialization of DB
+    Raft()
+    {
+    };
+    
     Raft(vector<string> _replicas, vector<int> _replicaIds, int candidateId, shared_ptr<DB> db, fs::path persistence);
     void appendEntries(int term, int leaderId, int prevLogIndex, int prevLogTerm, int leaderCommit);
     int requestVote(int term, int candidateId, int lastLogIndex, int lasLogTerm);

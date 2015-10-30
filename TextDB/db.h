@@ -22,6 +22,7 @@
 #include "LRU.h"
 #include "entry.h"
 #include "raft.h"
+#include <boost/serialization/serialization.hpp>
 
 
 using namespace std;
@@ -78,7 +79,7 @@ public:
     }
     static bool ready;
     const static std::string allowed_puncs;
-
+    
     DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
@@ -125,6 +126,20 @@ public:
     
     vector<string> getInterestingDocuments(string collectionName, int n);
     vector<string> getRelatedDocuments(string collectionName, string documentName, int n);
+    
+    
+    
+    // These two are here for serialization purposes
+    DB()
+    :sentimentAnalysis(), raft()
+    {};
+
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version)
+    {
+    }
+
 };
 
 

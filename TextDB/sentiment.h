@@ -19,6 +19,9 @@ namespace fs = boost::filesystem;
 class SentimentAnalysis
 {
 public:
+    // Default constructor for serialization of DB
+    SentimentAnalysis()
+    {}
     SentimentAnalysis(fs::path data);
     std::unordered_map<std::string, double> sentimentMap;
     

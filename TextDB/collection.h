@@ -22,6 +22,7 @@
 #include "cache.h"
 #include <boost/any.hpp>
 #include "naive_bayes_sentiment.h"
+#include "lsh.h"
 
 // Each collection has its own encoding type
 // Each collection has its own storage and word table
@@ -51,6 +52,7 @@ public:
     
     void loadWordIndex();
     bool load(std::string name);
+    void initializeLocalitySensitiveHashing();
     boost::uintmax_t size();
     boost::uintmax_t size(std::string name);
     void kick();
@@ -79,6 +81,10 @@ public:
     void mark(string name, string sentimentClass);
     void train();
     pair<string, double> test(string t);
+    
+    // deduplication
+    LSH localitySensitiveHashing;
+    unordered_map<string, double> getAllDuplicates(string name);
     
     // all words
     std::vector<std::string> getWords();
