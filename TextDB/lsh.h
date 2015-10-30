@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <vector>
 #include <functional>
+#include <math>
 
 #define CHAR_SPACE 26
 #define N_GRAM_SIZE 3
