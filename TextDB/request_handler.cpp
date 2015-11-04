@@ -21,7 +21,7 @@
 #include "api.h"
 using namespace std;
 
-extern DB* db;
+extern shared_ptr<DB> db;
 
 namespace http {
 namespace server {

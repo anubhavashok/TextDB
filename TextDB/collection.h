@@ -23,6 +23,7 @@
 #include <boost/any.hpp>
 #include "naive_bayes_sentiment.h"
 #include "lsh.h"
+#include <set>
 
 // Each collection has its own encoding type
 // Each collection has its own storage and word table
@@ -89,6 +90,7 @@ public:
     // all words
     std::vector<std::string> getWords();
     
+    vector<string> getDocumentNames();
     std::vector<std::string> listFiles();
     
     bool exists(std::string name);
@@ -118,6 +120,7 @@ private:
 
     // STORAGE
     std::unordered_map<std::string, std::vector<widx>> storage;
+    set<string> documentNames;
     std::unordered_map<std::string, Cache> cache;
 
     // I/O
@@ -141,6 +144,9 @@ private:
     std::string reassembleText(const std::vector<std::string>& words);
     
     std::unordered_map<std::string, std::vector<std::string> > search(std::string queryString);
+    
+    // Utilities
+    vector<string> randomSampleDocuments(int k);
 };
 
 #endif /* defined(__TextDB__collection__) */

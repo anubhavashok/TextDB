@@ -64,7 +64,7 @@ const std::string currentDateTime() {
 }
 
 
-void query::run(DB* db, ostream& out, map<string, string>& args, const http::server::request& req)
+void query::run(shared_ptr<DB> db, ostream& out, map<string, string>& args, const http::server::request& req)
 {
     db->log << "(TextDB): " << req.method << " " << req.uri << " " << req.ip_address << " @ " << currentDateTime() << endl;
     queryFunction(db, out, args);

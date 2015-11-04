@@ -22,7 +22,7 @@ API::API()
     // trim extraneous /
     cout << "API initializing" << endl;
     queries.push_back(query("endpoints", "Lists all user facing endpoints", "v1/endpoints",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               cout << "in lambda " << endl;
               for (auto p: args) {
                   cout << "args: " << p.first << endl;
@@ -53,7 +53,7 @@ API::API()
     cout << "Added routes" << endl;
 }
 
-void API::accept(const http::server::request& req, ostream& out, DB* db)
+void API::accept(const http::server::request& req, ostream& out, shared_ptr<DB> db)
 {
     string uri = req.uri;
     cout << "req: " << uri << endl;

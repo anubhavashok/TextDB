@@ -22,6 +22,7 @@
 #include "LRU.h"
 #include "entry.h"
 #include "raft.h"
+#include "bigram_anomaly.h"
 #include <boost/serialization/serialization.hpp>
 
 
@@ -43,9 +44,9 @@ private:
     size_t memory_epsilon = 10000;
         
     /* OBJECTS */
-    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
+    std::unordered_map<std::string, std::function<void(shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args)>> queryFunctions;
     std::unordered_map<std::string, std::string> descriptions;
-    std::unordered_map<std::string, std::function<void(DB* db, ostream& htmlout, const std::vector<std::string>& args)>> metaFunctions;
+    std::unordered_map<std::string, std::function<void(shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args)>> metaFunctions;
     SentimentAnalysis sentimentAnalysis;
     LRU lru;
 
@@ -68,6 +69,7 @@ private:
     std::string reassembleText(const std::vector<std::string>& words);
 
 public:
+    BigramAnomalyPerceptron bigramAnomalyPerceptron;
     static void gracefulShutdown(int sig)
     {
         // stop accepting requests and handle last accepted request
@@ -89,8 +91,8 @@ public:
     void commit(const Entry& op);
     
     // Q
-    bool add(std::string collection, std::string name, std::string path);
     bool add(std::string collection, std::string name, const std::vector<std::string>& text);
+    bool add(std::string collection, std::string name, const string& text);
     bool remove(std::string collection, std::string name);
     bool modify(string collection, string name, const vector<string>& text);
     std::string get(std::string collection, std::string name);
@@ -131,7 +133,7 @@ public:
     
     // These two are here for serialization purposes
     DB()
-    :sentimentAnalysis(), raft()
+    :sentimentAnalysis(), raft(), bigramAnomalyPerceptron()
     {};
 
     friend class boost::serialization::access;
@@ -139,6 +141,11 @@ public:
     void serialize(Archive & ar, const unsigned int version)
     {
     }
+    
+    bool exists(string collectionName, string documentName);
+    bool exists(string collectionName);
+
+    unordered_map<string, double> getAllDuplicates(string collectionName, string documentName);
 
 };
 

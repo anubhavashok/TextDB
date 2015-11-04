@@ -29,7 +29,7 @@ private:
     router_tree routes;
 public:
     API();
-    void accept(const http::server::request& req, ostream& out, DB* db);
+    void accept(const http::server::request& req, ostream& out, shared_ptr<DB> db);
     const error access_denied();
 };
 

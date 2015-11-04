@@ -41,6 +41,8 @@
  * Ideally should not contain any functionality
  */
 
+extern shared_ptr<DB> db;
+
 namespace fs = boost::filesystem;
 
 // ready - flag that indicates when request handler is ready
@@ -53,7 +55,7 @@ const std::string DB::allowed_puncs = " _.,-+*:;!?@$&[]()/|`\\\"\n\t\r";
 
 
 DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
-: sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port)), log((data / "log.txt").string(), ios_base::app)
+: sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port)), log((data / "log.txt").string(), ios_base::app), bigramAnomalyPerceptron(data)
 {
     
     // Create {data_path}/collections folder
@@ -94,15 +96,15 @@ std::pair<std::string, std::string> DB::parseCollectionsDirName(std::string dire
 
 Doc d1("test_doc", vector<string>{"hi", "my", "name", "is"});
 
+// These are actually selectively moved to queries.h
 void DB::init_query_operations()
 {
-    
     
     /* ---------------------------------------------------------------------------------------- */
 
     
     // Test endpoint
-    queryFunctions["doctest"] = [](DB* db, ostream& htmlout, const vector<string>& args){
+    queryFunctions["doctest"] = [](shared_ptr<DB> db, ostream& htmlout, const vector<string>& args){
         std::string t = args[0];
         std::string rawtext = curlpp::unescape(t);
         
@@ -135,7 +137,7 @@ void DB::init_query_operations()
     
     descriptions["revert"] = "Reverts a document to the immediately previous version\nUsage:/revert/{collectionName}/{docName}";
 
-    queryFunctions["revert"] = [](DB* db, ostream& htmlout, const vector<string>& args){
+    queryFunctions["revert"] = [](shared_ptr<DB> db, ostream& htmlout, const vector<string>& args){
         d1.revert(1);
         d1.output(htmlout);
         d1.output(cout);
@@ -147,7 +149,7 @@ void DB::init_query_operations()
     
     descriptions["collectionsize"] = "Returns how many bytes a specified collection occupies on disk\nUsage:/collectionsize/{collectionName}";
     
-    queryFunctions["collectionsize"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["collectionsize"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 1;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -164,7 +166,7 @@ void DB::init_query_operations()
     
     descriptions["size"] = "Returns how many bytes a specified document occupies on disk\nUsage:/size/{collectionName}/{docName}";
 
-    queryFunctions["size"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["size"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -183,7 +185,7 @@ void DB::init_query_operations()
     
     descriptions["add"] = "Adds a document to a collection\nUsage:/add/{collectionName}/{docName}/{text}";
 
-    queryFunctions["add"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["add"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 3;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -224,7 +226,7 @@ void DB::init_query_operations()
     
     descriptions["modify"] = "Modifies a document that already exists, storing history of previous versions. \nUsage:/modify/{collectionName}/{docName}/{text}";
 
-    queryFunctions["modify"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["modify"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 3;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -258,7 +260,7 @@ void DB::init_query_operations()
     
     descriptions["remove"] = "Removes a particular document\nUsage:/remove/{collectionName}/{docName}";
 
-    queryFunctions["remove"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["remove"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -279,7 +281,7 @@ void DB::init_query_operations()
     
     descriptions["get"] = "Gets text of a particular document\nUsage:/get/{collectionName}/{docName}";
 
-    queryFunctions["get"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["get"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -299,7 +301,7 @@ void DB::init_query_operations()
     
     descriptions["listdocs"] = "Lists all documents in a particular collection\nUsage:/listdocs/{collectionName}";
 
-    queryFunctions["listdocs"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["listdocs"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 1;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -312,7 +314,7 @@ void DB::init_query_operations()
         Collection* c = db->collections[collection];
         std::string json = "[";
         int i = 0;
-        for (std::string s: c->listFiles()) {
+        for (std::string s: c->getDocumentNames()) {
             json += ((i == 0)? "": ",");
             json += '"' + s + '"';
             i++;
@@ -328,7 +330,7 @@ void DB::init_query_operations()
     
     descriptions["sentiment"] = "Calculates sentiment score of a document\nUsage:/sentiment/{collectionName}/{docName}";
 
-    queryFunctions["sentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["sentiment"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -352,7 +354,7 @@ void DB::init_query_operations()
     
     descriptions["marksentiment"] = "Mark a document's sentiment for training\nUsage:/trainsentiment/{collectionName}/{docName}";
     
-    queryFunctions["marksentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["marksentiment"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         // TODO: persist marksentiment
         int argc = 3;
         if (args.size() < argc) {
@@ -379,7 +381,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     descriptions["trainsentiment"] = "Trains naive bayes model on all the marked documents\nUsage:/trainsentiment/{collectionName}";
     
-    queryFunctions["trainsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["trainsentiment"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 1;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -398,7 +400,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     descriptions["testsentiment"] = "Test document based on trained naive bayes model\nUsage:/marksentiment/{collectionName}/{docName}";
     
-    queryFunctions["testsentiment"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["testsentiment"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -425,7 +427,7 @@ void DB::init_query_operations()
     
     descriptions["sentence"] = "Returns nth sentence in a specified document\nUsage:/sentence/{collectionName}/{docName}/{n}";
 
-    queryFunctions["sentence"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["sentence"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 3;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -450,7 +452,7 @@ void DB::init_query_operations()
     
     descriptions["drop"] = "Drops a particular collection and all the documents in it\nUsage:/drop/{collectionName}";
 
-    queryFunctions["drop"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["drop"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 1;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -470,7 +472,7 @@ void DB::init_query_operations()
     
     descriptions["create"] = "Creates a new collection with specified encoding\nUsage:/create/{collectionName}/{encoding}";
 
-    queryFunctions["create"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["create"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -490,7 +492,7 @@ void DB::init_query_operations()
     
     descriptions["listcollections"] = "Lists all collections in the database\nUsage:/listcollections";
 
-    queryFunctions["listcollections"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["listcollections"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         // get all collectionNames
         std::string json = "[";
         int i = 0;
@@ -510,7 +512,7 @@ void DB::init_query_operations()
     
     descriptions["termfrequency"] = "Returns term frequency table of a document in json format\nUsage:/size/{collectionName}/{docName}";
 
-    queryFunctions["termfrequency"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["termfrequency"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -531,7 +533,7 @@ void DB::init_query_operations()
 
     descriptions["tfidf"] = "Returns tfidf score of document with regards to other documents in the same colletion\nUsage:/tfidf/{collectionName}/{docName}";
 
-    queryFunctions["tfidf"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["tfidf"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 2;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -565,7 +567,7 @@ void DB::init_query_operations()
     
     descriptions["similarity"] = "Calculates cosine similarity of 2 specified documents in a collection\nUsage:/similarity/{collectionName}/{doc1}/{doc2}";
 
-    queryFunctions["similarity"] = [](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["similarity"] = [](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         int argc = 3;
         if (args.size() < argc) {
             htmlout << "Required number of arguments: " << argc;
@@ -593,7 +595,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
 
     
-    metaFunctions["ping"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    metaFunctions["ping"] = [](shared_ptr<DB> db, ostream& out, const std::vector<std::string>& args){
         out << "OK" << endl;
     };
     
@@ -601,7 +603,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
     
     
-    metaFunctions["appendentries"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    metaFunctions["appendentries"] = [](shared_ptr<DB> db, ostream& out, const std::vector<std::string>& args){
          /*
          Arguments:
          term leader’s term
@@ -706,7 +708,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
 
     
-    metaFunctions["requestvote"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    metaFunctions["requestvote"] = [](shared_ptr<DB> db, ostream& out, const std::vector<std::string>& args){
         cout << "requestVote" << endl;
         int term = stoi(args[0]);
         int candidateId = stoi(args[1]);
@@ -746,7 +748,7 @@ void DB::init_query_operations()
     /* ---------------------------------------------------------------------------------------- */
 
     
-    metaFunctions["getid"] = [](DB* db, ostream& out, const std::vector<std::string>& args){
+    metaFunctions["getid"] = [](shared_ptr<DB> db, ostream& out, const std::vector<std::string>& args){
         out << db->raft.candidateId;
     };
     
@@ -756,7 +758,7 @@ void DB::init_query_operations()
     
     descriptions["endpoints"] = "Lists all user facing endpoints\nUsage:/endpoints";
 
-    queryFunctions["endpoints"] = [this](DB* db, ostream& htmlout, const std::vector<std::string>& args){
+    queryFunctions["endpoints"] = [this](shared_ptr<DB> db, ostream& htmlout, const std::vector<std::string>& args){
         htmlout << "LIST OF ENDPOINTS: " << endl << endl;
         for (auto p: queryFunctions) {
             htmlout << p.first << endl;
@@ -801,10 +803,10 @@ void DB::handleQuery(std::vector<std::string> in, ostream& htmlout)
         //  cout << "(DB) Failed to reach majority consensus" << endl;
         //    htmlout << "ERR (M4J0R17Y)" << endl;
         //}
-        queryFunctions[cmd](this, htmlout, args);
+        queryFunctions[cmd](db, htmlout, args);
     } else if(metaFunctions.count(cmd)) {
         cout << "(DB) Query: " << cmd << endl;
-        metaFunctions[cmd](this, htmlout, args);
+        metaFunctions[cmd](db, htmlout, args);
     } else {
         cout << "(DB) Unknown query" << endl;
     }
@@ -829,6 +831,30 @@ bool DB::add(std::string collection, std::string name, const std::vector<std::st
 
     //std::vector<widx> serializedDoc = serializeDoc(text);
     //storage[name] = serializedDoc;
+}
+
+bool DB::add(string collectionName, string documentName, const string& rawtext)
+{
+    if (!collections.count(collectionName)) {
+        cout << "Collection: " << collectionName << " does not exist!" << endl;
+        createCollection(collectionName, Encoder::CharacterEncoding::Unicode);
+        return false;
+    }
+    /* Tokenize words */
+    boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
+    boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
+    
+    std::vector<std::string> t;
+    
+    for (std::string _t : tokens) {
+        // boost::trim(t);
+        if (_t != "") {
+            t.push_back(_t);
+        }
+    }
+
+    Collection* c = collections[collectionName];
+    return c->add(documentName, t);
 }
 
 /*
@@ -1039,9 +1065,9 @@ void DB::commit(const Entry& e)
     ostream out(0);
     if (queryFunctions.count(cmd)) {
         this->raft.aow_log(e);
-        queryFunctions[cmd](this, out, args);
+        queryFunctions[cmd](db, out, args);
     } else if (metaFunctions.count(cmd)) {
-        metaFunctions[cmd](this, out, args);
+        metaFunctions[cmd](db, out, args);
     } else {
         cout << "(DB): Unknown query: " << cmd << " , commit failed" << endl;
     }
@@ -1110,3 +1136,23 @@ vector<string> DB::getRelatedDocuments(string collectionName, string documentNam
     return collections[collectionName]->getRelatedDocuments(documentName, n);
 }
 
+
+bool DB::exists(string collectionName, string documentName)
+{
+    if (!collections.count(collectionName)) {
+        return false;
+    }
+    return collections[collectionName]->exists(documentName);
+}
+bool DB::exists(string collectionName)
+{
+    return collections.count(collectionName) > 0;
+}
+
+unordered_map<string, double> DB::getAllDuplicates(string collectionName, string documentName)
+{
+    if (!collections.count(collectionName)) {
+        return unordered_map<string, double>();
+    }
+    return collections[collectionName]->getAllDuplicates(documentName);
+}

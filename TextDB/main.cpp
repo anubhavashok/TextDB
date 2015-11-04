@@ -22,18 +22,22 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <cstdlib>
+#include "mutex_unordered_map.h"
 
 #include "server.hpp"
 using namespace std;
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 
-volatile DB* db = nullptr;
+shared_ptr<DB> db = nullptr;
+static shared_ptr<DB> sdb(db);
 static std::string dbpath;
 const char* toolName = "tdb";
 
+#include "tests.h"
 
 int main(int argc, char ** argv) {
+    run_tests(&argc, argv);
 
     po::options_description desc("Welcome to TexteDB");
     Options options;
@@ -64,7 +68,8 @@ int main(int argc, char ** argv) {
     
     //fs::path datapath = options.datapath;
     //cout << "Building DB: " << datapath << endl;;
-    db = new DB(datapth, replicas, port, candidateId, replicaIds);
+    db = shared_ptr<DB>(new DB(datapth, replicas, port, candidateId, replicaIds));
+    //shared_ptr<DB> sdb = shared_ptr<DB>(db);
     assert(db != nullptr);
 
     try
@@ -79,4 +84,5 @@ int main(int argc, char ** argv) {
     {
         std::cerr << "exception: " << e.what() << "\n";
     }
+    cout << sdb.unique() << endl;
 }

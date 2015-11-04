@@ -40,10 +40,6 @@ public:
     
     LambdaObject()
     {
-        auto comp = [](InputTuple real, InputTuple fake)->string{return "Works";};
-        pq = priority_queue<InputTuple, vector<InputTuple>, ComparatorType> (comp);
-        //auto comp = [](int a, int b)->int{ return a + b; };
-        //pq = std::priority_queue<int, std::vector<int>, std::function<int(int, int)> >(comp);
     }
     
     //std::priority_queue<int, std::vector<int>, std::function<int(int, int)> > pq;
@@ -54,6 +50,8 @@ public:
         ar & pq;
     }
 };
+
+extern shared_ptr<DB> db;
 
 class Extractor: public priority_queue<InputTuple, std::vector<InputTuple>, ComparatorType>
 {
@@ -68,7 +66,7 @@ public:
         return comp;
     }
     // void(ostream& out, map<string, string>& args)
-    static function<void(DB*, ostream&, map<string, string>&)> extractLambda(string s) {
+    static function<void(shared_ptr<DB>, ostream&, map<string, string>&)> extractLambda(string s) {
         LambdaObject retrievedLambdaObject;
         std::stringstream ifs(s);
         boost::archive::text_iarchive ia(ifs);
@@ -79,12 +77,13 @@ public:
         Extractor e(retrievedLambdaObject.pq);
         auto f = e.getComparator();
         
-        
-        function<void(DB*, ostream&, map<string, string>&)> res = [f](DB* db, ostream& out, map<string, string>& args) {
-            auto real = make_tuple(shared_ptr<DB>(db), args);
-            DB* fakeDB = new DB();
+        function<void(shared_ptr<DB>, ostream&, map<string, string>&)> res = [f](shared_ptr<DB> _db, ostream& out, map<string, string>& args) {
+            shared_ptr<DB> realDB = db;
+            auto real = tuple<shared_ptr<DB>, map<string, string>>(realDB, args);
+            shared_ptr<DB> fakeDB = shared_ptr<DB>(new DB());
             map<string, string> fakeArgs;
-            auto fake = make_tuple(shared_ptr<DB>(fakeDB), fakeArgs);
+            auto fake = make_tuple(fakeDB, fakeArgs);
+            cout << f(real, fake);
             out << f(real, fake);
         };
         return res;

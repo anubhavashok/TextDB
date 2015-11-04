@@ -14,6 +14,7 @@
 #include <vector>
 #include <functional>
 #include <cmath>
+#include <set>
 
 #define CHAR_SPACE 26
 #define N_GRAM_SIZE 3
@@ -26,15 +27,17 @@ class LSH
 {
 public:
     void add(string s, string name);
+    void remove(string s, string name);
     unordered_map<string, double> test(string s, string name);
 private:
     long long lookup(string s);
     vector<long long> generate_col(vector<string> shingles);
     vector<long long> generate_signature(vector<long long> col);
-    unordered_map<long long, vector<string>> buckets;
+    unordered_map<long long, set<string>> buckets;
     void update_lsh(vector<long long> signature, string name);
     unordered_map<string, double> check_lsh(vector<long long> signature, string name);
     vector<string> generate_shingles(string s);
+    void remove_lsh(vector<long long> signature, string name);
     
     // ensure all hashes are modulo size of n-gram space
     vector<function<long long(long long)>> hashes {

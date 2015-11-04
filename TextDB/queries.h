@@ -25,12 +25,12 @@ using namespace std;
 
 // Validation helpers, move to utils
 
-static bool collectionExists(DB* db, string collectionName)
+static bool collectionExists(shared_ptr<DB> db, string collectionName)
 {
     return db->collections.count(collectionName) > 0;
 }
 
-static bool documentExists(DB* db, string collectionName, string documentName)
+static bool documentExists(shared_ptr<DB> db, string collectionName, string documentName)
 {
     return collectionExists(db, collectionName) && db->collections[collectionName]->exists(documentName);
 }
@@ -80,21 +80,21 @@ public:
     }
 };
 
-static void ensureCollectionExists(DB* db, string collectionName)
+static void ensureCollectionExists(shared_ptr<DB> db, string collectionName)
 {
     if (!collectionExists(db, collectionName)) {
         throw NonexistingCollection(collectionName);
     }
 }
 
-static void ensureCollectionDoesntExist(DB* db, string collectionName)
+static void ensureCollectionDoesntExist(shared_ptr<DB> db, string collectionName)
 {
     if (collectionExists(db, collectionName)) {
         throw PreexistingCollection(collectionName);
     }
 }
 
-static void ensureDocumentExists(DB* db, string collectionName, string documentName)
+static void ensureDocumentExists(shared_ptr<DB> db, string collectionName, string documentName)
 {
     ensureCollectionExists(db, collectionName);
     if (!documentExists(db, collectionName, documentName)) {
@@ -102,7 +102,7 @@ static void ensureDocumentExists(DB* db, string collectionName, string documentN
     }
 }
 
-static void ensureDocumentDoesntExist(DB* db, string collectionName, string documentName)
+static void ensureDocumentDoesntExist(shared_ptr<DB> db, string collectionName, string documentName)
 {
     ensureCollectionExists(db, collectionName);
     if (documentExists(db, collectionName, documentName)) {
@@ -212,7 +212,7 @@ vector<query> queries {
     
     // Collection
     query("addCollection", "Creates a new empty collection with unicode encoding", "v1/add/{collectionName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               ensureCollectionDoesntExist(db, collectionName);
              
@@ -221,7 +221,7 @@ vector<query> queries {
           }),
     
     query("addCollectionWithEncoding", "Creates a new empty collection with a specified encoding", "v1/add/{collectionName}/{encoding}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string encoding = args["encoding"];
               ensureCollectionDoesntExist(db, collectionName);
@@ -232,7 +232,7 @@ vector<query> queries {
           }),
     
     query("dropCollection", "Removes an existing collection", "v1/drop/{collectionName}/{auth}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string auth = args["auth"];
               ensureCollectionExists(db, collectionName);
@@ -244,7 +244,7 @@ vector<query> queries {
           }),
 
     query("collectionSize", "Returns how many bytes a specified collection occupies on disk", "v1/size/{collectionName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               ensureCollectionExists(db, collectionName);
               
@@ -254,17 +254,17 @@ vector<query> queries {
           }),
     
     query("listDocs", "Lists all documents in a particular collection", "v1/list/{collectionName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               ensureCollectionExists(db, collectionName);
               
-              vector<string> documentNames = db->collections[collectionName]->listFiles();
+              vector<string> documentNames = db->collections[collectionName]->getDocumentNames();
               
               successfulReply(out, {{"op", "listDocs"}, {"collectionName", collectionName}}, {{"documentNames", documentNames}});
           }),
     
     query("getInterestingDocuments", "Gets top n interesting documents", "v1/interesting/{collectionName}/{n}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               int n = stoi(args["n"]);
               ensureCollectionExists(db, collectionName);
@@ -274,7 +274,7 @@ vector<query> queries {
           }),
     
     query("getRelatedDocuments", "Gets top n related documents", "v1/related/{collectionName}/{documentName}/{n}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               int n = stoi(args["n"]);
@@ -288,7 +288,7 @@ vector<query> queries {
 
     // Document
     query("addDocument", "Adds a document to a specified collection", "v1/add/{collectionName}/{documentName}/{text}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               string text = args["text"];
@@ -297,26 +297,13 @@ vector<query> queries {
               std::string rawtext = curlpp::unescape(text);
               cout << "Text: " << rawtext << endl;
               
-              /* Tokenize words */
-              boost::char_separator<char> sep("", DB::allowed_puncs.c_str()); // specify only the kept separators
-              boost::tokenizer<boost::char_separator<char>> tokens(rawtext, sep);
-              
-              std::vector<std::string> t;
-              
-              for (std::string _t : tokens) {
-                  // boost::trim(t);
-                  if (_t != "") {
-                      t.push_back(_t);
-                  }
-              }
-              
-              db->add(collectionName, documentName, t);
+              db->add(collectionName, documentName, rawtext);
               
               successfulReply(out, {{"op", "addDocument"}, {"collectionName", collectionName}, {"documentName", documentName}});
           }),
     
     query("removeDocument", "Removes a specified document", "v1/remove/{collectionName}/{documentName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -327,7 +314,7 @@ vector<query> queries {
           }),
     
     query("getDocument", "Gets text of a specified document", "v1/get/{collectionName}/{documentName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -337,7 +324,7 @@ vector<query> queries {
           }),
     
     query("getSentence", "Returns nth sentence in a specified document", "v1/get/{collectionName}/{documentName}/sentence/{n}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               string n_str = args["n"];
@@ -354,7 +341,7 @@ vector<query> queries {
           }),
     
     query("documentSize", "Returns how many bytes a specified document occupies on disk", "v1/size/{collectionName}/{documentName}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -366,7 +353,7 @@ vector<query> queries {
 
     // Science
     query("wordListSentiment", "Calculates sentiment score of a document using a word list", "v1/get/{collectionName}/{documentName}/sentiment",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -377,7 +364,7 @@ vector<query> queries {
           }),
     
     query("markSentiment", "Mark a document's sentiment for training", "v1/add/{collectionName}/{documentName}/naive-bayes-sentiment/{sentiment}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               string sentiment = args["sentiment"];
@@ -389,7 +376,7 @@ vector<query> queries {
           }),
 
     query("getNaiveBayesSentiment", "Get sentiment of a document based on a trained naive bayes model", "v1/get/{collectionName}/{documentName}/naive-bayes-sentiment",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -397,7 +384,7 @@ vector<query> queries {
           }),
     
     query("getTermFrequency", "Get term frequency table of a document", "v1/get/{collectionName}/{documentName}/tf",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -409,7 +396,7 @@ vector<query> queries {
           }),
     
     query("getTermFrequency-InverseDocumentFrequency", "Get tfidf score of document with regards to other documents in the same colletion", "v1/get/{collectionName}/{documentName}/tfidf",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName = args["documentName"];
               ensureDocumentExists(db, collectionName, documentName);
@@ -420,7 +407,7 @@ vector<query> queries {
           }),
 
     query("getSimilarity", "Get cosine similarity of 2 specified documents in a collection", "v1/compare/{collectionName}/{documentName1}/{documentName2}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               string documentName1 = args["documentName1"];
               string documentName2 = args["documentName2"];
@@ -430,7 +417,7 @@ vector<query> queries {
 
     // DB
     query("dbSize", "Returns how many bytes the database occupies on disk", "v1/size",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               // TODO: add db name
               boost::uintmax_t size = db->size();
               
@@ -438,14 +425,14 @@ vector<query> queries {
           }),
     
     query("listCollections", "Lists all collections in the database", "v1/list",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               vector<string> collectionNames = db->listCollections();
               
               successfulReply(out, {{"op", "listCollections"}}, {{"collectionNames", collectionNames}});
           }),
     
     query("lambda", "Allows input of serialized lambda", "v1/lambda/{lambda}",
-          [](DB* db, ostream& out, map<string, string>& args) {
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string lambda = curlpp::unescape(args["lambda"]);
               cout << lambda << endl;
               auto f = Extractor::extractLambda(lambda);

@@ -29,22 +29,24 @@ Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
         fs::create_directories(path / "files");
     }
     loadWordIndex();
+    auto l = listFiles();
+    documentNames = set<string>(l.begin(), l.end());
     initializeLocalitySensitiveHashing();
     naiveBayesSentiment = NaiveBayesSentiment();
 }
 
 void Collection::initializeLocalitySensitiveHashing()
 {
-    vector<string> files = listFiles();
-    int i = 0;
-    for (string name: files) {
+    for (string name: documentNames) {
         localitySensitiveHashing.add(get(name), name);
-        i++;
     }
 }
 
 unordered_map<string, double> Collection::getAllDuplicates(string name)
 {
+    if (!documentNames.count(name)) {
+        return unordered_map<string, double>();
+    }
     string s = get(name);
     return localitySensitiveHashing.test(s, name);
 }
@@ -123,8 +125,9 @@ void Collection::loadWordIndex()
 bool Collection::load(std::string name)
 {
     bitReader.clear();
+    
     fs::path filePath = collectionPath / "files" / (name + ".fyle");
-    if (!fs::exists(filePath)) {
+    if (!documentNames.count(name)) {
         cout << "file cannot be loaded as it does not exist" << endl;
         return false;
     }
@@ -213,6 +216,7 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
     }
     // store in doc object/ docgraph here
     //Doc document(name, doc);
+    documentNames.insert(name);
     storage[name] = serialize(doc);
     aow(path, storage[name]);
     return true;
@@ -366,16 +370,19 @@ std::string Collection::getSentence(std::string name, size_t start)
 
 bool Collection::remove(std::string name)
 {
-    fs::path files = collectionPath / "files";
-    if (!fs::exists(files / (name + ".fyle"))) {
+    if (!documentNames.count(name)) {
         return false;
     }
+    // remove from lsh
+    localitySensitiveHashing.remove(get(name), name);
+    fs::path files = collectionPath / "files";
     time_t timestamp = time(0);
     std::string newName = name+".remove."+std::to_string(timestamp);
     // mark file for removal with timestamp
     fs::rename(files / (name + ".fyle"), files / newName);
     //removeWordsFromMapping(name);
     storage.erase(name);
+    documentNames.erase(name);
     // let cron take care of remove
     // remove doc name from idx2docs
     return true;
@@ -387,6 +394,12 @@ void Collection::removeWordsFromMapping(std::string name)
     for (widx idx: doc) {
         idx2docs[idx].erase(std::remove(idx2docs[idx].begin(), idx2docs[idx].end(), name), idx2docs[idx].end());
     }
+}
+
+vector<string> Collection::getDocumentNames()
+{
+    vector<string> names(documentNames.begin(), documentNames.end());
+    return names;
 }
 
 std::vector<std::string> Collection::listFiles()
@@ -417,7 +430,7 @@ std::vector<std::string> Collection::getWords()
 
 bool Collection::exists(std::string name)
 {
-    return fs::exists(collectionPath / "files" / (name + ".fyle"));
+    return documentNames.count(name) > 0;
 }
 
 std::string Collection::reassembleText(const std::vector<std::string>& words)
@@ -491,7 +504,7 @@ string Collection::get_frequency_table(string name)
 vector<vector<string>> Collection::get_all()
 {
     vector<vector<string>> docs;
-    for (string p: listFiles()) {
+    for (string p: documentNames) {
         docs.push_back(get_vector(p));
     }
     return docs;
@@ -500,7 +513,7 @@ vector<vector<string>> Collection::get_all()
 vector<string> Collection::get_all_string()
 {
     vector<string> docs;
-    for(string p: listFiles()) {
+    for(string p: documentNames) {
         docs.push_back(get(p));
     }
     return docs;
@@ -538,29 +551,31 @@ vector<string> Collection::getInterestingDocuments(int n)
 {
     // TODO: actually implement useful functionality
     // E.g. top freq words (removed stopwords), find n documents for top n, score top n^2 docs, according to relevance, return top n
-    if (n <= 0) {
-        return vector<string>();
-    }
-    vector<string> documentNames = listFiles();
-    while (documentNames.size() > n) {
-        int i = rand() % documentNames.size();
-        documentNames.erase(documentNames.begin() + i);
-    }
-    return documentNames;
+    return randomSampleDocuments(n);
 }
 
 vector<string> Collection::getRelatedDocuments(string documentName, int n)
 {
     // TODO: actually implement useful functionality
     // Should be fairly straightforward
-    if (n <= 0) {
-        return vector<string>();
+    return randomSampleDocuments(n);
+}
+
+vector<string> Collection::randomSampleDocuments(int k)
+{
+    vector<string> sampledDocuments(k);
+    vector<string> list(documentNames.begin(), documentNames.end());
+    // Resevoir sampling
+    for (int i = 0; i < list.size(); i++) {
+        if (i < k) {
+            sampledDocuments.push_back(list[i]);
+        } else {
+            int r = rand() & i;
+            // replace random document
+            if (r < k) {
+                sampledDocuments[r] = sampledDocuments[i];
+            }
+        }
     }
-    vector<string> documentNames = listFiles();
-    documentNames.erase(find(documentNames.begin(), documentNames.end(), documentName));
-    while (documentNames.size() > n) {
-        int i = rand() % documentNames.size();
-        documentNames.erase(documentNames.begin() + i);
-    }
-    return documentNames;
+    return sampledDocuments;
 }
