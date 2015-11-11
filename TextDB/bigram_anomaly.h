@@ -25,7 +25,7 @@ class BigramAnomalyPerceptron
     double bias = -0.25;
     
     vector<string> tokenize(const vector<string>& s, size_t token_size);
-    bool predict(unordered_map<string, long long> freq);
+    bool predict(unordered_map<string, double> freq);
     vector<string> sanitize(string s);
 public:
     BigramAnomalyPerceptron()

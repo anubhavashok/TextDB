@@ -75,7 +75,6 @@ TEST(CRUD, DROP_COLLECTION)
     ASSERT_FALSE(tdb.exists(collectionName));
 }
 
-
 TEST(CRUD, REMOVE_LSH)
 {
     // Might be a long test
@@ -86,6 +85,19 @@ TEST(CRUD, REMOVE_LSH)
     tdb.remove("ddr", "ddrtest1");
     auto m = tdb.collections["ddr"]->localitySensitiveHashing.test(doc, "");
     ASSERT_TRUE(m.empty());
+}
+
+TEST(SAMPLE, DEDUPLICATION)
+{
+    string doc = gen_doc(15 + rand() % 35);
+    string unique = gen_doc(15 + rand() % 35);
+    // Calculate accuracy
+    tdb.add("ddr", "ddrtest1", doc);
+    tdb.add("ddr", "ddrtest2", doc);
+    tdb.add("ddr", "ddrtest3", unique);
+    auto m = tdb.collections["ddr"]->localitySensitiveHashing.test(doc, "");
+    ASSERT_TRUE(m.count("ddrtest2"));
+    ASSERT_TRUE(!m.count("ddrtest3"));
 }
 
 // Sentiment analysis sanity chekcs
@@ -122,6 +134,25 @@ TEST(SAMPLE, TERM_FREQUENCY)
     ASSERT_NE(tf2, exp);
 }
 
+TEST(SAMPLE, TERM_FREQUENCY_INVERSE_DOCUMENT_FREQUENCY)
+{
+    string collectionName = "sentiment";
+    unordered_map<string, double> tf1 = tdb.getTermFrequencyInverseDocumentFrequency(collectionName, "positive");
+    unordered_map<string, double> exp{
+        {"text", 0.693147},
+        {"of", 0.693147},
+        {"a", 0.693147},
+        {"piece", 0.693147},
+        {"is", 0.693147},
+        {"good", 1.38629},
+        {"this", 0.693147}
+    };
+    for (auto p: exp) {
+        string k = p.first;
+        ASSERT_NEAR(tf1[k], exp[k], 0.1);
+    }
+}
+
 TEST(BENCHMARK, ANOMALY)
 {
     // Might be a long test
@@ -131,7 +162,5 @@ TEST(BENCHMARK, ANOMALY)
     cout << "is_anomaly, random" << tdb.bigramAnomalyPerceptron.is_anomaly(doc) << endl;
     ASSERT_TRUE(tdb.bigramAnomalyPerceptron.is_anomaly(doc));
     cout << "is_anomaly, real" << tdb.bigramAnomalyPerceptron.is_anomaly(doc) << endl;
-    ASSERT_FALSE(tdb.bigramAnomalyPerceptron.is_anomaly("Hi my name is anubhav"));
+    ASSERT_FALSE(tdb.bigramAnomalyPerceptron.is_anomaly("Hi my name is alice"));
 }
-
-

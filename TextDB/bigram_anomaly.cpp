@@ -21,17 +21,18 @@ BigramAnomalyPerceptron::BigramAnomalyPerceptron(fs::path path)
         weights[bg] = f;
     }
     
-    long long top = 0;
+    double top = 0;
+    double c = weights["hg"];
     for (auto p: weights) {
         // hand picked zero point
-        weights[p.first] -= weights["hg"];
-        top = max(top, (long long)p.second);
+        weights[p.first] -= c;
+        top = max(top, weights[p.first]);
     }
     for (auto p: weights) {
         if (p.second > 0) {
-            weights[p.first] = weights[p.first]/top;
+            weights[p.first] = p.second/top;
         } else {
-            weights[p.first] = 1000*weights[p.first]/top;
+            weights[p.first] = 1000*p.second/top;
         }
     }
 }
@@ -63,42 +64,49 @@ vector<string> BigramAnomalyPerceptron::tokenize(const vector<string>& s, size_t
             continue;
         }
         // TODO: What about the edge case of single character words? (We still want to count them)
-        for (int i = 0; i < w.size() - token_size; i++) {
+        for (int i = 0; i < w.size() - token_size+1; i++) {
             tokens.push_back(w.substr(i, token_size));
         }
     }
     return tokens;
 }
 
-bool BigramAnomalyPerceptron::predict(unordered_map<string, long long> freq)
+bool BigramAnomalyPerceptron::predict(unordered_map<string, double> freq)
 {
     double activation = 0;
+    long long n = 0;
     for (auto p: freq) {
         string k = p.first;
         if (!weights.count(k)) {
             continue;
         }
-        activation += p.second * weights[k] + bias;
+        n += p.second;
+        activation += p.second * weights[k];
     }
+    activation += bias;
+    activation /= n;
     cout << "ACTIVATION: " << activation << endl;
-    return activation < 0;
+    return activation > 0;
+}
+
+void print_words(const vector<string>& words)
+{
+    for (string w: words) {
+        cout << w << " ";
+    }
+    cout << endl;
 }
 
 bool BigramAnomalyPerceptron::is_anomaly(string s)
 {
     vector<string> words = sanitize(s);
     vector<string> bigrams = tokenize(words, 2);
-    cout << "Bigrams generated" << endl;
-    unordered_map<string, long long> freq;
+    unordered_map<string, double> freq;
     for (string b: bigrams) {
         // Create int obj = 0 at b
         freq[b];
         // Increment count
         freq[b]++;
     }
-    for (string b: bigrams) {
-        // Here, bigrams.size() is guaranteed to be > 0
-        freq[b] /= bigrams.size();
-    }
-    return predict(freq);
+    return !predict(freq);
 }
