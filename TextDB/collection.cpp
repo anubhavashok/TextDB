@@ -24,14 +24,17 @@ using widx = boost::dynamic_bitset<>;
 Collection::Collection(fs::path path, Encoder::CharacterEncoding _encoding)
 : collectionPath(path), name(path.stem().string()), bitReader(_encoding), bitWriter(_encoding)
 {
-    // load from file or create file
     if (!fs::exists(path / "files")) {
         fs::create_directories(path / "files");
     }
+    
     loadWordIndex();
-    auto l = listFiles();
-    documentNames = set<string>(l.begin(), l.end());
-    initializeLocalitySensitiveHashing();
+    
+    // Initialize documentNames
+    vector<string> filenames = listFiles();
+    documentNames = set<string>(filenames.begin(), filenames.end());
+    
+    initializeLocalitySensitiveHashing(); // TODO: serialize and load hashes instead of filling up cache with documents each time
     naiveBayesSentiment = NaiveBayesSentiment();
 }
 
@@ -52,19 +55,16 @@ unordered_map<string, double> Collection::getAllDuplicates(string name)
 }
 
 /*
- * aow
- * A function that byte encodes the DB and saves it to disk
- * @param path a string containing the absolute path of the store.bindb file
+ * aow - Append on Write
  */
-// TODO: make function modifiable
 
 void Collection::aow(fs::path path, const std::vector<widx>& doc)
 {
     bitWriter.clear();
     
-    // output number of words in doc
     assert(doc.size() < pow(2, 32));
-    cout << "doc size" << doc.size() << endl;
+    
+    // output number of words in doc
     bitWriter.write(doc.size(), 32);
     
     // output nbits in case nbits changes
@@ -75,29 +75,36 @@ void Collection::aow(fs::path path, const std::vector<widx>& doc)
         assert(idx.size() <= nbits);
         bitWriter.write(idx.to_ulong(), nbits);
     }
+    
     bitWriter.saveToFile(path.string(), true);
     bitWriter.clear();
-    
 }
 
 void Collection::loadWordIndex()
 {
 
     fs::path widx_path = collectionPath / "word.idx";
+    
     if (!fs::exists(widx_path)) {
         cout << "no widx yet " << endl;
         return;
     }
+    
     bitReader.clear();
+    
     // read uncompressed
     bitReader.read(widx_path.string(), false);
     
     ifstream fin(widx_path.string(), ios::binary | ios::in);
+    
     unsigned int size;
     fin.read((char*)&size, sizeof(int));
+    
     bitReader.getNextBits(32).to_ulong();
+    
     std::vector<std::string> words;
 
+    /* Read words */
     while (!bitReader.eof()) {
         size_t len = (size_t)bitReader.getNextBits(8).to_ulong();
         std::string word = bitReader.getNextString(len);
@@ -107,7 +114,7 @@ void Collection::loadWordIndex()
         }
     }
     
-    // build word index in memory
+    /* Construct in-memory word index */
     idx2word.empty();
     word2idx.empty();
     for (size_t i = 0; i < words.size(); i ++) {
@@ -118,6 +125,7 @@ void Collection::loadWordIndex()
         idx2word[idx] = words[i];
         word2idx[words[i]] = idx;
     }
+    
     bitReader.clear();
 }
 

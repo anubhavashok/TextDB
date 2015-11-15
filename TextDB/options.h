@@ -27,10 +27,10 @@ namespace {
         std::string datapath;         // path to data - sentiment analysis etc.
         static bool verbose;          // verbose flag
         size_t memory_limit;          // memory_limit
-        int port;
+        int port;                     // port of current replica
         vector<string> replicas;      // ip addresses of replicas
-        int candidateId;
-        string config;
+        int candidateId;              // id of current node
+        string config;                // path to config file
         
         po::variables_map processCmdLine(int argc, char **argv, po::options_description& desc)
         {
@@ -58,10 +58,15 @@ namespace {
                 std::cout << desc << std::endl;
                 exit(0);
             }
+            
             Options::verbose = vm.count("verbose");
-            try {
+            
+            try
+            {
                 po::notify(vm);
-            } catch (exception& e) {
+            }
+            catch (exception& e)
+            {
                 std::cout << desc << std::endl;
                 exit(0);
                 

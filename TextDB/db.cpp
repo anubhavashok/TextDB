@@ -994,6 +994,29 @@ double DB::getSentimentScore(std::string collection, std::string name)
     return sentiment;
 }
 
+
+unordered_map<string, uintmax_t> DB::sentimentDistributionWordList(string collectionName, double granularity)
+{
+    // What if collection does not exist?
+    assert(granularity > 0.01);
+    assert(granularity <= 1);
+    vector<string> documentNames = collections[collectionName]->getDocumentNames();
+    const int k = (int) 2.0/granularity;
+    unordered_map<string, uintmax_t> distribution;
+    for (string documentName: documentNames) {
+        string text = get(collectionName, documentName);
+        double sentiment = sentimentAnalysis.analyse(text);
+        double bucket = -1 + granularity;
+        while (bucket <= 1) {
+            if (sentiment <= bucket) {
+                distribution[to_string(bucket)] += granularity;
+            }
+            bucket += granularity;
+        }
+    }
+    return distribution;
+}
+
 void DB::trainNaiveBayes(string collection)
 {
     if (!collections.count(collection)) {

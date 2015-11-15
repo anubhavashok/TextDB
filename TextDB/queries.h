@@ -439,8 +439,17 @@ vector<query> queries {
               cout << "Lambda has been extracted" << endl;
               f(db, out, args);
               successfulReply(out, {{"op", "lambda"}});
-          })
+          }),
 
+    query("sentimentDistribution", "Returns distribution of sentiment", "v1/{collectionName}/sentimentDistribution",
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
+              string collectionName = args["collectionName"];
+              double granularity = stod(args["granularity"]);
+              
+              unordered_map<string, uintmax_t> distribution = db->sentimentDistributionWordList(collectionName, granularity);
+              
+              successfulReply(out, {{"op", "sentimentDistribution"}}, {{"distribution", distribution}});
+          })
 };
 
 #endif

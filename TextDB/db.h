@@ -104,6 +104,7 @@ public:
 
     // Text Mining
     double getSentimentScore(std::string collection, std::string name);
+    unordered_map<string, uintmax_t> sentimentDistributionWordList(string collectionName, double granularity);
     void trainNaiveBayes(string collection);
     void markNaiveBayes(string collection, string name, string sentimentClass);
     pair<string, double> testNaiveBayes(string collection, string name);
@@ -118,7 +119,6 @@ public:
     
     ofstream log;
     
-    // Log
     Raft raft;
     
     boost::uintmax_t size();

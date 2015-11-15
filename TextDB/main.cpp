@@ -34,48 +34,55 @@ static shared_ptr<DB> sdb(db);
 static std::string dbpath;
 const char* toolName = "tdb";
 
+#define LOG_VAR_I(v) { printf( "%s: %i\n", #v, v); }
+#define LOG_VAR_S(v) { printf( "%s: %s\n", #v, v.c_str()); }
+
+
 #include "tests.h"
 
 int main(int argc, char ** argv) {
-    run_tests(&argc, argv);
+    // run_tests(&argc, argv);
 
-    po::options_description desc("Welcome to TexteDB");
+    /* Program Options */
     Options options;
+    po::options_description desc("Welcome to TexteDB");
     po::variables_map vm = options.processCmdLine(argc, argv, desc);
 
+    /* Read config file */
     string config = options.config;
-    fstream inconf(config);
     boost::property_tree::ptree pt;
+    fstream inconf(config);
     boost::property_tree::read_json(inconf, pt);
     
+    /* Initialize variables */
     int port = pt.get<int>("port");
-    cout << "port: " << port << endl;
-    fs::path datapth = pt.get<string>("data") + "/" + to_string(port);
-    cout << "datapath: " << datapth.string() << endl;
+    fs::path datapath = pt.get<string>("data") + "/" + to_string(port);
     int candidateId = pt.get<int>("id");
-    cout << "candidateId: " << candidateId << endl;
     
+    LOG_VAR_I(port);
+    LOG_VAR_S(datapath);
+    LOG_VAR_I(candidateId);
+    
+    /* RAFT variables */
     vector<string> replicas;
     vector<int> replicaIds;
     for (auto& item: pt.get_child("replicas")) {
-        string replica = item.second.get<string>("hostname");
+        string replicaAddress = item.second.get<string>("hostname");
         int replicaId = item.second.get<int>("id");
-        replicas.push_back(replica);
+        replicas.push_back(replicaAddress);
         replicaIds.push_back(replicaId);
-        cout << "replica: " << replica << endl;
-        cout << "id: " << replicaId << endl;
+        LOG_VAR_S(replicaAddress);
+        LOG_VAR_I(replicaId);
     }
     
-    //fs::path datapath = options.datapath;
-    //cout << "Building DB: " << datapath << endl;;
-    db = shared_ptr<DB>(new DB(datapth, replicas, port, candidateId, replicaIds));
-    //shared_ptr<DB> sdb = shared_ptr<DB>(db);
+    /* Initialize database object */
+    db = shared_ptr<DB>(new DB(datapath, replicas, port, candidateId, replicaIds));
     assert(db != nullptr);
 
     try
     {
         // Initialise the server.
-        http::server::server s("0.0.0.0", to_string(port), datapth.string());
+        http::server::server s("0.0.0.0", to_string(port), datapath.string());
         
         // Run the server until stopped.
         s.run();
@@ -84,5 +91,7 @@ int main(int argc, char ** argv) {
     {
         std::cerr << "exception: " << e.what() << "\n";
     }
+    
+    // TR: Could possibly remove this
     cout << sdb.unique() << endl;
 }

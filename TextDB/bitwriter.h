@@ -19,6 +19,9 @@ class BitWriter
 {
 public:
     BitWriter(Encoder::CharacterEncoding);
+    void operator<<(const string& s) {
+        write(s);
+    }
     void write(std::string s);
     void write(unsigned long mydata, size_t num_bits);
     void write(std::string word, size_t ncharbits);
