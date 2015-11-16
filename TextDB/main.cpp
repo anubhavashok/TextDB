@@ -38,8 +38,6 @@ const char* toolName = "tdb";
 #define LOG_VAR_S(v) { printf( "%s: %s\n", #v, v.c_str()); }
 
 
-#include "tests.h"
-
 int main(int argc, char ** argv) {
     // run_tests(&argc, argv);
 
