@@ -78,6 +78,15 @@ include("GTest.cmake")
 cxx_test(runUnitTests "${TEST_SOURCES}" -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES} gtest_main)
 
 ################################
+# Google Protobuf
+################################
+find_package(Protobuf REQUIRED)
+if (NOT PROTOBUF_FOUND)
+    message("Google protobuf not found")
+endif()
+
+
+################################
 # Unit Tests
 ################################
 
@@ -86,8 +95,8 @@ cxx_test(runUnitTests "${TEST_SOURCES}" -L/usr/local/lib ${Boost_LIBRARIES} ${CU
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS} ${CURLPP_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS}) 
     message(${SOURCES})
-    add_executable(TextDB ${SOURCES}) 
-    target_link_libraries(TextDB -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES})
+    add_executable(TextDB ${SOURCES})
+    target_link_libraries(TextDB -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES} ${PROTOBUF_LIBRARIES})
 endif()
 
 

@@ -492,6 +492,8 @@
 					"-lboost_regex-mt",
 					"-L/usr/lib",
 					"-lgtest",
+					"-lpthread",
+					"-lprotobuf",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

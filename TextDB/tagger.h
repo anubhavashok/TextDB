@@ -14,6 +14,7 @@
 #include <vector>
 #include <unordered_map>
 #include "tagger_message.pb.h"
+#include "tagger_message.pb.cc"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ class Tagger
         ACTIVE_REQ
     };
     static unordered_map<string, TaggerStatus> tsParseMap;
+    tagger_message::TagResult getTagResult(string addr);
 public:
     // performs algorithm, returns tag
     int id;
@@ -42,16 +44,7 @@ public:
     TaggerStatus status = TaggerStatus::DISABLED;
     // Change status to STARTED once spawn is called
     Tagger(string name, int port, string spawn_cmd);
-    void spawn()
-    {
-        status = TaggerStatus::UNKNOWN;
-        // send Tagger ACK endpoint as well
-        // So once taggers starts, the first thing it should do is send an ack to the db
-        // Custom code goes here, tagger can either be on same machine,
-        // In which case, we just spawn process from here
-        // If it is on another machine, then send spawn request to client on the machine
-        // Let that handle the spawning
-    }
+    void spawn();
     void activate();
     void disable();
     vector<pair<string, size_t>> tag(tagger_message::DocumentFeatures df);
