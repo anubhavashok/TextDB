@@ -9,8 +9,8 @@ set(SRC_PATH "${CMAKE_SOURCE_DIR}/../TextDB")
 set(TEST_PATH "${CMAKE_SOURCE_DIR}/../test")
 
 file(GLOB TEST_SOURCES
-    "${TEST_PATH}/tests.h"
     "${TEST_PATH}/tests.cpp"
+    "${TEST_PATH}/tests.h"
     "${SRC_PATH}/*.h"
     "${SRC_PATH}/*.cpp"
 )
@@ -74,35 +74,18 @@ endif()
 ################################
 # GTest
 ################################
-find_package(GTest REQUIRED)
-if (NOT GTEST_FOUND)
-    message("GTest not found, downloading now")
-    # Download and install GoogleTest
-    ExternalProject_Add(
-        gtest
-        URL https://googletest.googlecode.com/files/gtest-1.7.0.zip
-        PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
-        # Disable install step
-        INSTALL_COMMAND ""
-    )
-    find_package(GTest REQUIRED)
-    if (NOT GTEST_FOUND)
-        message("GTest still not found")
-    endif()
-endif()
+include("GTest.cmake")
+cxx_test(runUnitTests "${TEST_SOURCES}" -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES} gtest_main)
 
 ################################
 # Unit Tests
 ################################
-enable_testing()
-include_directories(${SRC_PATH})
-add_executable(runUnitTests ${TEST_SOURCES})
-target_link_libraries(runUnitTests -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES})
-add_test(runUnitTests runUnitTests)
+
 
 # TODO: Revise to include all
 if(Boost_FOUND)
     include_directories(${Boost_INCLUDE_DIRS} ${CURLPP_INCLUDE_DIRS} ${CURL_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS}) 
+    message(${SOURCES})
     add_executable(TextDB ${SOURCES}) 
     target_link_libraries(TextDB -L/usr/local/lib ${Boost_LIBRARIES} ${CURLPP_LIBRARIES} ${snappy_LIBRARIES} ${CURL_LIBRARIES} ${GTEST_BOTH_LIBRARIES})
 endif()

@@ -1,0 +1,29 @@
+syntax="proto2";
+package tagger_message;
+
+message TagResult {
+    required string documentName = 1;
+    required bool success = 2;
+    optional uint64 tagResult = 4; // maybe set default = -1 (But we don't necessarily want to imply no result = error)
+    // Only accept if resultID >= expectedResultID
+    required uint64 resultID = 3;
+}
+
+message DocumentFeature {
+    required string name = 1;
+    required string type = 2;
+    required string value = 3; // leaves parsing up to the tagger
+    // See how to use protobuf to parse
+}
+
+message DocumentFeatures {
+    repeated DocumentFeature features = 1;
+};
+
+message TagRequest {
+    // This is usually ignored since we specify the endpoint in request,
+    // However, it is useful to identify the Message that was sent
+    required string cmd = 1;
+    optional string documentName = 2;
+    optional DocumentFeatures documentFeatures = 3;
+};

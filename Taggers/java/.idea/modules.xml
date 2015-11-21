@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TextDB.iml" filepath="$PROJECT_DIR$/.idea/TextDB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java-tagger.iml" filepath="$PROJECT_DIR$/java-tagger.iml" />
     </modules>
   </component>
 </project>

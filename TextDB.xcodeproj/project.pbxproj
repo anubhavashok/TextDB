@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		440281121A32CF9B00C1FA11 /* sentiment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440281101A32CF9B00C1FA11 /* sentiment.cpp */; };
-		4402BFE21BE9B18800989245 /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4402BFE01BE9B18800989245 /* tests.cpp */; };
 		4402BFE51BE9D7A500989245 /* bigram_anomaly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4402BFE31BE9D7A500989245 /* bigram_anomaly.cpp */; };
 		4402BFE81BE9D7E600989245 /* rand_doc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4402BFE61BE9D7E600989245 /* rand_doc.cpp */; };
 		440A8BFB1BD77C6300626CA7 /* custom_lambda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440A8BF91BD77C6300626CA7 /* custom_lambda.cpp */; };
@@ -39,6 +38,7 @@
 		448EB5081B6C23D30072E7E0 /* router_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 448EB5061B6C23D30072E7E0 /* router_tree.cpp */; };
 		449E29A51BE4AB4C00DDDB8C /* mutex_unordered_map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 449E29A31BE4AB4C00DDDB8C /* mutex_unordered_map.cpp */; };
 		44DE938A1B07D16100BB0BA1 /* Doc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44DE93881B07D16100BB0BA1 /* Doc.cpp */; };
+		44F3C51D1BFEB64900495125 /* tagger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44F3C51B1BFEB64900495125 /* tagger.cpp */; };
 		44FB69CA19ADB29000219F7B /* db.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69C819ADB29000219F7B /* db.cpp */; };
 		44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 44FB69CB19ADC6CF00219F7B /* bitreader.cpp */; };
 /* End PBXBuildFile section */
@@ -58,8 +58,6 @@
 /* Begin PBXFileReference section */
 		440281101A32CF9B00C1FA11 /* sentiment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sentiment.cpp; sourceTree = "<group>"; };
 		440281111A32CF9B00C1FA11 /* sentiment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sentiment.h; sourceTree = "<group>"; };
-		4402BFE01BE9B18800989245 /* tests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
-		4402BFE11BE9B18800989245 /* tests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tests.h; sourceTree = "<group>"; };
 		4402BFE31BE9D7A500989245 /* bigram_anomaly.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bigram_anomaly.cpp; sourceTree = "<group>"; };
 		4402BFE41BE9D7A500989245 /* bigram_anomaly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bigram_anomaly.h; sourceTree = "<group>"; };
 		4402BFE61BE9D7E600989245 /* rand_doc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = rand_doc.cpp; sourceTree = "<group>"; };
@@ -125,6 +123,8 @@
 		44D627D31A7A132700B67CB5 /* similarity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = similarity.h; sourceTree = "<group>"; };
 		44DE93881B07D16100BB0BA1 /* Doc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Doc.cpp; sourceTree = "<group>"; };
 		44DE93891B07D16100BB0BA1 /* Doc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Doc.h; sourceTree = "<group>"; };
+		44F3C51B1BFEB64900495125 /* tagger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagger.cpp; sourceTree = "<group>"; };
+		44F3C51C1BFEB64900495125 /* tagger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tagger.h; sourceTree = "<group>"; };
 		44FB69C819ADB29000219F7B /* db.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = db.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		44FB69C919ADB29000219F7B /* db.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = db.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		44FB69CB19ADC6CF00219F7B /* bitreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitreader.cpp; sourceTree = "<group>"; };
@@ -142,15 +142,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4402BFDF1BE9B17600989245 /* test */ = {
-			isa = PBXGroup;
-			children = (
-				4402BFE01BE9B18800989245 /* tests.cpp */,
-				4402BFE11BE9B18800989245 /* tests.h */,
-			);
-			name = test;
-			sourceTree = "<group>";
-		};
 		442E802119AAAC0400CB7442 = {
 			isa = PBXGroup;
 			children = (
@@ -170,7 +161,6 @@
 		442E802C19AAAC0400CB7442 /* TextDB */ = {
 			isa = PBXGroup;
 			children = (
-				4402BFDF1BE9B17600989245 /* test */,
 				449E29A31BE4AB4C00DDDB8C /* mutex_unordered_map.cpp */,
 				449E29A41BE4AB4C00DDDB8C /* mutex_unordered_map.h */,
 				4446947A1B1D7F6F0095FCF1 /* http */,
@@ -184,6 +174,8 @@
 				44DE93871B07D14C00BB0BA1 /* docgraph */,
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
+				44F3C51B1BFEB64900495125 /* tagger.cpp */,
+				44F3C51C1BFEB64900495125 /* tagger.h */,
 				444652B91AA4F80A00B1A102 /* operation.cpp */,
 				444652BA1AA4F80A00B1A102 /* operation.h */,
 				4485F36A1AC0EAB80082D573 /* raft */,
@@ -367,7 +359,6 @@
 				4446948B1B1D80400095FCF1 /* server.cpp in Sources */,
 				446F0AB71B5B0BAE00C218F1 /* naive_bayes_sentiment.cpp in Sources */,
 				44DE938A1B07D16100BB0BA1 /* Doc.cpp in Sources */,
-				4402BFE21BE9B18800989245 /* tests.cpp in Sources */,
 				4485F3701AC0EC680082D573 /* entry.cpp in Sources */,
 				448EB5051B6C1F7B0072E7E0 /* query.cpp in Sources */,
 				44752F641A5065EE0029C2D8 /* collection.cpp in Sources */,
@@ -376,6 +367,7 @@
 				444652BB1AA4F80A00B1A102 /* operation.cpp in Sources */,
 				4446948F1B1D80400095FCF1 /* mime_types.cpp in Sources */,
 				448EB4FF1B6C18E20072E7E0 /* api.cpp in Sources */,
+				44F3C51D1BFEB64900495125 /* tagger.cpp in Sources */,
 				448EB5081B6C23D30072E7E0 /* router_tree.cpp in Sources */,
 				44FB69CD19ADC6CF00219F7B /* bitreader.cpp in Sources */,
 				4446948E1B1D80400095FCF1 /* reply.cpp in Sources */,

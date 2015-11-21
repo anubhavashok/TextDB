@@ -8,7 +8,7 @@
 
 #ifndef __TextDB__custom_lambda__
 #define __TextDB__custom_lambda__
-
+/*
 #include <iostream>
 #include <queue>
 #include <map>
@@ -93,6 +93,6 @@ public:
 
 
 
-
+*/
 
 #endif /* defined(__TextDB__custom_lambda__) */

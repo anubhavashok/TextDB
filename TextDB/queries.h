@@ -19,7 +19,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <vector>
 #include <sstream>
-#include "custom_lambda.h"
+//#include "custom_lambda.h"
 
 using namespace std;
 
@@ -430,7 +430,7 @@ vector<query> queries {
               
               successfulReply(out, {{"op", "listCollections"}}, {{"collectionNames", collectionNames}});
           }),
-    
+    /*
     query("lambda", "Allows input of serialized lambda", "v1/lambda/{lambda}",
           [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string lambda = curlpp::unescape(args["lambda"]);
@@ -440,7 +440,7 @@ vector<query> queries {
               f(db, out, args);
               successfulReply(out, {{"op", "lambda"}});
           }),
-
+    */
     query("sentimentDistribution", "Returns distribution of sentiment", "v1/{collectionName}/sentimentDistribution",
           [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
