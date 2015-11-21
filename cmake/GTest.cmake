@@ -41,7 +41,8 @@ enable_testing()
 
 find_package(Threads)
 
-function(cxx_test name sources)
+function(cxx_test name sources SRC_PATH)
+    include_directories(${SRC_PATH})
     add_executable(${name} ${sources})
     target_link_libraries(${name} ${ARGN} gtest ${CMAKE_THREAD_LIBS_INIT})
     set_property(TARGET ${name} APPEND PROPERTY INCLUDE_DIRECTORIES
