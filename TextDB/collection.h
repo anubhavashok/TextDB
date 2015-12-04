@@ -147,6 +147,8 @@ private:
     
     // Utilities
     vector<string> randomSampleDocuments(int k);
+    
+    set<string> vocabulary;
 };
 
 #endif /* defined(__TextDB__collection__) */

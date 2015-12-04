@@ -12,6 +12,7 @@
 		4402BFE81BE9D7E600989245 /* rand_doc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4402BFE61BE9D7E600989245 /* rand_doc.cpp */; };
 		440A8BFB1BD77C6300626CA7 /* custom_lambda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440A8BF91BD77C6300626CA7 /* custom_lambda.cpp */; };
 		440C9FC91AFEE0E300E5A99E /* docgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 440C9FC71AFEE0E300E5A99E /* docgraph.cpp */; };
+		440E52031C053C890025A459 /* tagger_message.pb.cc in Sources */ = {isa = PBXBuildFile; fileRef = 440E52011C053C890025A459 /* tagger_message.pb.cc */; };
 		442E802E19AAAC0400CB7442 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 442E802D19AAAC0400CB7442 /* main.cpp */; };
 		444652BB1AA4F80A00B1A102 /* operation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 444652B91AA4F80A00B1A102 /* operation.cpp */; };
 		4446948B1B1D80400095FCF1 /* server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4446947C1B1D803F0095FCF1 /* server.cpp */; };
@@ -67,6 +68,8 @@
 		440C9FC71AFEE0E300E5A99E /* docgraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = docgraph.cpp; sourceTree = "<group>"; };
 		440C9FC81AFEE0E300E5A99E /* docgraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = docgraph.h; sourceTree = "<group>"; };
 		440DEBBD19B179F5000DCA90 /* options.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = options.h; sourceTree = "<group>"; };
+		440E52011C053C890025A459 /* tagger_message.pb.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tagger_message.pb.cc; sourceTree = "<group>"; };
+		440E52021C053C890025A459 /* tagger_message.pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tagger_message.pb.h; sourceTree = "<group>"; };
 		442E802A19AAAC0400CB7442 /* TextDB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TextDB; sourceTree = BUILT_PRODUCTS_DIR; };
 		442E802D19AAAC0400CB7442 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = main.cpp; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.cpp; };
 		444652B91AA4F80A00B1A102 /* operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = operation.cpp; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 				44747FF81A5D901C0053BE17 /* cache.cpp */,
 				44747FF91A5D901C0053BE17 /* cache.h */,
 				44F3C51B1BFEB64900495125 /* tagger.cpp */,
+				440E52011C053C890025A459 /* tagger_message.pb.cc */,
+				440E52021C053C890025A459 /* tagger_message.pb.h */,
 				44F3C51C1BFEB64900495125 /* tagger.h */,
 				444652B91AA4F80A00B1A102 /* operation.cpp */,
 				444652BA1AA4F80A00B1A102 /* operation.h */,
@@ -359,6 +364,7 @@
 				4446948B1B1D80400095FCF1 /* server.cpp in Sources */,
 				446F0AB71B5B0BAE00C218F1 /* naive_bayes_sentiment.cpp in Sources */,
 				44DE938A1B07D16100BB0BA1 /* Doc.cpp in Sources */,
+				440E52031C053C890025A459 /* tagger_message.pb.cc in Sources */,
 				4485F3701AC0EC680082D573 /* entry.cpp in Sources */,
 				448EB5051B6C1F7B0072E7E0 /* query.cpp in Sources */,
 				44752F641A5065EE0029C2D8 /* collection.cpp in Sources */,

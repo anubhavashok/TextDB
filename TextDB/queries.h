@@ -441,7 +441,7 @@ vector<query> queries {
               successfulReply(out, {{"op", "lambda"}});
           }),
     */
-    query("sentimentDistribution", "Returns distribution of sentiment", "v1/{collectionName}/sentimentDistribution",
+    query("sentimentDistribution", "Returns distribution of sentiment", "v1/sentimentDistribution/{collectionName}",
           [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
               string collectionName = args["collectionName"];
               double granularity = stod(args["granularity"]);
@@ -449,6 +449,16 @@ vector<query> queries {
               unordered_map<string, uintmax_t> distribution = db->sentimentDistributionWordList(collectionName, granularity);
               
               successfulReply(out, {{"op", "sentimentDistribution"}}, {{"distribution", distribution}});
+          }),
+    query("taggers", "Returns details of custom tagger", "v1/taggers/{taggerName}/{text}",
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
+              string taggerName = args["taggerName"];
+              string text = args["text"];
+              // tagger is spawned on this thread
+              db->taggers[taggerName].spawn();
+              db->taggers[taggerName].activate();
+              string result = "";
+              successfulReply(out, {{"op", "taggers"}, {"res", result}});
           })
 };
 

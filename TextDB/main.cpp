@@ -23,6 +23,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <cstdlib>
 #include "mutex_unordered_map.h"
+#include "tagger.h"
 
 #include "server.hpp"
 using namespace std;
@@ -72,9 +73,17 @@ int main(int argc, char ** argv) {
         LOG_VAR_S(replicaAddress);
         LOG_VAR_I(replicaId);
     }
+    vector<Tagger> taggers;
+    for (auto& item: pt.get_child("taggers")) {
+        string name = item.second.get<string>("name");
+        int taggerPort = item.second.get<int>("port");
+        string start = item.second.get<string>("start");
+        Tagger t(name, taggerPort, start);
+        taggers.push_back(t);
+    }
     
     /* Initialize database object */
-    db = shared_ptr<DB>(new DB(datapath, replicas, port, candidateId, replicaIds));
+    db = shared_ptr<DB>(new DB(datapath, replicas, port, candidateId, replicaIds, taggers));
     assert(db != nullptr);
 
     try

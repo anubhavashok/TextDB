@@ -126,12 +126,24 @@ class TagResult : public ::google::protobuf::Message {
   bool success() const;
   void set_success(bool value);
 
-  // optional uint64 tagResult = 4;
-  bool has_tagresult() const;
-  void clear_tagresult();
-  static const int kTagResultFieldNumber = 4;
-  ::google::protobuf::uint64 tagresult() const;
-  void set_tagresult(::google::protobuf::uint64 value);
+  // required string type = 5;
+  bool has_type() const;
+  void clear_type();
+  static const int kTypeFieldNumber = 5;
+  const ::std::string& type() const;
+  void set_type(const ::std::string& value);
+  void set_type(const char* value);
+  void set_type(const char* value, size_t size);
+  ::std::string* mutable_type();
+  ::std::string* release_type();
+  void set_allocated_type(::std::string* type);
+
+  // optional uint64 class = 8;
+  bool has_class_() const;
+  void clear_class_();
+  static const int kClassFieldNumber = 8;
+  ::google::protobuf::uint64 class_() const;
+  void set_class_(::google::protobuf::uint64 value);
 
   // required uint64 resultID = 3;
   bool has_resultid() const;
@@ -140,14 +152,44 @@ class TagResult : public ::google::protobuf::Message {
   ::google::protobuf::uint64 resultid() const;
   void set_resultid(::google::protobuf::uint64 value);
 
+  // repeated string keys = 6;
+  int keys_size() const;
+  void clear_keys();
+  static const int kKeysFieldNumber = 6;
+  const ::std::string& keys(int index) const;
+  ::std::string* mutable_keys(int index);
+  void set_keys(int index, const ::std::string& value);
+  void set_keys(int index, const char* value);
+  void set_keys(int index, const char* value, size_t size);
+  ::std::string* add_keys();
+  void add_keys(const ::std::string& value);
+  void add_keys(const char* value);
+  void add_keys(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& keys() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_keys();
+
+  // repeated double values = 7;
+  int values_size() const;
+  void clear_values();
+  static const int kValuesFieldNumber = 7;
+  double values(int index) const;
+  void set_values(int index, double value);
+  void add_values(double value);
+  const ::google::protobuf::RepeatedField< double >&
+      values() const;
+  ::google::protobuf::RepeatedField< double >*
+      mutable_values();
+
   // @@protoc_insertion_point(class_scope:tagger_message.TagResult)
  private:
   inline void set_has_documentname();
   inline void clear_has_documentname();
   inline void set_has_success();
   inline void clear_has_success();
-  inline void set_has_tagresult();
-  inline void clear_has_tagresult();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_class_();
+  inline void clear_has_class_();
   inline void set_has_resultid();
   inline void clear_has_resultid();
 
@@ -158,8 +200,11 @@ class TagResult : public ::google::protobuf::Message {
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr documentname_;
-  ::google::protobuf::uint64 tagresult_;
+  ::google::protobuf::internal::ArenaStringPtr type_;
+  ::google::protobuf::uint64 class__;
   ::google::protobuf::uint64 resultid_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> keys_;
+  ::google::protobuf::RepeatedField< double > values_;
   bool success_;
   friend void  protobuf_AddDesc_tagger_5fmessage_2eproto();
   friend void protobuf_AssignDesc_tagger_5fmessage_2eproto();
@@ -593,39 +638,92 @@ inline void TagResult::set_success(bool value) {
   // @@protoc_insertion_point(field_set:tagger_message.TagResult.success)
 }
 
-// optional uint64 tagResult = 4;
-inline bool TagResult::has_tagresult() const {
+// required string type = 5;
+inline bool TagResult::has_type() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void TagResult::set_has_tagresult() {
+inline void TagResult::set_has_type() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void TagResult::clear_has_tagresult() {
+inline void TagResult::clear_has_type() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void TagResult::clear_tagresult() {
-  tagresult_ = GOOGLE_ULONGLONG(0);
-  clear_has_tagresult();
+inline void TagResult::clear_type() {
+  type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_type();
 }
-inline ::google::protobuf::uint64 TagResult::tagresult() const {
-  // @@protoc_insertion_point(field_get:tagger_message.TagResult.tagResult)
-  return tagresult_;
+inline const ::std::string& TagResult::type() const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.type)
+  return type_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void TagResult::set_tagresult(::google::protobuf::uint64 value) {
-  set_has_tagresult();
-  tagresult_ = value;
-  // @@protoc_insertion_point(field_set:tagger_message.TagResult.tagResult)
+inline void TagResult::set_type(const ::std::string& value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.type)
+}
+inline void TagResult::set_type(const char* value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.type)
+}
+inline void TagResult::set_type(const char* value, size_t size) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.type)
+}
+inline ::std::string* TagResult::mutable_type() {
+  set_has_type();
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.type)
+  return type_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* TagResult::release_type() {
+  clear_has_type();
+  return type_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void TagResult::set_allocated_type(::std::string* type) {
+  if (type != NULL) {
+    set_has_type();
+  } else {
+    clear_has_type();
+  }
+  type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), type);
+  // @@protoc_insertion_point(field_set_allocated:tagger_message.TagResult.type)
+}
+
+// optional uint64 class = 8;
+inline bool TagResult::has_class_() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void TagResult::set_has_class_() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void TagResult::clear_has_class_() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void TagResult::clear_class_() {
+  class__ = GOOGLE_ULONGLONG(0);
+  clear_has_class_();
+}
+inline ::google::protobuf::uint64 TagResult::class_() const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.class)
+  return class__;
+}
+inline void TagResult::set_class_(::google::protobuf::uint64 value) {
+  set_has_class_();
+  class__ = value;
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.class)
 }
 
 // required uint64 resultID = 3;
 inline bool TagResult::has_resultid() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void TagResult::set_has_resultid() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void TagResult::clear_has_resultid() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void TagResult::clear_resultid() {
   resultid_ = GOOGLE_ULONGLONG(0);
@@ -639,6 +737,90 @@ inline void TagResult::set_resultid(::google::protobuf::uint64 value) {
   set_has_resultid();
   resultid_ = value;
   // @@protoc_insertion_point(field_set:tagger_message.TagResult.resultID)
+}
+
+// repeated string keys = 6;
+inline int TagResult::keys_size() const {
+  return keys_.size();
+}
+inline void TagResult::clear_keys() {
+  keys_.Clear();
+}
+inline const ::std::string& TagResult::keys(int index) const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.keys)
+  return keys_.Get(index);
+}
+inline ::std::string* TagResult::mutable_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.keys)
+  return keys_.Mutable(index);
+}
+inline void TagResult::set_keys(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.keys)
+  keys_.Mutable(index)->assign(value);
+}
+inline void TagResult::set_keys(int index, const char* value) {
+  keys_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.keys)
+}
+inline void TagResult::set_keys(int index, const char* value, size_t size) {
+  keys_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.keys)
+}
+inline ::std::string* TagResult::add_keys() {
+  return keys_.Add();
+}
+inline void TagResult::add_keys(const ::std::string& value) {
+  keys_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:tagger_message.TagResult.keys)
+}
+inline void TagResult::add_keys(const char* value) {
+  keys_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tagger_message.TagResult.keys)
+}
+inline void TagResult::add_keys(const char* value, size_t size) {
+  keys_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tagger_message.TagResult.keys)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+TagResult::keys() const {
+  // @@protoc_insertion_point(field_list:tagger_message.TagResult.keys)
+  return keys_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+TagResult::mutable_keys() {
+  // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.keys)
+  return &keys_;
+}
+
+// repeated double values = 7;
+inline int TagResult::values_size() const {
+  return values_.size();
+}
+inline void TagResult::clear_values() {
+  values_.Clear();
+}
+inline double TagResult::values(int index) const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.values)
+  return values_.Get(index);
+}
+inline void TagResult::set_values(int index, double value) {
+  values_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+}
+inline void TagResult::add_values(double value) {
+  values_.Add(value);
+  // @@protoc_insertion_point(field_add:tagger_message.TagResult.values)
+}
+inline const ::google::protobuf::RepeatedField< double >&
+TagResult::values() const {
+  // @@protoc_insertion_point(field_list:tagger_message.TagResult.values)
+  return values_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+TagResult::mutable_values() {
+  // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.values)
+  return &values_;
 }
 
 // -------------------------------------------------------------------

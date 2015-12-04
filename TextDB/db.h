@@ -24,6 +24,7 @@
 #include "raft.h"
 #include "bigram_anomaly.h"
 #include <boost/serialization/serialization.hpp>
+#include "tagger.h"
 
 
 using namespace std;
@@ -82,7 +83,7 @@ public:
     static bool ready;
     const static std::string allowed_puncs;
     
-    DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds);
+    DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds, vector<Tagger> taggers);
     fs::path datapath;
     std::unordered_map<std::string, Collection*> collections;
 
@@ -146,6 +147,8 @@ public:
     bool exists(string collectionName);
 
     unordered_map<string, double> getAllDuplicates(string collectionName, string documentName);
+    
+    unordered_map<string, Tagger> taggers;
 
 };
 

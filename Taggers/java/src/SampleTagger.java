@@ -16,6 +16,7 @@ public class SampleTagger extends Tagger {
     public SampleTagger(int port)
     {
         super(port);
+        // Add endpoints here
         paths.add("test");
     }
     @Override

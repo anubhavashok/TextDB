@@ -13,6 +13,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <cstdlib>
+#include <boost/thread.hpp>
 
 // TODO: use boost async to handle this, especially spawning
 
@@ -27,9 +28,17 @@ unordered_map<string, Tagger::TaggerStatus> Tagger::tsParseMap = unordered_map<s
     {"ACTIVE_REQ", TaggerStatus::ACTIVE_REQ}
 };
 
-Tagger::Tagger(string name, int port, string spawn_cmd)
+Tagger::Tagger(string _name, int port, string _spawn_cmd)
 {
     endpoint = "http://localhost:"+to_string(port);
+    name = _name;
+    spawn_cmd = _spawn_cmd;
+}
+
+void _spawn(string cmd)
+{
+    cout << "Spawning tagger on new thread" << endl;
+    std::system(cmd.c_str());
 }
 
 void Tagger::spawn()
@@ -43,7 +52,9 @@ void Tagger::spawn()
     // Let that handle the spawning
     
     // run spawn command on system? Learn how to spawn something like this properly
-    std::system(spawn_cmd.c_str());
+    cout << "Spawning tagger: " << spawn_cmd << endl;
+    boost::thread t(_spawn, spawn_cmd);
+    t.join();
 }
 
 void Tagger::activate()

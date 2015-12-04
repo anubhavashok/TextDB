@@ -54,7 +54,7 @@ using widx = boost::dynamic_bitset<>;
 const std::string DB::allowed_puncs = " _.,-+*:;!?@$&[]()/|`\\\"\n\t\r";
 
 
-DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds)
+DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector<int> replicaIds, vector<Tagger> _taggers)
 : sentimentAnalysis(data), datapath(data), raft(replicas, replicaIds, candidateId, shared_ptr<DB>(this), data / "replication" / to_string(port)), log((data / "log.txt").string(), ios_base::app), bigramAnomalyPerceptron(data)
 {
     
@@ -82,6 +82,9 @@ DB::DB(fs::path data, vector<string> replicas, int port, int candidateId, vector
         Encoder::CharacterEncoding encoding = Encoder::str2encoding(type);
         Collection* c = new Collection(datapath / "collections" / collectionName, encoding);
         collections[name] = c;
+    }
+    for (Tagger& t: _taggers) {
+        taggers[t.name] = t;
     }
     init_query_operations();
 }

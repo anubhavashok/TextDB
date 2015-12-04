@@ -48,8 +48,7 @@ public class Tagger {
     }
 
     protected ArrayList<String> paths;
-    public Object cmds(String cmd, HashMap<String, Object> args)
-    {
+    public Object cmds(String cmd, HashMap<String, Object> args) {
         if (cmd.toLowerCase().equals("started_ack")) {
             return do_started_ack(args);
         } else if (cmd.toLowerCase().equals("training_ack")) {
@@ -58,6 +57,9 @@ public class Tagger {
             return do_active_ack(args);
         } else if (cmd.toLowerCase().equals("disabled_ack")) {
             return do_disabled_ack(args);
+        } else if (cmd.toLowerCase().equals("kill")) {
+            System.exit(1);
+            return "";
         } else {
             return "Unknown";
         }

@@ -14,7 +14,6 @@
 #include <vector>
 #include <unordered_map>
 #include "tagger_message.pb.h"
-#include "tagger_message.pb.cc"
 
 using namespace std;
 
@@ -43,6 +42,7 @@ public:
     int port;
     TaggerStatus status = TaggerStatus::DISABLED;
     // Change status to STARTED once spawn is called
+    Tagger(){}
     Tagger(string name, int port, string spawn_cmd);
     void spawn();
     void activate();

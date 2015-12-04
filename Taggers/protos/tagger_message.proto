@@ -4,9 +4,17 @@ package tagger_message;
 message TagResult {
     required string documentName = 1;
     required bool success = 2;
-    optional uint64 tagResult = 4; // maybe set default = -1 (But we don't necessarily want to imply no result = error)
+    required string type = 5;
+    optional uint64 class = 8; // maybe set default = -1 (But we don't necessarily want to imply no result = error)
     // Only accept if resultID >= expectedResultID
     required uint64 resultID = 3;
+    repeated string keys = 6;
+    repeated double values = 7;
+    // we want to have 2 functions, maybe more
+    // classification
+    // - returns a whole number which represents the class
+    // annotating data
+    // - returns key value pairs of 
 }
 
 message DocumentFeature {

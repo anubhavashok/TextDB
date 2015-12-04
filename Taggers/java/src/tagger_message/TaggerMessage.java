@@ -36,21 +36,35 @@ public final class TaggerMessage {
     boolean getSuccess();
 
     /**
-     * <code>optional uint64 tagResult = 4;</code>
-     *
-     * <pre>
-     * maybe set default = -1 (But we don't necessarily want to imply no result = error)
-     * </pre>
+     * <code>required string type = 5;</code>
      */
-    boolean hasTagResult();
+    boolean hasType();
     /**
-     * <code>optional uint64 tagResult = 4;</code>
+     * <code>required string type = 5;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>required string type = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
+    /**
+     * <code>optional uint64 class = 8;</code>
      *
      * <pre>
      * maybe set default = -1 (But we don't necessarily want to imply no result = error)
      * </pre>
      */
-    long getTagResult();
+    boolean hasClass_();
+    /**
+     * <code>optional uint64 class = 8;</code>
+     *
+     * <pre>
+     * maybe set default = -1 (But we don't necessarily want to imply no result = error)
+     * </pre>
+     */
+    long getClass_();
 
     /**
      * <code>required uint64 resultID = 3;</code>
@@ -68,6 +82,62 @@ public final class TaggerMessage {
      * </pre>
      */
     long getResultID();
+
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    com.google.protobuf.ProtocolStringList
+        getKeysList();
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    int getKeysCount();
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    java.lang.String getKeys(int index);
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeysBytes(int index);
+
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    java.util.List<java.lang.Double> getValuesList();
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    int getValuesCount();
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    double getValues(int index);
   }
   /**
    * Protobuf type {@code tagger_message.TagResult}
@@ -83,8 +153,11 @@ public final class TaggerMessage {
     private TagResult() {
       documentName_ = "";
       success_ = false;
-      tagResult_ = 0L;
+      type_ = "";
+      class__ = 0L;
       resultID_ = 0L;
+      keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      values_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -126,13 +199,49 @@ public final class TaggerMessage {
               break;
             }
             case 24: {
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000010;
               resultID_ = input.readUInt64();
               break;
             }
-            case 32: {
+            case 42: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000004;
-              tagResult_ = input.readUInt64();
+              type_ = bs;
+              break;
+            }
+            case 50: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                keys_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              keys_.add(bs);
+              break;
+            }
+            case 57: {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                values_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              values_.add(input.readDouble());
+              break;
+            }
+            case 58: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040) && input.getBytesUntilLimit() > 0) {
+                values_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                values_.add(input.readDouble());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000008;
+              class__ = input.readUInt64();
               break;
             }
           }
@@ -144,6 +253,12 @@ public final class TaggerMessage {
             new com.google.protobuf.InvalidProtocolBufferException(
                 e.getMessage()).setUnfinishedMessage(this));
       } finally {
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          keys_ = keys_.getUnmodifiableView();
+        }
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+          values_ = java.util.Collections.unmodifiableList(values_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -218,27 +333,69 @@ public final class TaggerMessage {
       return success_;
     }
 
-    public static final int TAGRESULT_FIELD_NUMBER = 4;
-    private long tagResult_;
+    public static final int TYPE_FIELD_NUMBER = 5;
+    private volatile java.lang.Object type_;
     /**
-     * <code>optional uint64 tagResult = 4;</code>
-     *
-     * <pre>
-     * maybe set default = -1 (But we don't necessarily want to imply no result = error)
-     * </pre>
+     * <code>required string type = 5;</code>
      */
-    public boolean hasTagResult() {
+    public boolean hasType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional uint64 tagResult = 4;</code>
+     * <code>required string type = 5;</code>
+     */
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string type = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int CLASS_FIELD_NUMBER = 8;
+    private long class__;
+    /**
+     * <code>optional uint64 class = 8;</code>
      *
      * <pre>
      * maybe set default = -1 (But we don't necessarily want to imply no result = error)
      * </pre>
      */
-    public long getTagResult() {
-      return tagResult_;
+    public boolean hasClass_() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional uint64 class = 8;</code>
+     *
+     * <pre>
+     * maybe set default = -1 (But we don't necessarily want to imply no result = error)
+     * </pre>
+     */
+    public long getClass_() {
+      return class__;
     }
 
     public static final int RESULTID_FIELD_NUMBER = 3;
@@ -251,7 +408,7 @@ public final class TaggerMessage {
      * </pre>
      */
     public boolean hasResultID() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>required uint64 resultID = 3;</code>
@@ -262,6 +419,81 @@ public final class TaggerMessage {
      */
     public long getResultID() {
       return resultID_;
+    }
+
+    public static final int KEYS_FIELD_NUMBER = 6;
+    private com.google.protobuf.LazyStringList keys_;
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getKeysList() {
+      return keys_;
+    }
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    public int getKeysCount() {
+      return keys_.size();
+    }
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    public java.lang.String getKeys(int index) {
+      return keys_.get(index);
+    }
+    /**
+     * <code>repeated string keys = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeysBytes(int index) {
+      return keys_.getByteString(index);
+    }
+
+    public static final int VALUES_FIELD_NUMBER = 7;
+    private java.util.List<java.lang.Double> values_;
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    public java.util.List<java.lang.Double>
+        getValuesList() {
+      return values_;
+    }
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    public int getValuesCount() {
+      return values_.size();
+    }
+    /**
+     * <code>repeated double values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    public double getValues(int index) {
+      return values_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -275,6 +507,10 @@ public final class TaggerMessage {
         return false;
       }
       if (!hasSuccess()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasType()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -294,11 +530,20 @@ public final class TaggerMessage {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBool(2, success_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeUInt64(3, resultID_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt64(4, tagResult_);
+        com.google.protobuf.GeneratedMessage.writeString(output, 5, type_);
+      }
+      for (int i = 0; i < keys_.size(); i++) {
+        com.google.protobuf.GeneratedMessage.writeString(output, 6, keys_.getRaw(i));
+      }
+      for (int i = 0; i < values_.size(); i++) {
+        output.writeDouble(7, values_.get(i));
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt64(8, class__);
       }
       unknownFields.writeTo(output);
     }
@@ -315,13 +560,30 @@ public final class TaggerMessage {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, success_);
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(3, resultID_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessage.computeStringSize(5, type_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < keys_.size(); i++) {
+          dataSize += computeStringSizeNoTag(keys_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getKeysList().size();
+      }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getValuesList().size();
+        size += dataSize;
+        size += 1 * getValuesList().size();
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt64Size(4, tagResult_);
+          .computeUInt64Size(8, class__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -439,10 +701,16 @@ public final class TaggerMessage {
         bitField0_ = (bitField0_ & ~0x00000001);
         success_ = false;
         bitField0_ = (bitField0_ & ~0x00000002);
-        tagResult_ = 0L;
+        type_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
-        resultID_ = 0L;
+        class__ = 0L;
         bitField0_ = (bitField0_ & ~0x00000008);
+        resultID_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        values_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -478,11 +746,25 @@ public final class TaggerMessage {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.tagResult_ = tagResult_;
+        result.type_ = type_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
+        result.class__ = class__;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
         result.resultID_ = resultID_;
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          keys_ = keys_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        }
+        result.keys_ = keys_;
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          values_ = java.util.Collections.unmodifiableList(values_);
+          bitField0_ = (bitField0_ & ~0x00000040);
+        }
+        result.values_ = values_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -507,11 +789,36 @@ public final class TaggerMessage {
         if (other.hasSuccess()) {
           setSuccess(other.getSuccess());
         }
-        if (other.hasTagResult()) {
-          setTagResult(other.getTagResult());
+        if (other.hasType()) {
+          bitField0_ |= 0x00000004;
+          type_ = other.type_;
+          onChanged();
+        }
+        if (other.hasClass_()) {
+          setClass_(other.getClass_());
         }
         if (other.hasResultID()) {
           setResultID(other.getResultID());
+        }
+        if (!other.keys_.isEmpty()) {
+          if (keys_.isEmpty()) {
+            keys_ = other.keys_;
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            ensureKeysIsMutable();
+            keys_.addAll(other.keys_);
+          }
+          onChanged();
+        }
+        if (!other.values_.isEmpty()) {
+          if (values_.isEmpty()) {
+            values_ = other.values_;
+            bitField0_ = (bitField0_ & ~0x00000040);
+          } else {
+            ensureValuesIsMutable();
+            values_.addAll(other.values_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -523,6 +830,9 @@ public final class TaggerMessage {
           return false;
         }
         if (!hasSuccess()) {
+          return false;
+        }
+        if (!hasType()) {
           return false;
         }
         if (!hasResultID()) {
@@ -658,50 +968,126 @@ public final class TaggerMessage {
         return this;
       }
 
-      private long tagResult_ ;
+      private java.lang.Object type_ = "";
       /**
-       * <code>optional uint64 tagResult = 4;</code>
-       *
-       * <pre>
-       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
-       * </pre>
+       * <code>required string type = 5;</code>
        */
-      public boolean hasTagResult() {
+      public boolean hasType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional uint64 tagResult = 4;</code>
-       *
-       * <pre>
-       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
-       * </pre>
+       * <code>required string type = 5;</code>
        */
-      public long getTagResult() {
-        return tagResult_;
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>optional uint64 tagResult = 4;</code>
-       *
-       * <pre>
-       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
-       * </pre>
+       * <code>required string type = 5;</code>
        */
-      public Builder setTagResult(long value) {
-        bitField0_ |= 0x00000004;
-        tagResult_ = value;
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string type = 5;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        type_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional uint64 tagResult = 4;</code>
+       * <code>required string type = 5;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        type_ = getDefaultInstance().getType();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string type = 5;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long class__ ;
+      /**
+       * <code>optional uint64 class = 8;</code>
        *
        * <pre>
        * maybe set default = -1 (But we don't necessarily want to imply no result = error)
        * </pre>
        */
-      public Builder clearTagResult() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        tagResult_ = 0L;
+      public boolean hasClass_() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional uint64 class = 8;</code>
+       *
+       * <pre>
+       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
+       * </pre>
+       */
+      public long getClass_() {
+        return class__;
+      }
+      /**
+       * <code>optional uint64 class = 8;</code>
+       *
+       * <pre>
+       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
+       * </pre>
+       */
+      public Builder setClass_(long value) {
+        bitField0_ |= 0x00000008;
+        class__ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint64 class = 8;</code>
+       *
+       * <pre>
+       * maybe set default = -1 (But we don't necessarily want to imply no result = error)
+       * </pre>
+       */
+      public Builder clearClass_() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        class__ = 0L;
         onChanged();
         return this;
       }
@@ -715,7 +1101,7 @@ public final class TaggerMessage {
        * </pre>
        */
       public boolean hasResultID() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>required uint64 resultID = 3;</code>
@@ -735,7 +1121,7 @@ public final class TaggerMessage {
        * </pre>
        */
       public Builder setResultID(long value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000010;
         resultID_ = value;
         onChanged();
         return this;
@@ -748,8 +1134,223 @@ public final class TaggerMessage {
        * </pre>
        */
       public Builder clearResultID() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000010);
         resultID_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureKeysIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          keys_ = new com.google.protobuf.LazyStringArrayList(keys_);
+          bitField0_ |= 0x00000020;
+         }
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getKeysList() {
+        return keys_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public int getKeysCount() {
+        return keys_.size();
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public java.lang.String getKeys(int index) {
+        return keys_.get(index);
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeysBytes(int index) {
+        return keys_.getByteString(index);
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public Builder setKeys(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public Builder addKeys(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public Builder addAllKeys(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureKeysIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, keys_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public Builder clearKeys() {
+        keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000020);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string keys = 6;</code>
+       */
+      public Builder addKeysBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureKeysIsMutable();
+        keys_.add(value);
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<java.lang.Double> values_ = java.util.Collections.emptyList();
+      private void ensureValuesIsMutable() {
+        if (!((bitField0_ & 0x00000040) == 0x00000040)) {
+          values_ = new java.util.ArrayList<java.lang.Double>(values_);
+          bitField0_ |= 0x00000040;
+         }
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public java.util.List<java.lang.Double>
+          getValuesList() {
+        return java.util.Collections.unmodifiableList(values_);
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public int getValuesCount() {
+        return values_.size();
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public double getValues(int index) {
+        return values_.get(index);
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public Builder setValues(
+          int index, double value) {
+        ensureValuesIsMutable();
+        values_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public Builder addValues(double value) {
+        ensureValuesIsMutable();
+        values_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public Builder addAllValues(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureValuesIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, values_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public Builder clearValues() {
+        values_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000040);
         onChanged();
         return this;
       }
@@ -3269,15 +3870,16 @@ public final class TaggerMessage {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\024tagger_message.proto\022\016tagger_message\"W" +
+      "\n\024tagger_message.proto\022\016tagger_message\"\177" +
       "\n\tTagResult\022\024\n\014documentName\030\001 \002(\t\022\017\n\007suc" +
-      "cess\030\002 \002(\010\022\021\n\ttagResult\030\004 \001(\004\022\020\n\010resultI" +
-      "D\030\003 \002(\004\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t" +
+      "cess\030\002 \002(\010\022\014\n\004type\030\005 \002(\t\022\r\n\005class\030\010 \001(\004\022" +
+      "\020\n\010resultID\030\003 \002(\004\022\014\n\004keys\030\006 \003(\t\022\016\n\006value" +
+      "s\030\007 \003(\001\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t" +
       "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"E\n\020Documen" +
       "tFeatures\0221\n\010features\030\001 \003(\0132\037.tagger_mes" +
       "sage.DocumentFeature\"k\n\nTagRequest\022\013\n\003cm" +
       "d\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022:\n\020documen" +
-      "tFeatures\030\003 \001(\0132 .tagger_message.Documen" +
+      "tFeatures\030\003 \001(\0132 .tagger_message.Documen",
       "tFeatures"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
@@ -3297,7 +3899,7 @@ public final class TaggerMessage {
     internal_static_tagger_message_TagResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tagger_message_TagResult_descriptor,
-        new java.lang.String[] { "DocumentName", "Success", "TagResult", "ResultID", });
+        new java.lang.String[] { "DocumentName", "Success", "Type", "Class_", "ResultID", "Keys", "Values", });
     internal_static_tagger_message_DocumentFeature_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_tagger_message_DocumentFeature_fieldAccessorTable = new

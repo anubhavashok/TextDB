@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='tagger_message.proto',
   package='tagger_message',
   syntax='proto2',
-  serialized_pb=_b('\n\x14tagger_message.proto\x12\x0etagger_message\"W\n\tTagResult\x12\x14\n\x0c\x64ocumentName\x18\x01 \x02(\t\x12\x0f\n\x07success\x18\x02 \x02(\x08\x12\x11\n\ttagResult\x18\x04 \x01(\x04\x12\x10\n\x08resultID\x18\x03 \x02(\x04\"<\n\x0f\x44ocumentFeature\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\x12\r\n\x05value\x18\x03 \x02(\t\"E\n\x10\x44ocumentFeatures\x12\x31\n\x08\x66\x65\x61tures\x18\x01 \x03(\x0b\x32\x1f.tagger_message.DocumentFeature\"k\n\nTagRequest\x12\x0b\n\x03\x63md\x18\x01 \x02(\t\x12\x14\n\x0c\x64ocumentName\x18\x02 \x01(\t\x12:\n\x10\x64ocumentFeatures\x18\x03 \x01(\x0b\x32 .tagger_message.DocumentFeatures')
+  serialized_pb=_b('\n\x14tagger_message.proto\x12\x0etagger_message\"\x7f\n\tTagResult\x12\x14\n\x0c\x64ocumentName\x18\x01 \x02(\t\x12\x0f\n\x07success\x18\x02 \x02(\x08\x12\x0c\n\x04type\x18\x05 \x02(\t\x12\r\n\x05\x63lass\x18\x08 \x01(\x04\x12\x10\n\x08resultID\x18\x03 \x02(\x04\x12\x0c\n\x04keys\x18\x06 \x03(\t\x12\x0e\n\x06values\x18\x07 \x03(\x01\"<\n\x0f\x44ocumentFeature\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\x12\r\n\x05value\x18\x03 \x02(\t\"E\n\x10\x44ocumentFeatures\x12\x31\n\x08\x66\x65\x61tures\x18\x01 \x03(\x0b\x32\x1f.tagger_message.DocumentFeature\"k\n\nTagRequest\x12\x0b\n\x03\x63md\x18\x01 \x02(\t\x12\x14\n\x0c\x64ocumentName\x18\x02 \x01(\t\x12:\n\x10\x64ocumentFeatures\x18\x03 \x01(\x0b\x32 .tagger_message.DocumentFeatures')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -48,16 +48,37 @@ _TAGRESULT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='tagResult', full_name='tagger_message.TagResult.tagResult', index=2,
-      number=4, type=4, cpp_type=4, label=1,
+      name='type', full_name='tagger_message.TagResult.type', index=2,
+      number=5, type=9, cpp_type=9, label=2,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='class', full_name='tagger_message.TagResult.class', index=3,
+      number=8, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='resultID', full_name='tagger_message.TagResult.resultID', index=3,
+      name='resultID', full_name='tagger_message.TagResult.resultID', index=4,
       number=3, type=4, cpp_type=4, label=2,
       has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='keys', full_name='tagger_message.TagResult.keys', index=5,
+      number=6, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='values', full_name='tagger_message.TagResult.values', index=6,
+      number=7, type=1, cpp_type=5, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -74,7 +95,7 @@ _TAGRESULT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=40,
-  serialized_end=127,
+  serialized_end=167,
 )
 
 
@@ -118,8 +139,8 @@ _DOCUMENTFEATURE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=129,
-  serialized_end=189,
+  serialized_start=169,
+  serialized_end=229,
 )
 
 
@@ -149,8 +170,8 @@ _DOCUMENTFEATURES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=191,
-  serialized_end=260,
+  serialized_start=231,
+  serialized_end=300,
 )
 
 
@@ -194,8 +215,8 @@ _TAGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=262,
-  serialized_end=369,
+  serialized_start=302,
+  serialized_end=409,
 )
 
 _DOCUMENTFEATURES.fields_by_name['features'].message_type = _DOCUMENTFEATURE

@@ -43,11 +43,14 @@ void protobuf_AssignDesc_tagger_5fmessage_2eproto() {
       "tagger_message.proto");
   GOOGLE_CHECK(file != NULL);
   TagResult_descriptor_ = file->message_type(0);
-  static const int TagResult_offsets_[4] = {
+  static const int TagResult_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, documentname_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, success_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, tagresult_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, class__),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, resultid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, keys_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagResult, values_),
   };
   TagResult_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -151,16 +154,17 @@ void protobuf_AddDesc_tagger_5fmessage_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\024tagger_message.proto\022\016tagger_message\"W"
+    "\n\024tagger_message.proto\022\016tagger_message\"\177"
     "\n\tTagResult\022\024\n\014documentName\030\001 \002(\t\022\017\n\007suc"
-    "cess\030\002 \002(\010\022\021\n\ttagResult\030\004 \001(\004\022\020\n\010resultI"
-    "D\030\003 \002(\004\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t"
+    "cess\030\002 \002(\010\022\014\n\004type\030\005 \002(\t\022\r\n\005class\030\010 \001(\004\022"
+    "\020\n\010resultID\030\003 \002(\004\022\014\n\004keys\030\006 \003(\t\022\016\n\006value"
+    "s\030\007 \003(\001\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t"
     "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"E\n\020Documen"
     "tFeatures\0221\n\010features\030\001 \003(\0132\037.tagger_mes"
     "sage.DocumentFeature\"k\n\nTagRequest\022\013\n\003cm"
     "d\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022:\n\020documen"
     "tFeatures\030\003 \001(\0132 .tagger_message.Documen"
-    "tFeatures", 369);
+    "tFeatures", 409);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "tagger_message.proto", &protobuf_RegisterTypes);
   TagResult::default_instance_ = new TagResult();
@@ -196,8 +200,11 @@ static void MergeFromFail(int line) {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TagResult::kDocumentNameFieldNumber;
 const int TagResult::kSuccessFieldNumber;
-const int TagResult::kTagResultFieldNumber;
+const int TagResult::kTypeFieldNumber;
+const int TagResult::kClassFieldNumber;
 const int TagResult::kResultIDFieldNumber;
+const int TagResult::kKeysFieldNumber;
+const int TagResult::kValuesFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TagResult::TagResult()
@@ -222,7 +229,8 @@ void TagResult::SharedCtor() {
   _cached_size_ = 0;
   documentname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   success_ = false;
-  tagresult_ = GOOGLE_ULONGLONG(0);
+  type_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  class__ = GOOGLE_ULONGLONG(0);
   resultid_ = GOOGLE_ULONGLONG(0);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -234,6 +242,7 @@ TagResult::~TagResult() {
 
 void TagResult::SharedDtor() {
   documentname_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  type_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -272,16 +281,22 @@ void TagResult::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  if (_has_bits_[0 / 32] & 15u) {
-    ZR_(tagresult_, success_);
+  if (_has_bits_[0 / 32] & 31u) {
+    ZR_(class__, resultid_);
     if (has_documentname()) {
       documentname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+    }
+    success_ = false;
+    if (has_type()) {
+      type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
 
 #undef ZR_HELPER_
 #undef ZR_
 
+  keys_.Clear();
+  values_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   if (_internal_metadata_.have_unknown_fields()) {
     mutable_unknown_fields()->Clear();
@@ -340,18 +355,73 @@ bool TagResult::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(32)) goto parse_tagResult;
+        if (input->ExpectTag(42)) goto parse_type;
         break;
       }
 
-      // optional uint64 tagResult = 4;
-      case 4: {
-        if (tag == 32) {
-         parse_tagResult:
+      // required string type = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_type:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_type()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->type().data(), this->type().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "tagger_message.TagResult.type");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_keys;
+        break;
+      }
+
+      // repeated string keys = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_keys:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_keys()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->keys(this->keys_size() - 1).data(),
+            this->keys(this->keys_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "tagger_message.TagResult.keys");
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_keys;
+        if (input->ExpectTag(57)) goto parse_values;
+        break;
+      }
+
+      // repeated double values = 7;
+      case 7: {
+        if (tag == 57) {
+         parse_values:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 1, 57, input, this->mutable_values())));
+        } else if (tag == 58) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, this->mutable_values())));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(57)) goto parse_values;
+        if (input->ExpectTag(64)) goto parse_class;
+        break;
+      }
+
+      // optional uint64 class = 8;
+      case 8: {
+        if (tag == 64) {
+         parse_class:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
-                 input, &tagresult_)));
-          set_has_tagresult();
+                 input, &class__)));
+          set_has_class_();
         } else {
           goto handle_unusual;
         }
@@ -404,9 +474,35 @@ void TagResult::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(3, this->resultid(), output);
   }
 
-  // optional uint64 tagResult = 4;
-  if (has_tagresult()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt64(4, this->tagresult(), output);
+  // required string type = 5;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->type().data(), this->type().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.type");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->type(), output);
+  }
+
+  // repeated string keys = 6;
+  for (int i = 0; i < this->keys_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->keys(i).data(), this->keys(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.keys");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      6, this->keys(i), output);
+  }
+
+  // repeated double values = 7;
+  for (int i = 0; i < this->values_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(
+      7, this->values(i), output);
+  }
+
+  // optional uint64 class = 8;
+  if (has_class_()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt64(8, this->class_(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -440,9 +536,36 @@ void TagResult::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(3, this->resultid(), target);
   }
 
-  // optional uint64 tagResult = 4;
-  if (has_tagresult()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(4, this->tagresult(), target);
+  // required string type = 5;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->type().data(), this->type().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.type");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->type(), target);
+  }
+
+  // repeated string keys = 6;
+  for (int i = 0; i < this->keys_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->keys(i).data(), this->keys(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.keys");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(6, this->keys(i), target);
+  }
+
+  // repeated double values = 7;
+  for (int i = 0; i < this->values_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteDoubleToArray(7, this->values(i), target);
+  }
+
+  // optional uint64 class = 8;
+  if (has_class_()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(8, this->class_(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -468,6 +591,13 @@ int TagResult::RequiredFieldsByteSizeFallback() const {
     total_size += 1 + 1;
   }
 
+  if (has_type()) {
+    // required string type = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->type());
+  }
+
   if (has_resultid()) {
     // required uint64 resultID = 3;
     total_size += 1 +
@@ -480,7 +610,7 @@ int TagResult::RequiredFieldsByteSizeFallback() const {
 int TagResult::ByteSize() const {
   int total_size = 0;
 
-  if (((_has_bits_[0] & 0x0000000b) ^ 0x0000000b) == 0) {  // All required fields are present.
+  if (((_has_bits_[0] & 0x00000017) ^ 0x00000017) == 0) {  // All required fields are present.
     // required string documentName = 1;
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -488,6 +618,11 @@ int TagResult::ByteSize() const {
 
     // required bool success = 2;
     total_size += 1 + 1;
+
+    // required string type = 5;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->type());
 
     // required uint64 resultID = 3;
     total_size += 1 +
@@ -497,11 +632,25 @@ int TagResult::ByteSize() const {
   } else {
     total_size += RequiredFieldsByteSizeFallback();
   }
-  // optional uint64 tagResult = 4;
-  if (has_tagresult()) {
+  // optional uint64 class = 8;
+  if (has_class_()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::UInt64Size(
-        this->tagresult());
+        this->class_());
+  }
+
+  // repeated string keys = 6;
+  total_size += 1 * this->keys_size();
+  for (int i = 0; i < this->keys_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->keys(i));
+  }
+
+  // repeated double values = 7;
+  {
+    int data_size = 0;
+    data_size = 8 * this->values_size();
+    total_size += 1 * this->values_size() + data_size;
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -529,6 +678,8 @@ void TagResult::MergeFrom(const ::google::protobuf::Message& from) {
 
 void TagResult::MergeFrom(const TagResult& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  keys_.MergeFrom(from.keys_);
+  values_.MergeFrom(from.values_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_documentname()) {
       set_has_documentname();
@@ -537,8 +688,12 @@ void TagResult::MergeFrom(const TagResult& from) {
     if (from.has_success()) {
       set_success(from.success());
     }
-    if (from.has_tagresult()) {
-      set_tagresult(from.tagresult());
+    if (from.has_type()) {
+      set_has_type();
+      type_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.type_);
+    }
+    if (from.has_class_()) {
+      set_class_(from.class_());
     }
     if (from.has_resultid()) {
       set_resultid(from.resultid());
@@ -562,7 +717,7 @@ void TagResult::CopyFrom(const TagResult& from) {
 }
 
 bool TagResult::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000000b) != 0x0000000b) return false;
+  if ((_has_bits_[0] & 0x00000017) != 0x00000017) return false;
 
   return true;
 }
@@ -574,8 +729,11 @@ void TagResult::Swap(TagResult* other) {
 void TagResult::InternalSwap(TagResult* other) {
   documentname_.Swap(&other->documentname_);
   std::swap(success_, other->success_);
-  std::swap(tagresult_, other->tagresult_);
+  type_.Swap(&other->type_);
+  std::swap(class__, other->class__);
   std::swap(resultid_, other->resultid_);
+  keys_.UnsafeArenaSwap(&other->keys_);
+  values_.UnsafeArenaSwap(&other->values_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -669,39 +827,92 @@ void TagResult::clear_success() {
   // @@protoc_insertion_point(field_set:tagger_message.TagResult.success)
 }
 
-// optional uint64 tagResult = 4;
-bool TagResult::has_tagresult() const {
+// required string type = 5;
+bool TagResult::has_type() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-void TagResult::set_has_tagresult() {
+void TagResult::set_has_type() {
   _has_bits_[0] |= 0x00000004u;
 }
-void TagResult::clear_has_tagresult() {
+void TagResult::clear_has_type() {
   _has_bits_[0] &= ~0x00000004u;
 }
-void TagResult::clear_tagresult() {
-  tagresult_ = GOOGLE_ULONGLONG(0);
-  clear_has_tagresult();
+void TagResult::clear_type() {
+  type_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_type();
 }
- ::google::protobuf::uint64 TagResult::tagresult() const {
-  // @@protoc_insertion_point(field_get:tagger_message.TagResult.tagResult)
-  return tagresult_;
+ const ::std::string& TagResult::type() const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.type)
+  return type_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
- void TagResult::set_tagresult(::google::protobuf::uint64 value) {
-  set_has_tagresult();
-  tagresult_ = value;
-  // @@protoc_insertion_point(field_set:tagger_message.TagResult.tagResult)
+ void TagResult::set_type(const ::std::string& value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.type)
+}
+ void TagResult::set_type(const char* value) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.type)
+}
+ void TagResult::set_type(const char* value, size_t size) {
+  set_has_type();
+  type_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.type)
+}
+ ::std::string* TagResult::mutable_type() {
+  set_has_type();
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.type)
+  return type_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* TagResult::release_type() {
+  clear_has_type();
+  return type_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void TagResult::set_allocated_type(::std::string* type) {
+  if (type != NULL) {
+    set_has_type();
+  } else {
+    clear_has_type();
+  }
+  type_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), type);
+  // @@protoc_insertion_point(field_set_allocated:tagger_message.TagResult.type)
+}
+
+// optional uint64 class = 8;
+bool TagResult::has_class_() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+void TagResult::set_has_class_() {
+  _has_bits_[0] |= 0x00000008u;
+}
+void TagResult::clear_has_class_() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+void TagResult::clear_class_() {
+  class__ = GOOGLE_ULONGLONG(0);
+  clear_has_class_();
+}
+ ::google::protobuf::uint64 TagResult::class_() const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.class)
+  return class__;
+}
+ void TagResult::set_class_(::google::protobuf::uint64 value) {
+  set_has_class_();
+  class__ = value;
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.class)
 }
 
 // required uint64 resultID = 3;
 bool TagResult::has_resultid() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 void TagResult::set_has_resultid() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 void TagResult::clear_has_resultid() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 void TagResult::clear_resultid() {
   resultid_ = GOOGLE_ULONGLONG(0);
@@ -715,6 +926,90 @@ void TagResult::clear_resultid() {
   set_has_resultid();
   resultid_ = value;
   // @@protoc_insertion_point(field_set:tagger_message.TagResult.resultID)
+}
+
+// repeated string keys = 6;
+int TagResult::keys_size() const {
+  return keys_.size();
+}
+void TagResult::clear_keys() {
+  keys_.Clear();
+}
+ const ::std::string& TagResult::keys(int index) const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.keys)
+  return keys_.Get(index);
+}
+ ::std::string* TagResult::mutable_keys(int index) {
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.keys)
+  return keys_.Mutable(index);
+}
+ void TagResult::set_keys(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.keys)
+  keys_.Mutable(index)->assign(value);
+}
+ void TagResult::set_keys(int index, const char* value) {
+  keys_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.keys)
+}
+ void TagResult::set_keys(int index, const char* value, size_t size) {
+  keys_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.keys)
+}
+ ::std::string* TagResult::add_keys() {
+  return keys_.Add();
+}
+ void TagResult::add_keys(const ::std::string& value) {
+  keys_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:tagger_message.TagResult.keys)
+}
+ void TagResult::add_keys(const char* value) {
+  keys_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tagger_message.TagResult.keys)
+}
+ void TagResult::add_keys(const char* value, size_t size) {
+  keys_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tagger_message.TagResult.keys)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+TagResult::keys() const {
+  // @@protoc_insertion_point(field_list:tagger_message.TagResult.keys)
+  return keys_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+TagResult::mutable_keys() {
+  // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.keys)
+  return &keys_;
+}
+
+// repeated double values = 7;
+int TagResult::values_size() const {
+  return values_.size();
+}
+void TagResult::clear_values() {
+  values_.Clear();
+}
+ double TagResult::values(int index) const {
+  // @@protoc_insertion_point(field_get:tagger_message.TagResult.values)
+  return values_.Get(index);
+}
+ void TagResult::set_values(int index, double value) {
+  values_.Set(index, value);
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+}
+ void TagResult::add_values(double value) {
+  values_.Add(value);
+  // @@protoc_insertion_point(field_add:tagger_message.TagResult.values)
+}
+ const ::google::protobuf::RepeatedField< double >&
+TagResult::values() const {
+  // @@protoc_insertion_point(field_list:tagger_message.TagResult.values)
+  return values_;
+}
+ ::google::protobuf::RepeatedField< double >*
+TagResult::mutable_values() {
+  // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.values)
+  return &values_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
