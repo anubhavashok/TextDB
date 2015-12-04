@@ -13,11 +13,13 @@ file(GLOB TEST_SOURCES
     "${TEST_PATH}/tests.h"
     "${SRC_PATH}/*.h"
     "${SRC_PATH}/*.cpp"
+    "${SRC_PATH}/*.cc"
 )
 list(REMOVE_ITEM TEST_SOURCES ${SRC_PATH}/main.cpp)
 file(GLOB SOURCES
     "${SRC_PATH}/*.h"
     "${SRC_PATH}/*.cpp"
+    "${SRC_PATH}/*.cc"
 )
 
 ################################
