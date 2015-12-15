@@ -10,7 +10,6 @@ file(DOWNLOAD
   "https://googlemock.googlecode.com/files/gmock-1.7.0.zip"
   "/Users/anubhav/TextDB/cmake/gmock_ext-prefix/src/gmock-1.7.0.zip"
   SHOW_PROGRESS
-  # no EXPECTED_HASH
   # no TIMEOUT
   STATUS status
   LOG log)

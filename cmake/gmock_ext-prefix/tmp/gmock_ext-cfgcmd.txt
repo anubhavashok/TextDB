@@ -1,1 +1,1 @@
-cmd='/usr/local/Cellar/cmake/3.0.2/bin/cmake;-DCMAKE_BUILD_TYPE=;-GUnix Makefiles;/Users/anubhav/TextDB/cmake/third-party/gmock-src'
+cmd='/usr/local/Cellar/cmake/3.4.0/bin/cmake;-DCMAKE_BUILD_TYPE=;-GUnix Makefiles;/Users/anubhav/TextDB/cmake/third-party/gmock-src'
