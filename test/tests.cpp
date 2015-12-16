@@ -18,7 +18,7 @@ vector<string> replicas;
 int port = 8001;
 int candidateId = 0;
 vector<int> replicaIds;
-vector<Tagger> taggers
+vector<Tagger> taggers;
 
 DB tdb(datapath, replicas, port, candidateId, replicaIds, taggers);
 
