@@ -93,7 +93,7 @@ unordered_map<string, double> LSH::check_lsh(vector<long long> signature, string
         }
     }
     assert(BAND_SIZE <= signature.size());
-    int r = ceil(signature.size()/BAND_SIZE);
+    int r = ceil((double)signature.size()/BAND_SIZE);
     for (string n: candidates) {
         if (n != name) {
             probabilities[n] += 1;
