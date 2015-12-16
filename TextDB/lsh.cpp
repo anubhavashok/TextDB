@@ -92,6 +92,7 @@ unordered_map<string, double> LSH::check_lsh(vector<long long> signature, string
             candidates.insert(candidates.end(), buckets[hash_val].begin(), buckets[hash_val].end());
         }
     }
+    assert(BAND_SIZE <= signature.size());
     int r = ceil(signature.size()/BAND_SIZE);
     for (string n: candidates) {
         if (n != name) {
@@ -100,7 +101,9 @@ unordered_map<string, double> LSH::check_lsh(vector<long long> signature, string
     }
     
     for (auto p: probabilities) {
-        probabilities[p.first] = probabilities[p.first]/r;
+        cout << "probabilities count: " << p.second << endl;
+        probabilities[p.first] = p.second/r;
+        cout << "normalized: " << probabilities[p.first] << endl;
     }
     return probabilities;
 }
