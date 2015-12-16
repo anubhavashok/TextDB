@@ -459,6 +459,15 @@ vector<query> queries {
               db->taggers[taggerName].activate();
               string result = "";
               successfulReply(out, {{"op", "taggers"}, {"res", result}});
+          }),
+    query("duplicates", "Returns all duplicates of current document", "v1/duplicates/{collectionName}/{documentName}",
+          [](shared_ptr<DB> db, ostream& out, map<string, string>& args) {
+              string collectionName = args["collectionName"];
+              string documentName = args["documentName"];
+              ensureDocumentExists(db, collectionName, documentName);
+              // tagger is spawned on this thread
+              unordered_map<string, double> duplicates = db->getAllDuplicates(collectionName, documentName);
+              successfulReply(out, {{"op", "taggers"}}, {{"duplicates", duplicates}});
           })
 };
 
