@@ -18,7 +18,7 @@
 
 #define CHAR_SPACE 26
 #define N_GRAM_SIZE 3
-#define BAND_SIZE 3
+#define BAND_SIZE 2
 
 
 using namespace std;
@@ -45,7 +45,23 @@ private:
         [](long long i) { return (34*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
         [](long long i) { return (54*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
         [](long long i) { return (3400*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
-        [](long long i) { return (6500*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); }
+        [](long long i) { return (500*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6512*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6523*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6534*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6545*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6556*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6567*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6578*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6589*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (6511*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1200*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1212*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1234*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1245*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1256*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); },
+        [](long long i) { return (1267*i + 1)% (int)pow(CHAR_SPACE, N_GRAM_SIZE); }
+
     };
 };
 
