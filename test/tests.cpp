@@ -9,6 +9,7 @@
 #include "tests.h"
 #include "db.h"
 #include "rand_doc.h"
+#include "tagger.h"
 #include <boost/filesystem.hpp>
 
 namespace fs = boost::filesystem;
@@ -17,8 +18,9 @@ vector<string> replicas;
 int port = 8001;
 int candidateId = 0;
 vector<int> replicaIds;
+vector<Tagger> taggers
 
-DB tdb(datapath, replicas, port, candidateId, replicaIds);
+DB tdb(datapath, replicas, port, candidateId, replicaIds, taggers);
 
 // This is here due to the extern requirement
 // TODO: Remove extern requirement
