@@ -103,7 +103,7 @@ public final class TaggerMessage {
         getKeysBytes(int index);
 
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -113,9 +113,10 @@ public final class TaggerMessage {
      * - returns key value pairs of 
      * </pre>
      */
-    java.util.List<java.lang.Double> getValuesList();
+    com.google.protobuf.ProtocolStringList
+        getValuesList();
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -127,7 +128,7 @@ public final class TaggerMessage {
      */
     int getValuesCount();
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -137,7 +138,20 @@ public final class TaggerMessage {
      * - returns key value pairs of 
      * </pre>
      */
-    double getValues(int index);
+    java.lang.String getValues(int index);
+    /**
+     * <code>repeated string values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getValuesBytes(int index);
   }
   /**
    * Protobuf type {@code tagger_message.TagResult}
@@ -157,7 +171,7 @@ public final class TaggerMessage {
       class__ = 0L;
       resultID_ = 0L;
       keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      values_ = java.util.Collections.emptyList();
+      values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
 
     @java.lang.Override
@@ -218,25 +232,13 @@ public final class TaggerMessage {
               keys_.add(bs);
               break;
             }
-            case 57: {
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                values_ = new java.util.ArrayList<java.lang.Double>();
-                mutable_bitField0_ |= 0x00000040;
-              }
-              values_.add(input.readDouble());
-              break;
-            }
             case 58: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040) && input.getBytesUntilLimit() > 0) {
-                values_ = new java.util.ArrayList<java.lang.Double>();
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                values_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000040;
               }
-              while (input.getBytesUntilLimit() > 0) {
-                values_.add(input.readDouble());
-              }
-              input.popLimit(limit);
+              values_.add(bs);
               break;
             }
             case 64: {
@@ -257,7 +259,7 @@ public final class TaggerMessage {
           keys_ = keys_.getUnmodifiableView();
         }
         if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-          values_ = java.util.Collections.unmodifiableList(values_);
+          values_ = values_.getUnmodifiableView();
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -451,9 +453,9 @@ public final class TaggerMessage {
     }
 
     public static final int VALUES_FIELD_NUMBER = 7;
-    private java.util.List<java.lang.Double> values_;
+    private com.google.protobuf.LazyStringList values_;
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -463,12 +465,12 @@ public final class TaggerMessage {
      * - returns key value pairs of 
      * </pre>
      */
-    public java.util.List<java.lang.Double>
+    public com.google.protobuf.ProtocolStringList
         getValuesList() {
       return values_;
     }
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -482,7 +484,7 @@ public final class TaggerMessage {
       return values_.size();
     }
     /**
-     * <code>repeated double values = 7;</code>
+     * <code>repeated string values = 7;</code>
      *
      * <pre>
      * we want to have 2 functions, maybe more
@@ -492,8 +494,23 @@ public final class TaggerMessage {
      * - returns key value pairs of 
      * </pre>
      */
-    public double getValues(int index) {
+    public java.lang.String getValues(int index) {
       return values_.get(index);
+    }
+    /**
+     * <code>repeated string values = 7;</code>
+     *
+     * <pre>
+     * we want to have 2 functions, maybe more
+     * classification
+     * - returns a whole number which represents the class
+     * annotating data
+     * - returns key value pairs of 
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getValuesBytes(int index) {
+      return values_.getByteString(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -540,7 +557,7 @@ public final class TaggerMessage {
         com.google.protobuf.GeneratedMessage.writeString(output, 6, keys_.getRaw(i));
       }
       for (int i = 0; i < values_.size(); i++) {
-        output.writeDouble(7, values_.get(i));
+        com.google.protobuf.GeneratedMessage.writeString(output, 7, values_.getRaw(i));
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeUInt64(8, class__);
@@ -577,7 +594,9 @@ public final class TaggerMessage {
       }
       {
         int dataSize = 0;
-        dataSize = 8 * getValuesList().size();
+        for (int i = 0; i < values_.size(); i++) {
+          dataSize += computeStringSizeNoTag(values_.getRaw(i));
+        }
         size += dataSize;
         size += 1 * getValuesList().size();
       }
@@ -709,7 +728,7 @@ public final class TaggerMessage {
         bitField0_ = (bitField0_ & ~0x00000010);
         keys_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000020);
-        values_ = java.util.Collections.emptyList();
+        values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
@@ -761,7 +780,7 @@ public final class TaggerMessage {
         }
         result.keys_ = keys_;
         if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          values_ = java.util.Collections.unmodifiableList(values_);
+          values_ = values_.getUnmodifiableView();
           bitField0_ = (bitField0_ & ~0x00000040);
         }
         result.values_ = values_;
@@ -1233,15 +1252,15 @@ public final class TaggerMessage {
         return this;
       }
 
-      private java.util.List<java.lang.Double> values_ = java.util.Collections.emptyList();
+      private com.google.protobuf.LazyStringList values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureValuesIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          values_ = new java.util.ArrayList<java.lang.Double>(values_);
+          values_ = new com.google.protobuf.LazyStringArrayList(values_);
           bitField0_ |= 0x00000040;
          }
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1251,12 +1270,12 @@ public final class TaggerMessage {
        * - returns key value pairs of 
        * </pre>
        */
-      public java.util.List<java.lang.Double>
+      public com.google.protobuf.ProtocolStringList
           getValuesList() {
-        return java.util.Collections.unmodifiableList(values_);
+        return values_.getUnmodifiableView();
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1270,7 +1289,7 @@ public final class TaggerMessage {
         return values_.size();
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1280,11 +1299,26 @@ public final class TaggerMessage {
        * - returns key value pairs of 
        * </pre>
        */
-      public double getValues(int index) {
+      public java.lang.String getValues(int index) {
         return values_.get(index);
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getValuesBytes(int index) {
+        return values_.getByteString(index);
+      }
+      /**
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1295,14 +1329,17 @@ public final class TaggerMessage {
        * </pre>
        */
       public Builder setValues(
-          int index, double value) {
-        ensureValuesIsMutable();
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
         values_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1312,14 +1349,18 @@ public final class TaggerMessage {
        * - returns key value pairs of 
        * </pre>
        */
-      public Builder addValues(double value) {
-        ensureValuesIsMutable();
+      public Builder addValues(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
         values_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1330,7 +1371,7 @@ public final class TaggerMessage {
        * </pre>
        */
       public Builder addAllValues(
-          java.lang.Iterable<? extends java.lang.Double> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureValuesIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
             values, values_);
@@ -1338,7 +1379,7 @@ public final class TaggerMessage {
         return this;
       }
       /**
-       * <code>repeated double values = 7;</code>
+       * <code>repeated string values = 7;</code>
        *
        * <pre>
        * we want to have 2 functions, maybe more
@@ -1349,8 +1390,29 @@ public final class TaggerMessage {
        * </pre>
        */
       public Builder clearValues() {
-        values_ = java.util.Collections.emptyList();
+        values_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string values = 7;</code>
+       *
+       * <pre>
+       * we want to have 2 functions, maybe more
+       * classification
+       * - returns a whole number which represents the class
+       * annotating data
+       * - returns key value pairs of 
+       * </pre>
+       */
+      public Builder addValuesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureValuesIsMutable();
+        values_.add(value);
         onChanged();
         return this;
       }
@@ -2257,692 +2319,6 @@ public final class TaggerMessage {
 
   }
 
-  public interface DocumentFeaturesOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:tagger_message.DocumentFeatures)
-      com.google.protobuf.MessageOrBuilder {
-
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    java.util.List<tagger_message.TaggerMessage.DocumentFeature> 
-        getFeaturesList();
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    tagger_message.TaggerMessage.DocumentFeature getFeatures(int index);
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    int getFeaturesCount();
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    java.util.List<? extends tagger_message.TaggerMessage.DocumentFeatureOrBuilder> 
-        getFeaturesOrBuilderList();
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    tagger_message.TaggerMessage.DocumentFeatureOrBuilder getFeaturesOrBuilder(
-        int index);
-  }
-  /**
-   * Protobuf type {@code tagger_message.DocumentFeatures}
-   */
-  public  static final class DocumentFeatures extends
-      com.google.protobuf.GeneratedMessage implements
-      // @@protoc_insertion_point(message_implements:tagger_message.DocumentFeatures)
-      DocumentFeaturesOrBuilder {
-    // Use DocumentFeatures.newBuilder() to construct.
-    private DocumentFeatures(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-    }
-    private DocumentFeatures() {
-      features_ = java.util.Collections.emptyList();
-    }
-
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-    getUnknownFields() {
-      return this.unknownFields;
-    }
-    private DocumentFeatures(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry) {
-      this();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                features_ = new java.util.ArrayList<tagger_message.TaggerMessage.DocumentFeature>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              features_.add(input.readMessage(tagger_message.TaggerMessage.DocumentFeature.parser(), extensionRegistry));
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw new RuntimeException(e.setUnfinishedMessage(this));
-      } catch (java.io.IOException e) {
-        throw new RuntimeException(
-            new com.google.protobuf.InvalidProtocolBufferException(
-                e.getMessage()).setUnfinishedMessage(this));
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          features_ = java.util.Collections.unmodifiableList(features_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return tagger_message.TaggerMessage.internal_static_tagger_message_DocumentFeatures_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return tagger_message.TaggerMessage.internal_static_tagger_message_DocumentFeatures_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              tagger_message.TaggerMessage.DocumentFeatures.class, tagger_message.TaggerMessage.DocumentFeatures.Builder.class);
-    }
-
-    public static final int FEATURES_FIELD_NUMBER = 1;
-    private java.util.List<tagger_message.TaggerMessage.DocumentFeature> features_;
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    public java.util.List<tagger_message.TaggerMessage.DocumentFeature> getFeaturesList() {
-      return features_;
-    }
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    public java.util.List<? extends tagger_message.TaggerMessage.DocumentFeatureOrBuilder> 
-        getFeaturesOrBuilderList() {
-      return features_;
-    }
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    public int getFeaturesCount() {
-      return features_.size();
-    }
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    public tagger_message.TaggerMessage.DocumentFeature getFeatures(int index) {
-      return features_.get(index);
-    }
-    /**
-     * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-     */
-    public tagger_message.TaggerMessage.DocumentFeatureOrBuilder getFeaturesOrBuilder(
-        int index) {
-      return features_.get(index);
-    }
-
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized == 1) return true;
-      if (isInitialized == 0) return false;
-
-      for (int i = 0; i < getFeaturesCount(); i++) {
-        if (!getFeatures(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      for (int i = 0; i < features_.size(); i++) {
-        output.writeMessage(1, features_.get(i));
-      }
-      unknownFields.writeTo(output);
-    }
-
-    public int getSerializedSize() {
-      int size = memoizedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < features_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, features_.get(i));
-      }
-      size += unknownFields.getSerializedSize();
-      memoizedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static tagger_message.TaggerMessage.DocumentFeatures parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder() {
-      return DEFAULT_INSTANCE.toBuilder();
-    }
-    public static Builder newBuilder(tagger_message.TaggerMessage.DocumentFeatures prototype) {
-      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() {
-      return this == DEFAULT_INSTANCE
-          ? new Builder() : new Builder().mergeFrom(this);
-    }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code tagger_message.DocumentFeatures}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
-        // @@protoc_insertion_point(builder_implements:tagger_message.DocumentFeatures)
-        tagger_message.TaggerMessage.DocumentFeaturesOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tagger_message.TaggerMessage.internal_static_tagger_message_DocumentFeatures_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tagger_message.TaggerMessage.internal_static_tagger_message_DocumentFeatures_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tagger_message.TaggerMessage.DocumentFeatures.class, tagger_message.TaggerMessage.DocumentFeatures.Builder.class);
-      }
-
-      // Construct using tagger_message.TaggerMessage.DocumentFeatures.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getFeaturesFieldBuilder();
-        }
-      }
-      public Builder clear() {
-        super.clear();
-        if (featuresBuilder_ == null) {
-          features_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          featuresBuilder_.clear();
-        }
-        return this;
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return tagger_message.TaggerMessage.internal_static_tagger_message_DocumentFeatures_descriptor;
-      }
-
-      public tagger_message.TaggerMessage.DocumentFeatures getDefaultInstanceForType() {
-        return tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance();
-      }
-
-      public tagger_message.TaggerMessage.DocumentFeatures build() {
-        tagger_message.TaggerMessage.DocumentFeatures result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public tagger_message.TaggerMessage.DocumentFeatures buildPartial() {
-        tagger_message.TaggerMessage.DocumentFeatures result = new tagger_message.TaggerMessage.DocumentFeatures(this);
-        int from_bitField0_ = bitField0_;
-        if (featuresBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            features_ = java.util.Collections.unmodifiableList(features_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.features_ = features_;
-        } else {
-          result.features_ = featuresBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof tagger_message.TaggerMessage.DocumentFeatures) {
-          return mergeFrom((tagger_message.TaggerMessage.DocumentFeatures)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(tagger_message.TaggerMessage.DocumentFeatures other) {
-        if (other == tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance()) return this;
-        if (featuresBuilder_ == null) {
-          if (!other.features_.isEmpty()) {
-            if (features_.isEmpty()) {
-              features_ = other.features_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureFeaturesIsMutable();
-              features_.addAll(other.features_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.features_.isEmpty()) {
-            if (featuresBuilder_.isEmpty()) {
-              featuresBuilder_.dispose();
-              featuresBuilder_ = null;
-              features_ = other.features_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              featuresBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getFeaturesFieldBuilder() : null;
-            } else {
-              featuresBuilder_.addAllMessages(other.features_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.unknownFields);
-        onChanged();
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        for (int i = 0; i < getFeaturesCount(); i++) {
-          if (!getFeatures(i).isInitialized()) {
-            return false;
-          }
-        }
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        tagger_message.TaggerMessage.DocumentFeatures parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (tagger_message.TaggerMessage.DocumentFeatures) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      private java.util.List<tagger_message.TaggerMessage.DocumentFeature> features_ =
-        java.util.Collections.emptyList();
-      private void ensureFeaturesIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          features_ = new java.util.ArrayList<tagger_message.TaggerMessage.DocumentFeature>(features_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          tagger_message.TaggerMessage.DocumentFeature, tagger_message.TaggerMessage.DocumentFeature.Builder, tagger_message.TaggerMessage.DocumentFeatureOrBuilder> featuresBuilder_;
-
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public java.util.List<tagger_message.TaggerMessage.DocumentFeature> getFeaturesList() {
-        if (featuresBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(features_);
-        } else {
-          return featuresBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public int getFeaturesCount() {
-        if (featuresBuilder_ == null) {
-          return features_.size();
-        } else {
-          return featuresBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeature getFeatures(int index) {
-        if (featuresBuilder_ == null) {
-          return features_.get(index);
-        } else {
-          return featuresBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder setFeatures(
-          int index, tagger_message.TaggerMessage.DocumentFeature value) {
-        if (featuresBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFeaturesIsMutable();
-          features_.set(index, value);
-          onChanged();
-        } else {
-          featuresBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder setFeatures(
-          int index, tagger_message.TaggerMessage.DocumentFeature.Builder builderForValue) {
-        if (featuresBuilder_ == null) {
-          ensureFeaturesIsMutable();
-          features_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          featuresBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder addFeatures(tagger_message.TaggerMessage.DocumentFeature value) {
-        if (featuresBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFeaturesIsMutable();
-          features_.add(value);
-          onChanged();
-        } else {
-          featuresBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder addFeatures(
-          int index, tagger_message.TaggerMessage.DocumentFeature value) {
-        if (featuresBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureFeaturesIsMutable();
-          features_.add(index, value);
-          onChanged();
-        } else {
-          featuresBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder addFeatures(
-          tagger_message.TaggerMessage.DocumentFeature.Builder builderForValue) {
-        if (featuresBuilder_ == null) {
-          ensureFeaturesIsMutable();
-          features_.add(builderForValue.build());
-          onChanged();
-        } else {
-          featuresBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder addFeatures(
-          int index, tagger_message.TaggerMessage.DocumentFeature.Builder builderForValue) {
-        if (featuresBuilder_ == null) {
-          ensureFeaturesIsMutable();
-          features_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          featuresBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder addAllFeatures(
-          java.lang.Iterable<? extends tagger_message.TaggerMessage.DocumentFeature> values) {
-        if (featuresBuilder_ == null) {
-          ensureFeaturesIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, features_);
-          onChanged();
-        } else {
-          featuresBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder clearFeatures() {
-        if (featuresBuilder_ == null) {
-          features_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          featuresBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public Builder removeFeatures(int index) {
-        if (featuresBuilder_ == null) {
-          ensureFeaturesIsMutable();
-          features_.remove(index);
-          onChanged();
-        } else {
-          featuresBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeature.Builder getFeaturesBuilder(
-          int index) {
-        return getFeaturesFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeatureOrBuilder getFeaturesOrBuilder(
-          int index) {
-        if (featuresBuilder_ == null) {
-          return features_.get(index);  } else {
-          return featuresBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public java.util.List<? extends tagger_message.TaggerMessage.DocumentFeatureOrBuilder> 
-           getFeaturesOrBuilderList() {
-        if (featuresBuilder_ != null) {
-          return featuresBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(features_);
-        }
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeature.Builder addFeaturesBuilder() {
-        return getFeaturesFieldBuilder().addBuilder(
-            tagger_message.TaggerMessage.DocumentFeature.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeature.Builder addFeaturesBuilder(
-          int index) {
-        return getFeaturesFieldBuilder().addBuilder(
-            index, tagger_message.TaggerMessage.DocumentFeature.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .tagger_message.DocumentFeature features = 1;</code>
-       */
-      public java.util.List<tagger_message.TaggerMessage.DocumentFeature.Builder> 
-           getFeaturesBuilderList() {
-        return getFeaturesFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          tagger_message.TaggerMessage.DocumentFeature, tagger_message.TaggerMessage.DocumentFeature.Builder, tagger_message.TaggerMessage.DocumentFeatureOrBuilder> 
-          getFeaturesFieldBuilder() {
-        if (featuresBuilder_ == null) {
-          featuresBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              tagger_message.TaggerMessage.DocumentFeature, tagger_message.TaggerMessage.DocumentFeature.Builder, tagger_message.TaggerMessage.DocumentFeatureOrBuilder>(
-                  features_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          features_ = null;
-        }
-        return featuresBuilder_;
-      }
-
-      // @@protoc_insertion_point(builder_scope:tagger_message.DocumentFeatures)
-    }
-
-    // @@protoc_insertion_point(class_scope:tagger_message.DocumentFeatures)
-    private static final tagger_message.TaggerMessage.DocumentFeatures DEFAULT_INSTANCE;
-    static {
-      DEFAULT_INSTANCE = new tagger_message.TaggerMessage.DocumentFeatures();
-    }
-
-    public static tagger_message.TaggerMessage.DocumentFeatures getDefaultInstance() {
-      return DEFAULT_INSTANCE;
-    }
-
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<DocumentFeatures>
-        PARSER = new com.google.protobuf.AbstractParser<DocumentFeatures>() {
-      public DocumentFeatures parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        try {
-          return new DocumentFeatures(input, extensionRegistry);
-        } catch (RuntimeException e) {
-          if (e.getCause() instanceof
-              com.google.protobuf.InvalidProtocolBufferException) {
-            throw (com.google.protobuf.InvalidProtocolBufferException)
-                e.getCause();
-          }
-          throw e;
-        }
-      }
-    };
-
-    public static com.google.protobuf.Parser<DocumentFeatures> parser() {
-      return PARSER;
-    }
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<DocumentFeatures> getParserForType() {
-      return PARSER;
-    }
-
-    public tagger_message.TaggerMessage.DocumentFeatures getDefaultInstanceForType() {
-      return DEFAULT_INSTANCE;
-    }
-
-  }
-
   public interface TagRequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:tagger_message.TagRequest)
       com.google.protobuf.MessageOrBuilder {
@@ -2991,17 +2367,10 @@ public final class TaggerMessage {
         getDocumentNameBytes();
 
     /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
+     * <code>map&lt;string, .tagger_message.DocumentFeature&gt; documentFeatures = 3;</code>
      */
-    boolean hasDocumentFeatures();
-    /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-     */
-    tagger_message.TaggerMessage.DocumentFeatures getDocumentFeatures();
-    /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-     */
-    tagger_message.TaggerMessage.DocumentFeaturesOrBuilder getDocumentFeaturesOrBuilder();
+    java.util.Map<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+    getDocumentFeatures();
   }
   /**
    * Protobuf type {@code tagger_message.TagRequest}
@@ -3059,16 +2428,15 @@ public final class TaggerMessage {
               break;
             }
             case 26: {
-              tagger_message.TaggerMessage.DocumentFeatures.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000004) == 0x00000004)) {
-                subBuilder = documentFeatures_.toBuilder();
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                documentFeatures_ = com.google.protobuf.MapField.newMapField(
+                    DocumentFeaturesDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000004;
               }
-              documentFeatures_ = input.readMessage(tagger_message.TaggerMessage.DocumentFeatures.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(documentFeatures_);
-                documentFeatures_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000004;
+              com.google.protobuf.MapEntry<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+              documentFeatures = input.readMessage(
+                  DocumentFeaturesDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              documentFeatures_.getMutableMap().put(documentFeatures.getKey(), documentFeatures.getValue());
               break;
             }
           }
@@ -3089,6 +2457,17 @@ public final class TaggerMessage {
       return tagger_message.TaggerMessage.internal_static_tagger_message_TagRequest_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 3:
+          return internalGetDocumentFeatures();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return tagger_message.TaggerMessage.internal_static_tagger_message_TagRequest_fieldAccessorTable
@@ -3197,24 +2576,33 @@ public final class TaggerMessage {
     }
 
     public static final int DOCUMENTFEATURES_FIELD_NUMBER = 3;
-    private tagger_message.TaggerMessage.DocumentFeatures documentFeatures_;
-    /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-     */
-    public boolean hasDocumentFeatures() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+    private static final class DocumentFeaturesDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, tagger_message.TaggerMessage.DocumentFeature> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>newDefaultInstance(
+                  tagger_message.TaggerMessage.internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.MESSAGE,
+                  tagger_message.TaggerMessage.DocumentFeature.getDefaultInstance());
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, tagger_message.TaggerMessage.DocumentFeature> documentFeatures_;
+    private com.google.protobuf.MapField<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+    internalGetDocumentFeatures() {
+      if (documentFeatures_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            DocumentFeaturesDefaultEntryHolder.defaultEntry);
+     }
+      return documentFeatures_;
     }
     /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
+     * <code>map&lt;string, .tagger_message.DocumentFeature&gt; documentFeatures = 3;</code>
      */
-    public tagger_message.TaggerMessage.DocumentFeatures getDocumentFeatures() {
-      return documentFeatures_ == null ? tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance() : documentFeatures_;
-    }
-    /**
-     * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-     */
-    public tagger_message.TaggerMessage.DocumentFeaturesOrBuilder getDocumentFeaturesOrBuilder() {
-      return documentFeatures_ == null ? tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance() : documentFeatures_;
+
+    public java.util.Map<java.lang.String, tagger_message.TaggerMessage.DocumentFeature> getDocumentFeatures() {
+      return internalGetDocumentFeatures().getMap();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3227,8 +2615,8 @@ public final class TaggerMessage {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (hasDocumentFeatures()) {
-        if (!getDocumentFeatures().isInitialized()) {
+      for (tagger_message.TaggerMessage.DocumentFeature item : getDocumentFeatures().values()) {
+        if (!item.isInitialized()) {
           memoizedIsInitialized = 0;
           return false;
         }
@@ -3245,8 +2633,14 @@ public final class TaggerMessage {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         com.google.protobuf.GeneratedMessage.writeString(output, 2, documentName_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeMessage(3, getDocumentFeatures());
+      for (java.util.Map.Entry<java.lang.String, tagger_message.TaggerMessage.DocumentFeature> entry
+           : internalGetDocumentFeatures().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+        documentFeatures = DocumentFeaturesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        output.writeMessage(3, documentFeatures);
       }
       unknownFields.writeTo(output);
     }
@@ -3262,9 +2656,15 @@ public final class TaggerMessage {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.GeneratedMessage.computeStringSize(2, documentName_);
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+      for (java.util.Map.Entry<java.lang.String, tagger_message.TaggerMessage.DocumentFeature> entry
+           : internalGetDocumentFeatures().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+        documentFeatures = DocumentFeaturesDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getDocumentFeatures());
+            .computeMessageSize(3, documentFeatures);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -3355,6 +2755,28 @@ public final class TaggerMessage {
         return tagger_message.TaggerMessage.internal_static_tagger_message_TagRequest_descriptor;
       }
 
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMapField(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetDocumentFeatures();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
+      @SuppressWarnings({"rawtypes"})
+      protected com.google.protobuf.MapField internalGetMutableMapField(
+          int number) {
+        switch (number) {
+          case 3:
+            return internalGetMutableDocumentFeatures();
+          default:
+            throw new RuntimeException(
+                "Invalid map field number: " + number);
+        }
+      }
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return tagger_message.TaggerMessage.internal_static_tagger_message_TagRequest_fieldAccessorTable
@@ -3374,7 +2796,6 @@ public final class TaggerMessage {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getDocumentFeaturesFieldBuilder();
         }
       }
       public Builder clear() {
@@ -3383,12 +2804,7 @@ public final class TaggerMessage {
         bitField0_ = (bitField0_ & ~0x00000001);
         documentName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (documentFeaturesBuilder_ == null) {
-          documentFeatures_ = null;
-        } else {
-          documentFeaturesBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
+        internalGetMutableDocumentFeatures().clear();
         return this;
       }
 
@@ -3421,14 +2837,8 @@ public final class TaggerMessage {
           to_bitField0_ |= 0x00000002;
         }
         result.documentName_ = documentName_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        if (documentFeaturesBuilder_ == null) {
-          result.documentFeatures_ = documentFeatures_;
-        } else {
-          result.documentFeatures_ = documentFeaturesBuilder_.build();
-        }
+        result.documentFeatures_ = internalGetDocumentFeatures();
+        result.documentFeatures_.makeImmutable();
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3455,9 +2865,8 @@ public final class TaggerMessage {
           documentName_ = other.documentName_;
           onChanged();
         }
-        if (other.hasDocumentFeatures()) {
-          mergeDocumentFeatures(other.getDocumentFeatures());
-        }
+        internalGetMutableDocumentFeatures().mergeFrom(
+            other.internalGetDocumentFeatures());
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -3467,8 +2876,8 @@ public final class TaggerMessage {
         if (!hasCmd()) {
           return false;
         }
-        if (hasDocumentFeatures()) {
-          if (!getDocumentFeatures().isInitialized()) {
+        for (tagger_message.TaggerMessage.DocumentFeature item : getDocumentFeatures().values()) {
+          if (!item.isInitialized()) {
             return false;
           }
         }
@@ -3676,122 +3085,48 @@ public final class TaggerMessage {
         return this;
       }
 
-      private tagger_message.TaggerMessage.DocumentFeatures documentFeatures_ = null;
-      private com.google.protobuf.SingleFieldBuilder<
-          tagger_message.TaggerMessage.DocumentFeatures, tagger_message.TaggerMessage.DocumentFeatures.Builder, tagger_message.TaggerMessage.DocumentFeaturesOrBuilder> documentFeaturesBuilder_;
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public boolean hasDocumentFeatures() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+      private com.google.protobuf.MapField<
+          java.lang.String, tagger_message.TaggerMessage.DocumentFeature> documentFeatures_;
+      private com.google.protobuf.MapField<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+      internalGetDocumentFeatures() {
+        if (documentFeatures_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              DocumentFeaturesDefaultEntryHolder.defaultEntry);
+       }
+        return documentFeatures_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+      internalGetMutableDocumentFeatures() {
+        onChanged();;
+        if (documentFeatures_ == null) {
+          documentFeatures_ = com.google.protobuf.MapField.newMapField(
+              DocumentFeaturesDefaultEntryHolder.defaultEntry);
+        }
+        if (!documentFeatures_.isMutable()) {
+          documentFeatures_ = documentFeatures_.copy();
+        }
+        return documentFeatures_;
       }
       /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
+       * <code>map&lt;string, .tagger_message.DocumentFeature&gt; documentFeatures = 3;</code>
        */
-      public tagger_message.TaggerMessage.DocumentFeatures getDocumentFeatures() {
-        if (documentFeaturesBuilder_ == null) {
-          return documentFeatures_ == null ? tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance() : documentFeatures_;
-        } else {
-          return documentFeaturesBuilder_.getMessage();
-        }
+      public java.util.Map<java.lang.String, tagger_message.TaggerMessage.DocumentFeature> getDocumentFeatures() {
+        return internalGetDocumentFeatures().getMap();
       }
       /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
+       * <code>map&lt;string, .tagger_message.DocumentFeature&gt; documentFeatures = 3;</code>
        */
-      public Builder setDocumentFeatures(tagger_message.TaggerMessage.DocumentFeatures value) {
-        if (documentFeaturesBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          documentFeatures_ = value;
-          onChanged();
-        } else {
-          documentFeaturesBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000004;
+      public java.util.Map<java.lang.String, tagger_message.TaggerMessage.DocumentFeature>
+      getMutableDocumentFeatures() {
+        return internalGetMutableDocumentFeatures().getMutableMap();
+      }
+      /**
+       * <code>map&lt;string, .tagger_message.DocumentFeature&gt; documentFeatures = 3;</code>
+       */
+      public Builder putAllDocumentFeatures(
+          java.util.Map<java.lang.String, tagger_message.TaggerMessage.DocumentFeature> values) {
+        getMutableDocumentFeatures().putAll(values);
         return this;
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public Builder setDocumentFeatures(
-          tagger_message.TaggerMessage.DocumentFeatures.Builder builderForValue) {
-        if (documentFeaturesBuilder_ == null) {
-          documentFeatures_ = builderForValue.build();
-          onChanged();
-        } else {
-          documentFeaturesBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public Builder mergeDocumentFeatures(tagger_message.TaggerMessage.DocumentFeatures value) {
-        if (documentFeaturesBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              documentFeatures_ != null &&
-              documentFeatures_ != tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance()) {
-            documentFeatures_ =
-              tagger_message.TaggerMessage.DocumentFeatures.newBuilder(documentFeatures_).mergeFrom(value).buildPartial();
-          } else {
-            documentFeatures_ = value;
-          }
-          onChanged();
-        } else {
-          documentFeaturesBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public Builder clearDocumentFeatures() {
-        if (documentFeaturesBuilder_ == null) {
-          documentFeatures_ = null;
-          onChanged();
-        } else {
-          documentFeaturesBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeatures.Builder getDocumentFeaturesBuilder() {
-        bitField0_ |= 0x00000004;
-        onChanged();
-        return getDocumentFeaturesFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      public tagger_message.TaggerMessage.DocumentFeaturesOrBuilder getDocumentFeaturesOrBuilder() {
-        if (documentFeaturesBuilder_ != null) {
-          return documentFeaturesBuilder_.getMessageOrBuilder();
-        } else {
-          return documentFeatures_ == null ?
-              tagger_message.TaggerMessage.DocumentFeatures.getDefaultInstance() : documentFeatures_;
-        }
-      }
-      /**
-       * <code>optional .tagger_message.DocumentFeatures documentFeatures = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          tagger_message.TaggerMessage.DocumentFeatures, tagger_message.TaggerMessage.DocumentFeatures.Builder, tagger_message.TaggerMessage.DocumentFeaturesOrBuilder> 
-          getDocumentFeaturesFieldBuilder() {
-        if (documentFeaturesBuilder_ == null) {
-          documentFeaturesBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              tagger_message.TaggerMessage.DocumentFeatures, tagger_message.TaggerMessage.DocumentFeatures.Builder, tagger_message.TaggerMessage.DocumentFeaturesOrBuilder>(
-                  getDocumentFeatures(),
-                  getParentForChildren(),
-                  isClean());
-          documentFeatures_ = null;
-        }
-        return documentFeaturesBuilder_;
       }
 
       // @@protoc_insertion_point(builder_scope:tagger_message.TagRequest)
@@ -3852,15 +3187,15 @@ public final class TaggerMessage {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_tagger_message_DocumentFeature_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_tagger_message_DocumentFeatures_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_tagger_message_DocumentFeatures_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_tagger_message_TagRequest_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_tagger_message_TagRequest_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3874,13 +3209,14 @@ public final class TaggerMessage {
       "\n\tTagResult\022\024\n\014documentName\030\001 \002(\t\022\017\n\007suc" +
       "cess\030\002 \002(\010\022\014\n\004type\030\005 \002(\t\022\r\n\005class\030\010 \001(\004\022" +
       "\020\n\010resultID\030\003 \002(\004\022\014\n\004keys\030\006 \003(\t\022\016\n\006value" +
-      "s\030\007 \003(\001\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t" +
-      "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"E\n\020Documen" +
-      "tFeatures\0221\n\010features\030\001 \003(\0132\037.tagger_mes" +
-      "sage.DocumentFeature\"k\n\nTagRequest\022\013\n\003cm" +
-      "d\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022:\n\020documen" +
-      "tFeatures\030\003 \001(\0132 .tagger_message.Documen",
-      "tFeatures"
+      "s\030\007 \003(\t\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t" +
+      "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"\325\001\n\nTagReq" +
+      "uest\022\013\n\003cmd\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022" +
+      "J\n\020documentFeatures\030\003 \003(\01320.tagger_messa" +
+      "ge.TagRequest.DocumentFeaturesEntry\032X\n\025D" +
+      "ocumentFeaturesEntry\022\013\n\003key\030\001 \001(\t\022.\n\005val",
+      "ue\030\002 \001(\0132\037.tagger_message.DocumentFeatur" +
+      "e:\0028\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3906,18 +3242,18 @@ public final class TaggerMessage {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tagger_message_DocumentFeature_descriptor,
         new java.lang.String[] { "Name", "Type", "Value", });
-    internal_static_tagger_message_DocumentFeatures_descriptor =
-      getDescriptor().getMessageTypes().get(2);
-    internal_static_tagger_message_DocumentFeatures_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-        internal_static_tagger_message_DocumentFeatures_descriptor,
-        new java.lang.String[] { "Features", });
     internal_static_tagger_message_TagRequest_descriptor =
-      getDescriptor().getMessageTypes().get(3);
+      getDescriptor().getMessageTypes().get(2);
     internal_static_tagger_message_TagRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_tagger_message_TagRequest_descriptor,
         new java.lang.String[] { "Cmd", "DocumentName", "DocumentFeatures", });
+    internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_descriptor =
+      internal_static_tagger_message_TagRequest_descriptor.getNestedTypes().get(0);
+    internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_tagger_message_TagRequest_DocumentFeaturesEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

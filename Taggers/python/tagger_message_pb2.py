@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='tagger_message.proto',
   package='tagger_message',
   syntax='proto2',
-  serialized_pb=_b('\n\x14tagger_message.proto\x12\x0etagger_message\"\x7f\n\tTagResult\x12\x14\n\x0c\x64ocumentName\x18\x01 \x02(\t\x12\x0f\n\x07success\x18\x02 \x02(\x08\x12\x0c\n\x04type\x18\x05 \x02(\t\x12\r\n\x05\x63lass\x18\x08 \x01(\x04\x12\x10\n\x08resultID\x18\x03 \x02(\x04\x12\x0c\n\x04keys\x18\x06 \x03(\t\x12\x0e\n\x06values\x18\x07 \x03(\x01\"<\n\x0f\x44ocumentFeature\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\x12\r\n\x05value\x18\x03 \x02(\t\"E\n\x10\x44ocumentFeatures\x12\x31\n\x08\x66\x65\x61tures\x18\x01 \x03(\x0b\x32\x1f.tagger_message.DocumentFeature\"k\n\nTagRequest\x12\x0b\n\x03\x63md\x18\x01 \x02(\t\x12\x14\n\x0c\x64ocumentName\x18\x02 \x01(\t\x12:\n\x10\x64ocumentFeatures\x18\x03 \x01(\x0b\x32 .tagger_message.DocumentFeatures')
+  serialized_pb=_b('\n\x14tagger_message.proto\x12\x0etagger_message\"\x7f\n\tTagResult\x12\x14\n\x0c\x64ocumentName\x18\x01 \x02(\t\x12\x0f\n\x07success\x18\x02 \x02(\x08\x12\x0c\n\x04type\x18\x05 \x02(\t\x12\r\n\x05\x63lass\x18\x08 \x01(\x04\x12\x10\n\x08resultID\x18\x03 \x02(\x04\x12\x0c\n\x04keys\x18\x06 \x03(\t\x12\x0e\n\x06values\x18\x07 \x03(\t\"<\n\x0f\x44ocumentFeature\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04type\x18\x02 \x02(\t\x12\r\n\x05value\x18\x03 \x02(\t\"\xd5\x01\n\nTagRequest\x12\x0b\n\x03\x63md\x18\x01 \x02(\t\x12\x14\n\x0c\x64ocumentName\x18\x02 \x01(\t\x12J\n\x10\x64ocumentFeatures\x18\x03 \x03(\x0b\x32\x30.tagger_message.TagRequest.DocumentFeaturesEntry\x1aX\n\x15\x44ocumentFeaturesEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12.\n\x05value\x18\x02 \x01(\x0b\x32\x1f.tagger_message.DocumentFeature:\x02\x38\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -77,7 +77,7 @@ _TAGRESULT = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='values', full_name='tagger_message.TagResult.values', index=6,
-      number=7, type=1, cpp_type=5, label=3,
+      number=7, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -144,17 +144,24 @@ _DOCUMENTFEATURE = _descriptor.Descriptor(
 )
 
 
-_DOCUMENTFEATURES = _descriptor.Descriptor(
-  name='DocumentFeatures',
-  full_name='tagger_message.DocumentFeatures',
+_TAGREQUEST_DOCUMENTFEATURESENTRY = _descriptor.Descriptor(
+  name='DocumentFeaturesEntry',
+  full_name='tagger_message.TagRequest.DocumentFeaturesEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='features', full_name='tagger_message.DocumentFeatures.features', index=0,
-      number=1, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
+      name='key', full_name='tagger_message.TagRequest.DocumentFeaturesEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='tagger_message.TagRequest.DocumentFeaturesEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -164,16 +171,15 @@ _DOCUMENTFEATURES = _descriptor.Descriptor(
   nested_types=[],
   enum_types=[
   ],
-  options=None,
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
   is_extendable=False,
   syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=231,
-  serialized_end=300,
+  serialized_start=357,
+  serialized_end=445,
 )
-
 
 _TAGREQUEST = _descriptor.Descriptor(
   name='TagRequest',
@@ -198,15 +204,15 @@ _TAGREQUEST = _descriptor.Descriptor(
       options=None),
     _descriptor.FieldDescriptor(
       name='documentFeatures', full_name='tagger_message.TagRequest.documentFeatures', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      number=3, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_TAGREQUEST_DOCUMENTFEATURESENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -215,15 +221,15 @@ _TAGREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=302,
-  serialized_end=409,
+  serialized_start=232,
+  serialized_end=445,
 )
 
-_DOCUMENTFEATURES.fields_by_name['features'].message_type = _DOCUMENTFEATURE
-_TAGREQUEST.fields_by_name['documentFeatures'].message_type = _DOCUMENTFEATURES
+_TAGREQUEST_DOCUMENTFEATURESENTRY.fields_by_name['value'].message_type = _DOCUMENTFEATURE
+_TAGREQUEST_DOCUMENTFEATURESENTRY.containing_type = _TAGREQUEST
+_TAGREQUEST.fields_by_name['documentFeatures'].message_type = _TAGREQUEST_DOCUMENTFEATURESENTRY
 DESCRIPTOR.message_types_by_name['TagResult'] = _TAGRESULT
 DESCRIPTOR.message_types_by_name['DocumentFeature'] = _DOCUMENTFEATURE
-DESCRIPTOR.message_types_by_name['DocumentFeatures'] = _DOCUMENTFEATURES
 DESCRIPTOR.message_types_by_name['TagRequest'] = _TAGREQUEST
 
 TagResult = _reflection.GeneratedProtocolMessageType('TagResult', (_message.Message,), dict(
@@ -240,19 +246,22 @@ DocumentFeature = _reflection.GeneratedProtocolMessageType('DocumentFeature', (_
   ))
 _sym_db.RegisterMessage(DocumentFeature)
 
-DocumentFeatures = _reflection.GeneratedProtocolMessageType('DocumentFeatures', (_message.Message,), dict(
-  DESCRIPTOR = _DOCUMENTFEATURES,
-  __module__ = 'tagger_message_pb2'
-  # @@protoc_insertion_point(class_scope:tagger_message.DocumentFeatures)
-  ))
-_sym_db.RegisterMessage(DocumentFeatures)
-
 TagRequest = _reflection.GeneratedProtocolMessageType('TagRequest', (_message.Message,), dict(
+
+  DocumentFeaturesEntry = _reflection.GeneratedProtocolMessageType('DocumentFeaturesEntry', (_message.Message,), dict(
+    DESCRIPTOR = _TAGREQUEST_DOCUMENTFEATURESENTRY,
+    __module__ = 'tagger_message_pb2'
+    # @@protoc_insertion_point(class_scope:tagger_message.TagRequest.DocumentFeaturesEntry)
+    ))
+  ,
   DESCRIPTOR = _TAGREQUEST,
   __module__ = 'tagger_message_pb2'
   # @@protoc_insertion_point(class_scope:tagger_message.TagRequest)
   ))
 _sym_db.RegisterMessage(TagRequest)
+_sym_db.RegisterMessage(TagRequest.DocumentFeaturesEntry)
 
 
+_TAGREQUEST_DOCUMENTFEATURESENTRY.has_options = True
+_TAGREQUEST_DOCUMENTFEATURESENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 # @@protoc_insertion_point(module_scope)

@@ -80,6 +80,16 @@ public:
     }
 };
 
+class ServiceNotFound : public error
+{
+public:
+    ServiceNotFound(string serviceName)
+    : error("Service: " + serviceName + " is not found", 537463)
+    {
+    }
+};
+
+
 static void ensureCollectionExists(shared_ptr<DB> db, string collectionName)
 {
     if (!collectionExists(db, collectionName)) {

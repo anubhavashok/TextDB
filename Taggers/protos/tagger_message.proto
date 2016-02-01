@@ -9,7 +9,7 @@ message TagResult {
     // Only accept if resultID >= expectedResultID
     required uint64 resultID = 3;
     repeated string keys = 6;
-    repeated double values = 7;
+    repeated string values = 7;
     // we want to have 2 functions, maybe more
     // classification
     // - returns a whole number which represents the class
@@ -24,14 +24,11 @@ message DocumentFeature {
     // See how to use protobuf to parse
 }
 
-message DocumentFeatures {
-    repeated DocumentFeature features = 1;
-};
 
 message TagRequest {
     // This is usually ignored since we specify the endpoint in request,
     // However, it is useful to identify the Message that was sent
     required string cmd = 1;
     optional string documentName = 2;
-    optional DocumentFeatures documentFeatures = 3;
+    map<string, DocumentFeature> documentFeatures = 3;
 };

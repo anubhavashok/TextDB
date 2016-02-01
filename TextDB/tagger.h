@@ -47,7 +47,7 @@ public:
     void spawn();
     void activate();
     void disable();
-    vector<pair<string, size_t>> tag(tagger_message::DocumentFeatures df);
+    vector<pair<string, size_t>> tag(tagger_message::DocumentFeature df);
     // If tagger is stateful, then train tagger
     // If tagger is static e.g. tfidf, then train is irrelevant
     // options may contain things like (overwrite old model, etc.)

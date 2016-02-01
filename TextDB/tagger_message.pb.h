@@ -26,6 +26,8 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
+#include <google/protobuf/map.h>
+#include <google/protobuf/map_field_inl.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
@@ -37,7 +39,6 @@ void protobuf_AssignDesc_tagger_5fmessage_2eproto();
 void protobuf_ShutdownFile_tagger_5fmessage_2eproto();
 
 class DocumentFeature;
-class DocumentFeatures;
 class TagRequest;
 class TagResult;
 
@@ -168,17 +169,21 @@ class TagResult : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& keys() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_keys();
 
-  // repeated double values = 7;
+  // repeated string values = 7;
   int values_size() const;
   void clear_values();
   static const int kValuesFieldNumber = 7;
-  double values(int index) const;
-  void set_values(int index, double value);
-  void add_values(double value);
-  const ::google::protobuf::RepeatedField< double >&
-      values() const;
-  ::google::protobuf::RepeatedField< double >*
-      mutable_values();
+  const ::std::string& values(int index) const;
+  ::std::string* mutable_values(int index);
+  void set_values(int index, const ::std::string& value);
+  void set_values(int index, const char* value);
+  void set_values(int index, const char* value, size_t size);
+  ::std::string* add_values();
+  void add_values(const ::std::string& value);
+  void add_values(const char* value);
+  void add_values(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& values() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_values();
 
   // @@protoc_insertion_point(class_scope:tagger_message.TagResult)
  private:
@@ -204,7 +209,7 @@ class TagResult : public ::google::protobuf::Message {
   ::google::protobuf::uint64 class__;
   ::google::protobuf::uint64 resultid_;
   ::google::protobuf::RepeatedPtrField< ::std::string> keys_;
-  ::google::protobuf::RepeatedField< double > values_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> values_;
   bool success_;
   friend void  protobuf_AddDesc_tagger_5fmessage_2eproto();
   friend void protobuf_AssignDesc_tagger_5fmessage_2eproto();
@@ -342,98 +347,6 @@ class DocumentFeature : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class DocumentFeatures : public ::google::protobuf::Message {
- public:
-  DocumentFeatures();
-  virtual ~DocumentFeatures();
-
-  DocumentFeatures(const DocumentFeatures& from);
-
-  inline DocumentFeatures& operator=(const DocumentFeatures& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const DocumentFeatures& default_instance();
-
-  void Swap(DocumentFeatures* other);
-
-  // implements Message ----------------------------------------------
-
-  inline DocumentFeatures* New() const { return New(NULL); }
-
-  DocumentFeatures* New(::google::protobuf::Arena* arena) const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DocumentFeatures& from);
-  void MergeFrom(const DocumentFeatures& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  void InternalSwap(DocumentFeatures* other);
-  private:
-  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
-    return _internal_metadata_.arena();
-  }
-  inline void* MaybeArenaPtr() const {
-    return _internal_metadata_.raw_arena_ptr();
-  }
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated .tagger_message.DocumentFeature features = 1;
-  int features_size() const;
-  void clear_features();
-  static const int kFeaturesFieldNumber = 1;
-  const ::tagger_message::DocumentFeature& features(int index) const;
-  ::tagger_message::DocumentFeature* mutable_features(int index);
-  ::tagger_message::DocumentFeature* add_features();
-  ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >*
-      mutable_features();
-  const ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >&
-      features() const;
-
-  // @@protoc_insertion_point(class_scope:tagger_message.DocumentFeatures)
- private:
-
-  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::uint32 _has_bits_[1];
-  mutable int _cached_size_;
-  ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature > features_;
-  friend void  protobuf_AddDesc_tagger_5fmessage_2eproto();
-  friend void protobuf_AssignDesc_tagger_5fmessage_2eproto();
-  friend void protobuf_ShutdownFile_tagger_5fmessage_2eproto();
-
-  void InitAsDefaultInstance();
-  static DocumentFeatures* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class TagRequest : public ::google::protobuf::Message {
  public:
   TagRequest();
@@ -496,6 +409,7 @@ class TagRequest : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+
   // accessors -------------------------------------------------------
 
   // required string cmd = 1;
@@ -522,14 +436,14 @@ class TagRequest : public ::google::protobuf::Message {
   ::std::string* release_documentname();
   void set_allocated_documentname(::std::string* documentname);
 
-  // optional .tagger_message.DocumentFeatures documentFeatures = 3;
-  bool has_documentfeatures() const;
+  // map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+  int documentfeatures_size() const;
   void clear_documentfeatures();
   static const int kDocumentFeaturesFieldNumber = 3;
-  const ::tagger_message::DocumentFeatures& documentfeatures() const;
-  ::tagger_message::DocumentFeatures* mutable_documentfeatures();
-  ::tagger_message::DocumentFeatures* release_documentfeatures();
-  void set_allocated_documentfeatures(::tagger_message::DocumentFeatures* documentfeatures);
+  const ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >&
+      documentfeatures() const;
+  ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >*
+      mutable_documentfeatures();
 
   // @@protoc_insertion_point(class_scope:tagger_message.TagRequest)
  private:
@@ -537,15 +451,23 @@ class TagRequest : public ::google::protobuf::Message {
   inline void clear_has_cmd();
   inline void set_has_documentname();
   inline void clear_has_documentname();
-  inline void set_has_documentfeatures();
-  inline void clear_has_documentfeatures();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::uint32 _has_bits_[1];
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr cmd_;
   ::google::protobuf::internal::ArenaStringPtr documentname_;
-  ::tagger_message::DocumentFeatures* documentfeatures_;
+  typedef ::google::protobuf::internal::MapEntryLite<
+      ::std::string, ::tagger_message::DocumentFeature,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+      0 >
+      TagRequest_DocumentFeaturesEntry;
+  ::google::protobuf::internal::MapField<
+      ::std::string, ::tagger_message::DocumentFeature,
+      ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+      ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+      0 > documentfeatures_;
   friend void  protobuf_AddDesc_tagger_5fmessage_2eproto();
   friend void protobuf_AssignDesc_tagger_5fmessage_2eproto();
   friend void protobuf_ShutdownFile_tagger_5fmessage_2eproto();
@@ -793,31 +715,55 @@ TagResult::mutable_keys() {
   return &keys_;
 }
 
-// repeated double values = 7;
+// repeated string values = 7;
 inline int TagResult::values_size() const {
   return values_.size();
 }
 inline void TagResult::clear_values() {
   values_.Clear();
 }
-inline double TagResult::values(int index) const {
+inline const ::std::string& TagResult::values(int index) const {
   // @@protoc_insertion_point(field_get:tagger_message.TagResult.values)
   return values_.Get(index);
 }
-inline void TagResult::set_values(int index, double value) {
-  values_.Set(index, value);
-  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+inline ::std::string* TagResult::mutable_values(int index) {
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.values)
+  return values_.Mutable(index);
 }
-inline void TagResult::add_values(double value) {
-  values_.Add(value);
+inline void TagResult::set_values(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+  values_.Mutable(index)->assign(value);
+}
+inline void TagResult::set_values(int index, const char* value) {
+  values_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.values)
+}
+inline void TagResult::set_values(int index, const char* value, size_t size) {
+  values_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.values)
+}
+inline ::std::string* TagResult::add_values() {
+  return values_.Add();
+}
+inline void TagResult::add_values(const ::std::string& value) {
+  values_.Add()->assign(value);
   // @@protoc_insertion_point(field_add:tagger_message.TagResult.values)
 }
-inline const ::google::protobuf::RepeatedField< double >&
+inline void TagResult::add_values(const char* value) {
+  values_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tagger_message.TagResult.values)
+}
+inline void TagResult::add_values(const char* value, size_t size) {
+  values_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tagger_message.TagResult.values)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
 TagResult::values() const {
   // @@protoc_insertion_point(field_list:tagger_message.TagResult.values)
   return values_;
 }
-inline ::google::protobuf::RepeatedField< double >*
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 TagResult::mutable_values() {
   // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.values)
   return &values_;
@@ -988,40 +934,6 @@ inline void DocumentFeature::set_allocated_value(::std::string* value) {
 
 // -------------------------------------------------------------------
 
-// DocumentFeatures
-
-// repeated .tagger_message.DocumentFeature features = 1;
-inline int DocumentFeatures::features_size() const {
-  return features_.size();
-}
-inline void DocumentFeatures::clear_features() {
-  features_.Clear();
-}
-inline const ::tagger_message::DocumentFeature& DocumentFeatures::features(int index) const {
-  // @@protoc_insertion_point(field_get:tagger_message.DocumentFeatures.features)
-  return features_.Get(index);
-}
-inline ::tagger_message::DocumentFeature* DocumentFeatures::mutable_features(int index) {
-  // @@protoc_insertion_point(field_mutable:tagger_message.DocumentFeatures.features)
-  return features_.Mutable(index);
-}
-inline ::tagger_message::DocumentFeature* DocumentFeatures::add_features() {
-  // @@protoc_insertion_point(field_add:tagger_message.DocumentFeatures.features)
-  return features_.Add();
-}
-inline ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >*
-DocumentFeatures::mutable_features() {
-  // @@protoc_insertion_point(field_mutable_list:tagger_message.DocumentFeatures.features)
-  return &features_;
-}
-inline const ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >&
-DocumentFeatures::features() const {
-  // @@protoc_insertion_point(field_list:tagger_message.DocumentFeatures.features)
-  return features_;
-}
-
-// -------------------------------------------------------------------
-
 // TagRequest
 
 // required string cmd = 1;
@@ -1130,52 +1042,25 @@ inline void TagRequest::set_allocated_documentname(::std::string* documentname) 
   // @@protoc_insertion_point(field_set_allocated:tagger_message.TagRequest.documentName)
 }
 
-// optional .tagger_message.DocumentFeatures documentFeatures = 3;
-inline bool TagRequest::has_documentfeatures() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void TagRequest::set_has_documentfeatures() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void TagRequest::clear_has_documentfeatures() {
-  _has_bits_[0] &= ~0x00000004u;
+// map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+inline int TagRequest::documentfeatures_size() const {
+  return documentfeatures_.size();
 }
 inline void TagRequest::clear_documentfeatures() {
-  if (documentfeatures_ != NULL) documentfeatures_->::tagger_message::DocumentFeatures::Clear();
-  clear_has_documentfeatures();
+  documentfeatures_.Clear();
 }
-inline const ::tagger_message::DocumentFeatures& TagRequest::documentfeatures() const {
-  // @@protoc_insertion_point(field_get:tagger_message.TagRequest.documentFeatures)
-  return documentfeatures_ != NULL ? *documentfeatures_ : *default_instance_->documentfeatures_;
+inline const ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >&
+TagRequest::documentfeatures() const {
+  // @@protoc_insertion_point(field_map:tagger_message.TagRequest.documentFeatures)
+  return documentfeatures_.GetMap();
 }
-inline ::tagger_message::DocumentFeatures* TagRequest::mutable_documentfeatures() {
-  set_has_documentfeatures();
-  if (documentfeatures_ == NULL) {
-    documentfeatures_ = new ::tagger_message::DocumentFeatures;
-  }
-  // @@protoc_insertion_point(field_mutable:tagger_message.TagRequest.documentFeatures)
-  return documentfeatures_;
-}
-inline ::tagger_message::DocumentFeatures* TagRequest::release_documentfeatures() {
-  clear_has_documentfeatures();
-  ::tagger_message::DocumentFeatures* temp = documentfeatures_;
-  documentfeatures_ = NULL;
-  return temp;
-}
-inline void TagRequest::set_allocated_documentfeatures(::tagger_message::DocumentFeatures* documentfeatures) {
-  delete documentfeatures_;
-  documentfeatures_ = documentfeatures;
-  if (documentfeatures) {
-    set_has_documentfeatures();
-  } else {
-    clear_has_documentfeatures();
-  }
-  // @@protoc_insertion_point(field_set_allocated:tagger_message.TagRequest.documentFeatures)
+inline ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >*
+TagRequest::mutable_documentfeatures() {
+  // @@protoc_insertion_point(field_mutable_map:tagger_message.TagRequest.documentFeatures)
+  return documentfeatures_.MutableMap();
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
-// -------------------------------------------------------------------
-
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

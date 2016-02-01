@@ -26,12 +26,10 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* DocumentFeature_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DocumentFeature_reflection_ = NULL;
-const ::google::protobuf::Descriptor* DocumentFeatures_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  DocumentFeatures_reflection_ = NULL;
 const ::google::protobuf::Descriptor* TagRequest_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TagRequest_reflection_ = NULL;
+const ::google::protobuf::Descriptor* TagRequest_DocumentFeaturesEntry_descriptor_ = NULL;
 
 }  // namespace
 
@@ -80,22 +78,7 @@ void protobuf_AssignDesc_tagger_5fmessage_2eproto() {
       sizeof(DocumentFeature),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DocumentFeature, _internal_metadata_),
       -1);
-  DocumentFeatures_descriptor_ = file->message_type(2);
-  static const int DocumentFeatures_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DocumentFeatures, features_),
-  };
-  DocumentFeatures_reflection_ =
-    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      DocumentFeatures_descriptor_,
-      DocumentFeatures::default_instance_,
-      DocumentFeatures_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DocumentFeatures, _has_bits_[0]),
-      -1,
-      -1,
-      sizeof(DocumentFeatures),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DocumentFeatures, _internal_metadata_),
-      -1);
-  TagRequest_descriptor_ = file->message_type(3);
+  TagRequest_descriptor_ = file->message_type(2);
   static const int TagRequest_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagRequest, cmd_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagRequest, documentname_),
@@ -112,6 +95,7 @@ void protobuf_AssignDesc_tagger_5fmessage_2eproto() {
       sizeof(TagRequest),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TagRequest, _internal_metadata_),
       -1);
+  TagRequest_DocumentFeaturesEntry_descriptor_ = TagRequest_descriptor_->nested_type(0);
 }
 
 namespace {
@@ -129,9 +113,16 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       DocumentFeature_descriptor_, &DocumentFeature::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      DocumentFeatures_descriptor_, &DocumentFeatures::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       TagRequest_descriptor_, &TagRequest::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+        TagRequest_DocumentFeaturesEntry_descriptor_,
+        ::google::protobuf::internal::MapEntry<
+            ::std::string,
+            ::tagger_message::DocumentFeature,
+            ::google::protobuf::internal::WireFormatLite::TYPE_STRING,
+            ::google::protobuf::internal::WireFormatLite::TYPE_MESSAGE,
+            0>::CreateDefaultInstance(
+                TagRequest_DocumentFeaturesEntry_descriptor_));
 }
 
 }  // namespace
@@ -141,8 +132,6 @@ void protobuf_ShutdownFile_tagger_5fmessage_2eproto() {
   delete TagResult_reflection_;
   delete DocumentFeature::default_instance_;
   delete DocumentFeature_reflection_;
-  delete DocumentFeatures::default_instance_;
-  delete DocumentFeatures_reflection_;
   delete TagRequest::default_instance_;
   delete TagRequest_reflection_;
 }
@@ -158,22 +147,21 @@ void protobuf_AddDesc_tagger_5fmessage_2eproto() {
     "\n\tTagResult\022\024\n\014documentName\030\001 \002(\t\022\017\n\007suc"
     "cess\030\002 \002(\010\022\014\n\004type\030\005 \002(\t\022\r\n\005class\030\010 \001(\004\022"
     "\020\n\010resultID\030\003 \002(\004\022\014\n\004keys\030\006 \003(\t\022\016\n\006value"
-    "s\030\007 \003(\001\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t"
-    "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"E\n\020Documen"
-    "tFeatures\0221\n\010features\030\001 \003(\0132\037.tagger_mes"
-    "sage.DocumentFeature\"k\n\nTagRequest\022\013\n\003cm"
-    "d\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022:\n\020documen"
-    "tFeatures\030\003 \001(\0132 .tagger_message.Documen"
-    "tFeatures", 409);
+    "s\030\007 \003(\t\"<\n\017DocumentFeature\022\014\n\004name\030\001 \002(\t"
+    "\022\014\n\004type\030\002 \002(\t\022\r\n\005value\030\003 \002(\t\"\325\001\n\nTagReq"
+    "uest\022\013\n\003cmd\030\001 \002(\t\022\024\n\014documentName\030\002 \001(\t\022"
+    "J\n\020documentFeatures\030\003 \003(\01320.tagger_messa"
+    "ge.TagRequest.DocumentFeaturesEntry\032X\n\025D"
+    "ocumentFeaturesEntry\022\013\n\003key\030\001 \001(\t\022.\n\005val"
+    "ue\030\002 \001(\0132\037.tagger_message.DocumentFeatur"
+    "e:\0028\001", 445);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "tagger_message.proto", &protobuf_RegisterTypes);
   TagResult::default_instance_ = new TagResult();
   DocumentFeature::default_instance_ = new DocumentFeature();
-  DocumentFeatures::default_instance_ = new DocumentFeatures();
   TagRequest::default_instance_ = new TagRequest();
   TagResult::default_instance_->InitAsDefaultInstance();
   DocumentFeature::default_instance_->InitAsDefaultInstance();
-  DocumentFeatures::default_instance_->InitAsDefaultInstance();
   TagRequest::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_tagger_5fmessage_2eproto);
 }
@@ -391,25 +379,25 @@ bool TagResult::MergePartialFromCodedStream(
           goto handle_unusual;
         }
         if (input->ExpectTag(50)) goto parse_keys;
-        if (input->ExpectTag(57)) goto parse_values;
+        if (input->ExpectTag(58)) goto parse_values;
         break;
       }
 
-      // repeated double values = 7;
+      // repeated string values = 7;
       case 7: {
-        if (tag == 57) {
+        if (tag == 58) {
          parse_values:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 57, input, this->mutable_values())));
-        } else if (tag == 58) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_values())));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_values()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            this->values(this->values_size() - 1).data(),
+            this->values(this->values_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "tagger_message.TagResult.values");
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(57)) goto parse_values;
+        if (input->ExpectTag(58)) goto parse_values;
         if (input->ExpectTag(64)) goto parse_class;
         break;
       }
@@ -494,9 +482,13 @@ void TagResult::SerializeWithCachedSizes(
       6, this->keys(i), output);
   }
 
-  // repeated double values = 7;
+  // repeated string values = 7;
   for (int i = 0; i < this->values_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->values(i).data(), this->values(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.values");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
       7, this->values(i), output);
   }
 
@@ -557,10 +549,14 @@ void TagResult::SerializeWithCachedSizes(
       WriteStringToArray(6, this->keys(i), target);
   }
 
-  // repeated double values = 7;
+  // repeated string values = 7;
   for (int i = 0; i < this->values_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+      this->values(i).data(), this->values(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "tagger_message.TagResult.values");
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(7, this->values(i), target);
+      WriteStringToArray(7, this->values(i), target);
   }
 
   // optional uint64 class = 8;
@@ -646,11 +642,11 @@ int TagResult::ByteSize() const {
       this->keys(i));
   }
 
-  // repeated double values = 7;
-  {
-    int data_size = 0;
-    data_size = 8 * this->values_size();
-    total_size += 1 * this->values_size() + data_size;
+  // repeated string values = 7;
+  total_size += 1 * this->values_size();
+  for (int i = 0; i < this->values_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->values(i));
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -982,31 +978,55 @@ TagResult::mutable_keys() {
   return &keys_;
 }
 
-// repeated double values = 7;
+// repeated string values = 7;
 int TagResult::values_size() const {
   return values_.size();
 }
 void TagResult::clear_values() {
   values_.Clear();
 }
- double TagResult::values(int index) const {
+ const ::std::string& TagResult::values(int index) const {
   // @@protoc_insertion_point(field_get:tagger_message.TagResult.values)
   return values_.Get(index);
 }
- void TagResult::set_values(int index, double value) {
-  values_.Set(index, value);
-  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+ ::std::string* TagResult::mutable_values(int index) {
+  // @@protoc_insertion_point(field_mutable:tagger_message.TagResult.values)
+  return values_.Mutable(index);
 }
- void TagResult::add_values(double value) {
-  values_.Add(value);
+ void TagResult::set_values(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:tagger_message.TagResult.values)
+  values_.Mutable(index)->assign(value);
+}
+ void TagResult::set_values(int index, const char* value) {
+  values_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:tagger_message.TagResult.values)
+}
+ void TagResult::set_values(int index, const char* value, size_t size) {
+  values_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:tagger_message.TagResult.values)
+}
+ ::std::string* TagResult::add_values() {
+  return values_.Add();
+}
+ void TagResult::add_values(const ::std::string& value) {
+  values_.Add()->assign(value);
   // @@protoc_insertion_point(field_add:tagger_message.TagResult.values)
 }
- const ::google::protobuf::RepeatedField< double >&
+ void TagResult::add_values(const char* value) {
+  values_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:tagger_message.TagResult.values)
+}
+ void TagResult::add_values(const char* value, size_t size) {
+  values_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:tagger_message.TagResult.values)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
 TagResult::values() const {
   // @@protoc_insertion_point(field_list:tagger_message.TagResult.values)
   return values_;
 }
- ::google::protobuf::RepeatedField< double >*
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
 TagResult::mutable_values() {
   // @@protoc_insertion_point(field_mutable_list:tagger_message.TagResult.values)
   return &values_;
@@ -1568,273 +1588,6 @@ void DocumentFeature::clear_value() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int DocumentFeatures::kFeaturesFieldNumber;
-#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
-
-DocumentFeatures::DocumentFeatures()
-  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  SharedCtor();
-  // @@protoc_insertion_point(constructor:tagger_message.DocumentFeatures)
-}
-
-void DocumentFeatures::InitAsDefaultInstance() {
-}
-
-DocumentFeatures::DocumentFeatures(const DocumentFeatures& from)
-  : ::google::protobuf::Message(),
-    _internal_metadata_(NULL) {
-  SharedCtor();
-  MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:tagger_message.DocumentFeatures)
-}
-
-void DocumentFeatures::SharedCtor() {
-  _cached_size_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-DocumentFeatures::~DocumentFeatures() {
-  // @@protoc_insertion_point(destructor:tagger_message.DocumentFeatures)
-  SharedDtor();
-}
-
-void DocumentFeatures::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void DocumentFeatures::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* DocumentFeatures::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return DocumentFeatures_descriptor_;
-}
-
-const DocumentFeatures& DocumentFeatures::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_tagger_5fmessage_2eproto();
-  return *default_instance_;
-}
-
-DocumentFeatures* DocumentFeatures::default_instance_ = NULL;
-
-DocumentFeatures* DocumentFeatures::New(::google::protobuf::Arena* arena) const {
-  DocumentFeatures* n = new DocumentFeatures;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
-
-void DocumentFeatures::Clear() {
-  features_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  if (_internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->Clear();
-  }
-}
-
-bool DocumentFeatures::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
-  ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:tagger_message.DocumentFeatures)
-  for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
-    tag = p.first;
-    if (!p.second) goto handle_unusual;
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .tagger_message.DocumentFeature features = 1;
-      case 1: {
-        if (tag == 10) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_features:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
-                input, add_features()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(10)) goto parse_loop_features;
-        input->UnsafeDecrementRecursionDepth();
-        if (input->ExpectAtEnd()) goto success;
-        break;
-      }
-
-      default: {
-      handle_unusual:
-        if (tag == 0 ||
-            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          goto success;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-success:
-  // @@protoc_insertion_point(parse_success:tagger_message.DocumentFeatures)
-  return true;
-failure:
-  // @@protoc_insertion_point(parse_failure:tagger_message.DocumentFeatures)
-  return false;
-#undef DO_
-}
-
-void DocumentFeatures::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:tagger_message.DocumentFeatures)
-  // repeated .tagger_message.DocumentFeature features = 1;
-  for (unsigned int i = 0, n = this->features_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->features(i), output);
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-  // @@protoc_insertion_point(serialize_end:tagger_message.DocumentFeatures)
-}
-
-::google::protobuf::uint8* DocumentFeatures::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:tagger_message.DocumentFeatures)
-  // repeated .tagger_message.DocumentFeature features = 1;
-  for (unsigned int i = 0, n = this->features_size(); i < n; i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        1, this->features(i), target);
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:tagger_message.DocumentFeatures)
-  return target;
-}
-
-int DocumentFeatures::ByteSize() const {
-  int total_size = 0;
-
-  // repeated .tagger_message.DocumentFeature features = 1;
-  total_size += 1 * this->features_size();
-  for (int i = 0; i < this->features_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->features(i));
-  }
-
-  if (_internal_metadata_.have_unknown_fields()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void DocumentFeatures::MergeFrom(const ::google::protobuf::Message& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const DocumentFeatures* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const DocumentFeatures>(
-          &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void DocumentFeatures::MergeFrom(const DocumentFeatures& from) {
-  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  features_.MergeFrom(from.features_);
-  if (from._internal_metadata_.have_unknown_fields()) {
-    mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-  }
-}
-
-void DocumentFeatures::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void DocumentFeatures::CopyFrom(const DocumentFeatures& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DocumentFeatures::IsInitialized() const {
-
-  if (!::google::protobuf::internal::AllAreInitialized(this->features())) return false;
-  return true;
-}
-
-void DocumentFeatures::Swap(DocumentFeatures* other) {
-  if (other == this) return;
-  InternalSwap(other);
-}
-void DocumentFeatures::InternalSwap(DocumentFeatures* other) {
-  features_.UnsafeArenaSwap(&other->features_);
-  std::swap(_has_bits_[0], other->_has_bits_[0]);
-  _internal_metadata_.Swap(&other->_internal_metadata_);
-  std::swap(_cached_size_, other->_cached_size_);
-}
-
-::google::protobuf::Metadata DocumentFeatures::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = DocumentFeatures_descriptor_;
-  metadata.reflection = DocumentFeatures_reflection_;
-  return metadata;
-}
-
-#if PROTOBUF_INLINE_NOT_IN_HEADERS
-// DocumentFeatures
-
-// repeated .tagger_message.DocumentFeature features = 1;
-int DocumentFeatures::features_size() const {
-  return features_.size();
-}
-void DocumentFeatures::clear_features() {
-  features_.Clear();
-}
-const ::tagger_message::DocumentFeature& DocumentFeatures::features(int index) const {
-  // @@protoc_insertion_point(field_get:tagger_message.DocumentFeatures.features)
-  return features_.Get(index);
-}
-::tagger_message::DocumentFeature* DocumentFeatures::mutable_features(int index) {
-  // @@protoc_insertion_point(field_mutable:tagger_message.DocumentFeatures.features)
-  return features_.Mutable(index);
-}
-::tagger_message::DocumentFeature* DocumentFeatures::add_features() {
-  // @@protoc_insertion_point(field_add:tagger_message.DocumentFeatures.features)
-  return features_.Add();
-}
-::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >*
-DocumentFeatures::mutable_features() {
-  // @@protoc_insertion_point(field_mutable_list:tagger_message.DocumentFeatures.features)
-  return &features_;
-}
-const ::google::protobuf::RepeatedPtrField< ::tagger_message::DocumentFeature >&
-DocumentFeatures::features() const {
-  // @@protoc_insertion_point(field_list:tagger_message.DocumentFeatures.features)
-  return features_;
-}
-
-#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
-
-// ===================================================================
-
-#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TagRequest::kCmdFieldNumber;
 const int TagRequest::kDocumentNameFieldNumber;
 const int TagRequest::kDocumentFeaturesFieldNumber;
@@ -1847,7 +1600,6 @@ TagRequest::TagRequest()
 }
 
 void TagRequest::InitAsDefaultInstance() {
-  documentfeatures_ = const_cast< ::tagger_message::DocumentFeatures*>(&::tagger_message::DocumentFeatures::default_instance());
 }
 
 TagRequest::TagRequest(const TagRequest& from)
@@ -1863,7 +1615,10 @@ void TagRequest::SharedCtor() {
   _cached_size_ = 0;
   cmd_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   documentname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  documentfeatures_ = NULL;
+  documentfeatures_.SetAssignDescriptorCallback(
+      protobuf_AssignDescriptorsOnce);
+  documentfeatures_.SetEntryDescriptor(
+      &::tagger_message::TagRequest_DocumentFeaturesEntry_descriptor_);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1876,7 +1631,6 @@ void TagRequest::SharedDtor() {
   cmd_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   documentname_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
-    delete documentfeatures_;
   }
 }
 
@@ -1906,17 +1660,15 @@ TagRequest* TagRequest::New(::google::protobuf::Arena* arena) const {
 }
 
 void TagRequest::Clear() {
-  if (_has_bits_[0 / 32] & 7u) {
+  if (_has_bits_[0 / 32] & 3u) {
     if (has_cmd()) {
       cmd_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
     if (has_documentname()) {
       documentname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
-    if (has_documentfeatures()) {
-      if (documentfeatures_ != NULL) documentfeatures_->::tagger_message::DocumentFeatures::Clear();
-    }
   }
+  documentfeatures_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   if (_internal_metadata_.have_unknown_fields()) {
     mutable_unknown_fields()->Clear();
@@ -1966,15 +1718,25 @@ bool TagRequest::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .tagger_message.DocumentFeatures documentFeatures = 3;
+      // map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
       case 3: {
         if (tag == 26) {
          parse_documentFeatures:
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_documentFeatures:
+          ::google::protobuf::scoped_ptr<TagRequest_DocumentFeaturesEntry> entry(documentfeatures_.NewEntry());
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_documentfeatures()));
+              input, entry.get()));
+          (*mutable_documentfeatures())[entry->key()].Swap(entry->mutable_value());
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+            entry->key().data(), entry->key().length(),
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "tagger_message.TagRequest.DocumentFeaturesEntry.key");
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(26)) goto parse_loop_documentFeatures;
+        input->UnsafeDecrementRecursionDepth();
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -2024,10 +1786,20 @@ void TagRequest::SerializeWithCachedSizes(
       2, this->documentname(), output);
   }
 
-  // optional .tagger_message.DocumentFeatures documentFeatures = 3;
-  if (has_documentfeatures()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, *this->documentfeatures_, output);
+  // map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+  {
+    ::google::protobuf::scoped_ptr<TagRequest_DocumentFeaturesEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >::const_iterator
+        it = this->documentfeatures().begin();
+        it != this->documentfeatures().end(); ++it) {
+      entry.reset(documentfeatures_.NewEntryWrapper(it->first, it->second));
+      ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+          3, *entry, output);
+      ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+        it->first.data(), it->first.length(),
+        ::google::protobuf::internal::WireFormat::SERIALIZE,
+        "tagger_message.TagRequest.DocumentFeaturesEntry.key");
+    }
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2062,11 +1834,21 @@ void TagRequest::SerializeWithCachedSizes(
         2, this->documentname(), target);
   }
 
-  // optional .tagger_message.DocumentFeatures documentFeatures = 3;
-  if (has_documentfeatures()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, *this->documentfeatures_, target);
+  // map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+  {
+    ::google::protobuf::scoped_ptr<TagRequest_DocumentFeaturesEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >::const_iterator
+        it = this->documentfeatures().begin();
+        it != this->documentfeatures().end(); ++it) {
+      entry.reset(documentfeatures_.NewEntryWrapper(it->first, it->second));
+      target = ::google::protobuf::internal::WireFormatLite::
+          WriteMessageNoVirtualToArray(
+              3, *entry, target);
+      ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+        it->first.data(), it->first.length(),
+        ::google::protobuf::internal::WireFormat::SERIALIZE,
+        "tagger_message.TagRequest.DocumentFeaturesEntry.key");
+    }
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2086,22 +1868,26 @@ int TagRequest::ByteSize() const {
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->cmd());
   }
-  if (_has_bits_[1 / 32] & 6u) {
-    // optional string documentName = 2;
-    if (has_documentname()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->documentname());
-    }
-
-    // optional .tagger_message.DocumentFeatures documentFeatures = 3;
-    if (has_documentfeatures()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          *this->documentfeatures_);
-    }
-
+  // optional string documentName = 2;
+  if (has_documentname()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->documentname());
   }
+
+  // map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+  total_size += 1 * this->documentfeatures_size();
+  {
+    ::google::protobuf::scoped_ptr<TagRequest_DocumentFeaturesEntry> entry;
+    for (::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >::const_iterator
+        it = this->documentfeatures().begin();
+        it != this->documentfeatures().end(); ++it) {
+      entry.reset(documentfeatures_.NewEntryWrapper(it->first, it->second));
+      total_size += ::google::protobuf::internal::WireFormatLite::
+          MessageSizeNoVirtual(*entry);
+    }
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -2127,6 +1913,7 @@ void TagRequest::MergeFrom(const ::google::protobuf::Message& from) {
 
 void TagRequest::MergeFrom(const TagRequest& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  documentfeatures_.MergeFrom(from.documentfeatures_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_cmd()) {
       set_has_cmd();
@@ -2135,9 +1922,6 @@ void TagRequest::MergeFrom(const TagRequest& from) {
     if (from.has_documentname()) {
       set_has_documentname();
       documentname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.documentname_);
-    }
-    if (from.has_documentfeatures()) {
-      mutable_documentfeatures()->::tagger_message::DocumentFeatures::MergeFrom(from.documentfeatures());
     }
   }
   if (from._internal_metadata_.have_unknown_fields()) {
@@ -2160,9 +1944,7 @@ void TagRequest::CopyFrom(const TagRequest& from) {
 bool TagRequest::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
-  if (has_documentfeatures()) {
-    if (!this->documentfeatures_->IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->documentfeatures())) return false;
   return true;
 }
 
@@ -2173,7 +1955,7 @@ void TagRequest::Swap(TagRequest* other) {
 void TagRequest::InternalSwap(TagRequest* other) {
   cmd_.Swap(&other->cmd_);
   documentname_.Swap(&other->documentname_);
-  std::swap(documentfeatures_, other->documentfeatures_);
+  documentfeatures_.Swap(&other->documentfeatures_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -2296,47 +2078,22 @@ void TagRequest::clear_documentname() {
   // @@protoc_insertion_point(field_set_allocated:tagger_message.TagRequest.documentName)
 }
 
-// optional .tagger_message.DocumentFeatures documentFeatures = 3;
-bool TagRequest::has_documentfeatures() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-void TagRequest::set_has_documentfeatures() {
-  _has_bits_[0] |= 0x00000004u;
-}
-void TagRequest::clear_has_documentfeatures() {
-  _has_bits_[0] &= ~0x00000004u;
+// map<string, .tagger_message.DocumentFeature> documentFeatures = 3;
+int TagRequest::documentfeatures_size() const {
+  return documentfeatures_.size();
 }
 void TagRequest::clear_documentfeatures() {
-  if (documentfeatures_ != NULL) documentfeatures_->::tagger_message::DocumentFeatures::Clear();
-  clear_has_documentfeatures();
+  documentfeatures_.Clear();
 }
-const ::tagger_message::DocumentFeatures& TagRequest::documentfeatures() const {
-  // @@protoc_insertion_point(field_get:tagger_message.TagRequest.documentFeatures)
-  return documentfeatures_ != NULL ? *documentfeatures_ : *default_instance_->documentfeatures_;
+ const ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >&
+TagRequest::documentfeatures() const {
+  // @@protoc_insertion_point(field_map:tagger_message.TagRequest.documentFeatures)
+  return documentfeatures_.GetMap();
 }
-::tagger_message::DocumentFeatures* TagRequest::mutable_documentfeatures() {
-  set_has_documentfeatures();
-  if (documentfeatures_ == NULL) {
-    documentfeatures_ = new ::tagger_message::DocumentFeatures;
-  }
-  // @@protoc_insertion_point(field_mutable:tagger_message.TagRequest.documentFeatures)
-  return documentfeatures_;
-}
-::tagger_message::DocumentFeatures* TagRequest::release_documentfeatures() {
-  clear_has_documentfeatures();
-  ::tagger_message::DocumentFeatures* temp = documentfeatures_;
-  documentfeatures_ = NULL;
-  return temp;
-}
-void TagRequest::set_allocated_documentfeatures(::tagger_message::DocumentFeatures* documentfeatures) {
-  delete documentfeatures_;
-  documentfeatures_ = documentfeatures;
-  if (documentfeatures) {
-    set_has_documentfeatures();
-  } else {
-    clear_has_documentfeatures();
-  }
-  // @@protoc_insertion_point(field_set_allocated:tagger_message.TagRequest.documentFeatures)
+ ::google::protobuf::Map< ::std::string, ::tagger_message::DocumentFeature >*
+TagRequest::mutable_documentfeatures() {
+  // @@protoc_insertion_point(field_mutable_map:tagger_message.TagRequest.documentFeatures)
+  return documentfeatures_.MutableMap();
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

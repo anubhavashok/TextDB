@@ -24,6 +24,7 @@
 #include <cstdlib>
 #include "mutex_unordered_map.h"
 #include "tagger.h"
+#include "service_discovery.h"
 
 #include "server.hpp"
 using namespace std;

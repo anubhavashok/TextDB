@@ -205,6 +205,8 @@ bool Collection::add(std::string name, std::vector<std::string> doc)
         nbits++;
     }
 
+
+    
     // TODO: change to take a doc
     localitySensitiveHashing.add(reassembleText(doc), name);
     
